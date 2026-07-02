@@ -1,7 +1,8 @@
-import { NetimText } from "../typography/components/netimText"
+
+import { NetimText } from "../typography/components/NetimText"
 import type { ButtomNetimProps } from "./types/buttomNetimProps"
 
-export const ButtomNetim = ({onClickButtom,text,widthButtom}: ButtomNetimProps) => {
+export const NetimButton = ({onClickButtom,text,widthButtom}: ButtomNetimProps) => {
     return (
         <div onClick={onClickButtom} className='relative w-max cursor-pointer-custom'>
             <img src="/button/moda_b.png" className={`${widthButtom} h-[20px]`} alt="" />

@@ -1,4 +1,7 @@
-export type ModalType = 'none' | 'loading' | 'error' | 'success' | 'confirm';
+import type { ActionModalProps } from "./modals/actionModalProps";
+import type { NotificationModalProps } from "./modals/notificationModalProps";
+
+export type ModalType = 'none' | 'loading' | 'error' | 'notification' | 'action';
 
 export interface ConfirmModalOptions {
   title: string;
@@ -15,19 +18,17 @@ export interface MessageModalOptions {
 export interface ModalState {
   type: ModalType;
   title?: string;
-  message?: string;
+  sub_title?: string;
   confirmText?: string;
   cancelText?: string;
 }
 
 export interface ModalContextValue {
-  showLoading: (message?: string) => void;
-  hideLoading: () => void;
+  showLoadingModal: (message?: string) => void;
+  closeLoadingModal: () => void;
 
-  showError: (message: string, title?: string) => void;
-  showSuccess: (message: string, title?: string) => void;
-
-  confirm: (options: ConfirmModalOptions) => Promise<boolean>;
+  showActionModal: (props:ActionModalProps) => void;
+  showNotificationModal: (props:NotificationModalProps) => void;
 
   closeModal: () => void;
 }

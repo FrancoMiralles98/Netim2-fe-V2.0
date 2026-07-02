@@ -4,7 +4,6 @@ import { Register } from "../../features/auth/components/Register"
 import { PatchNotes } from "../../features/landing/components/PatchNotes"
 import { ForgotPassword } from "../../features/auth/components/forgotPassword"
 import type { LandingSectionType } from "../../features/landing/types/landing-section.type"
-import { ActionModal } from "../../shared/modal/components/ActionModal"
 
 export const LandingPage = () => {
     const [type,setType] = useState<LandingSectionType>('parche')
@@ -13,18 +12,8 @@ export const LandingPage = () => {
         setType(value)
     }
 
-    const functionGeneric = () => {}
-
     return (
         <>
-        <ActionModal 
-        acceptText={'Si'} 
-        cancelText="No" 
-        messagePrincipal="hola"
-        messageSecondary="hola todo bien"
-        onAccept={functionGeneric}
-        onClose={functionGeneric}
-        />
             <main className="relative w-300 mx-auto overflow-hidden bg-center bg-[url('/landing/bg_pattern.jpg')]">
                 <img src="/landing/Netim2_2.png" className="relative mx-auto mt-10 z-10 w-100 h-37.5" alt="" />
                 <img src="/landing/header-bg.png" className="relative z-10 w-full" alt="" />

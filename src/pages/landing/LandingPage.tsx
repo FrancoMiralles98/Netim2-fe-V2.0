@@ -4,12 +4,15 @@ import { Register } from "../../features/auth/components/Register"
 import { PatchNotes } from "../../features/landing/components/PatchNotes"
 import { ForgotPassword } from "../../features/auth/components/forgotPassword"
 import type { LandingSectionType } from "../../features/landing/types/landing-section.type"
-
 export const LandingPage = () => {
-    const [type,setType] = useState<LandingSectionType>('parche')
+    const [type, setType] = useState<LandingSectionType>('parche')
 
     const changeType = (value: LandingSectionType) => {
         setType(value)
+    }
+
+    function ffef() {
+
     }
 
     return (
@@ -35,7 +38,7 @@ export const LandingPage = () => {
                         type === 'parche' && <PatchNotes />
                     }
                     {
-                        type === 'password' && <ForgotPassword/>
+                        type === 'password' && <ForgotPassword />
                     }
                 </div>
                 <div className="relative bg-[url('/landing/container_bg_mid.png')] w-[49%] bg-repeat-y h-[380px]  mx-auto">

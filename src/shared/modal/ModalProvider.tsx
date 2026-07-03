@@ -6,6 +6,10 @@ import { ActionModal } from "./components/ActionModal";
 import type { NotificationModalProps } from "./types/modals/notificationModalProps";
 import { NotificationModal } from "./components/NotificationModal";
 import { LoadingModal } from "./components/LoadingModal";
+import type { FeedBackModalProps } from "./types/modals/feedbackModalProps";
+import { FeedBackModal } from "./components/FeedBackModal";
+import { ErrorModal } from "./components/ErrorModal";
+import type { ApiError } from "../../api/api-error";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [modalState, setModalState] = useState<ModalState>({ type: 'none', });
@@ -37,6 +41,19 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         })
     }
 
+    const showFeedBackModal = (props: FeedBackModalProps) => {
+        actionRef.current = props.onAccept ?? null
+        setModalState({
+            type: 'feedback',
+            messages: props.messages,
+            title: props.title
+        })
+    }
+
+    const showErrorModal = (error: ApiError | unknown) => {
+        
+    }
+
     const handleAcceptAction = async () => {
         try {
             await actionRef.current?.()
@@ -66,7 +83,8 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             showNotificationModal,
             showActionModal,
             showLoadingModal,
-            closeLoadingModal
+            closeLoadingModal,
+            showFeedBackModal
         }}>
             {children}
 
@@ -78,6 +96,23 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                     onCancel={closeModal}
                     acceptText={modalState.confirmText!}
                     cancelText={modalState.cancelText!}
+                />
+            )}
+
+            {modalState.type === 'error' && (
+                <ErrorModal
+                    status={0} //se pone 0 para que no salte el ts, y porque en modal no usa este valor
+                    message={modalState.title!}
+                    errors={modalState.messages!}
+                    onAccept={handleAcceptAction}
+                />
+            )}
+
+            {modalState.type === 'feedback' && (
+                <FeedBackModal
+                    messages={modalState.messages!}
+                    onAccept={handleAcceptAction}
+                    title={modalState.title!}
                 />
             )}
 

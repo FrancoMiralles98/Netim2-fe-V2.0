@@ -1,5 +1,5 @@
 import axios from "axios";
-import { normalizaApiError } from "./api-error";
+import { normalizaApiError } from "./errors/api-error";
 
 export const http = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,

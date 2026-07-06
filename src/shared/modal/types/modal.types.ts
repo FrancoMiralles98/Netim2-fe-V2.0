@@ -1,14 +1,16 @@
+import type { ApiError } from "../../../api/errors/api-error";
 import type { ActionModalProps } from "./modals/actionModalProps";
+import type { ErrorModalProps } from "./modals/error-modal-props.type";
 import type { FeedBackModalProps } from "./modals/feedbackModalProps";
 import type { NotificationModalProps } from "./modals/notificationModalProps";
 
-export type ModalType = 
-'none' | 
-'loading' |
- 'error' |
- 'notification' |
- 'feedback' |
- 'action';
+export type ModalType =
+  'none' |
+  'loading' |
+  'error' |
+  'notification' |
+  'feedback' |
+  'action';
 
 export interface ConfirmModalOptions {
   title: string;
@@ -36,8 +38,9 @@ export interface ModalContextValue {
   closeLoadingModal: () => void;
 
   showFeedBackModal: (props: FeedBackModalProps) => void;
-  showActionModal: (props:ActionModalProps) => void;
-  showNotificationModal: (props:NotificationModalProps) => void;
+  showActionModal: (props: ActionModalProps) => void;
+  showNotificationModal: (props: NotificationModalProps) => void;
+  showErrorModal: (props: ApiError | unknown) => void
 
   closeModal: () => void;
 }

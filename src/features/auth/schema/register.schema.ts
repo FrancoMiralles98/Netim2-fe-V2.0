@@ -18,7 +18,7 @@ export const registerSchema = z.object({
 
     codigo: z
         .string({ error: 'Se requiere el campo: codigo.' })
-        .length(7, 'El código debe tener 7 números.')
+        .length(8, 'El código debe tener 8 números.')
         .regex(/^\d+$/, 'El código solo puede contener números.'),
 })
 

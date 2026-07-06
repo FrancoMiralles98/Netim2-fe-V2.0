@@ -8,16 +8,9 @@ export const ErrorModal = ({ message, errors, onAccept }: ErrorModalProps) => {
             <section className='relative '>
                 <div className="shadow-lg top-[39%] left-[-100px] bg-white/50 h-[120px] w-[350px]  max-w-md absolute">
                     <img src="/modal/modal_wo_b.png" className="h-[130px] w-full absolute z-1" alt="" />
-                    <section className="relative grid grid-rows-[20%_50%_30%] h-full z-50 mx-1 mt-1">
+                    <section className="relative grid grid-rows-2 h-full z-50 mx-1 mt-1">
                         <section id='title' className=" flex justify-center items-center">
                             <NetimText text={message} cssAditionals="!text-sm" />
-                        </section>
-                        <section id='body' className=" overflow-y-auto custom-scrollbar">
-                            {
-                                errors.map((message, index) => (
-                                    <NetimText key={`feedd-back-message ${index}`} text={`- ${message}`} />
-                                ))
-                            }
                         </section>
                         <section id="button" className=" flex justify-center items-center">
                             <NetimButton text="Ok" onClickButtom={onAccept} />

@@ -5,6 +5,7 @@ import { PatchNotes } from "../../features/landing/components/PatchNotes"
 import { ForgotPassword } from "../../features/auth/components/forgotPassword"
 import type { LandingSectionType } from "../../features/landing/types/landing-section.type"
 export const LandingPage = () => {
+    
     const [type, setType] = useState<LandingSectionType>('parche')
 
     const changeType = (value: LandingSectionType) => {
@@ -27,8 +28,8 @@ export const LandingPage = () => {
                     <section className="top-[7%] absolute min-h-7 w-full">
                         <section className="flex gap-5 justify-center">
                             <button onClick={() => changeType('register')} className="hover:text-red-800 text-yellow-950 cursor-pointer-custom">Registro</button>
-                            <button onClick={() => changeType('password')} className="hover:text-red-800 text-yellow-950 cursor-pointer-custom">Olvide mi contraseña</button>
                             <button onClick={() => changeType('parche')} className="hover:text-red-800 text-yellow-950 cursor-pointer-custom">Notas del parche</button>
+                            <button onClick={() => changeType('password')} className="hover:text-red-800 text-yellow-950 cursor-pointer-custom">Olvide mi contraseña</button>
                         </section>
                     </section>
                     {

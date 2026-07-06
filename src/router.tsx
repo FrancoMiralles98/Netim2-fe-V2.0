@@ -1,13 +1,25 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { LandingPage } from "./pages/landing/LandingPage";
+import { AppLayout } from "./AppLayout";
+import { CharacterSelection } from "./pages/characterSelection/CharacterSelection";
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    Component: LandingPage,
-  },
-  {
-    path: '*',
-    element: <Navigate to="/" replace />,
+    element: <AppLayout />,
+    children: [
+      {
+        index: true,
+        Component: LandingPage
+      },
+      {
+        path: 'character-selection',
+        element: <CharacterSelection />,
+      },
+      {
+        path: '*',
+        element: <Navigate to="/" replace />,
+      },
+    ]
   },
 ]);

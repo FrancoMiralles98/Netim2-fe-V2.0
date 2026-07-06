@@ -9,12 +9,15 @@ import { LoadingModal } from "./components/LoadingModal";
 import type { FeedBackModalProps } from "./types/modals/feedbackModalProps";
 import { FeedBackModal } from "./components/FeedBackModal";
 import { ErrorModal } from "./components/ErrorModal";
-import type { ApiError } from "../../api/api-error";
+import { ApiError } from "../../api/errors/api-error";
+import { useNavigate } from "react-router";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [modalState, setModalState] = useState<ModalState>({ type: 'none', });
 
     const actionRef = useRef<(() => void | Promise<void>) | null>(null)
+
+    const navigate = useNavigate()
 
     const closeModal = () => {
         setModalState({ type: 'none' });
@@ -51,7 +54,29 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const showErrorModal = (error: ApiError | unknown) => {
-        
+        if (error instanceof ApiError) {
+      
+            const shouldRedirect = error.status === 0 || error.status >= 500
+
+            actionRef.current = shouldRedirect
+                ? () => {
+                    closeModal()
+                    navigate('/', { replace: true })
+                }
+                : closeModal
+
+            setModalState({
+                type: 'error',
+                title: error.message,
+                messages: error.messages,
+            })
+        } else {
+            setModalState({
+                type: 'error',
+                title: 'Ah ocurrido un error no esperado.',
+                messages: ['Intente nuevamente más tarde.'],
+            })
+        }
     }
 
     const handleAcceptAction = async () => {
@@ -84,7 +109,8 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             showActionModal,
             showLoadingModal,
             closeLoadingModal,
-            showFeedBackModal
+            showFeedBackModal,
+            showErrorModal
         }}>
             {children}
 

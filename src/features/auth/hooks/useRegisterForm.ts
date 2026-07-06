@@ -1,8 +1,7 @@
 import { useRef, type SubmitEventHandler } from "react"
 import { useModal } from "../../../shared/modal/hooks/useModal"
-import { registerSchema, type RegisterFormData } from "../schema/register.schema"
+import { registerSchema } from "../schema/register.schema"
 import { registerRequest } from "../api/auth.services"
-import { ApiError } from "../../../api/api-error"
 
 export const useRegisterForm = () => {
     const loading = useRef(false)
@@ -11,6 +10,7 @@ export const useRegisterForm = () => {
     const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault()
         if (loading.current) return
+        const form = event.currentTarget
         loading.current = true
         try {
             const body = Object.fromEntries(new FormData(event.currentTarget))
@@ -25,11 +25,14 @@ export const useRegisterForm = () => {
                 return
             }
             const registerBody = verifyResult.data
+            modal.showLoadingModal('Registro en proceso...')
             await registerRequest(registerBody)
+            form.reset()
+            modal.closeLoadingModal()
+            modal.showNotificationModal({ title: 'Te has registrado con éxito.' })
         } catch (error) {
-            if (error instanceof ApiError) {
-                
-            }
+            modal.closeLoadingModal()
+            modal.showErrorModal(error)
         }
         finally {
             loading.current = false

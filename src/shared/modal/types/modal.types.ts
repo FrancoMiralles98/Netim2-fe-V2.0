@@ -1,6 +1,5 @@
 import type { ApiError } from "../../../api/errors/api-error";
 import type { ActionModalProps } from "./modals/actionModalProps";
-import type { ErrorModalProps } from "./modals/error-modal-props.type";
 import type { FeedBackModalProps } from "./modals/feedbackModalProps";
 import type { NotificationModalProps } from "./modals/notificationModalProps";
 
@@ -40,7 +39,7 @@ export interface ModalContextValue {
   showFeedBackModal: (props: FeedBackModalProps) => void;
   showActionModal: (props: ActionModalProps) => void;
   showNotificationModal: (props: NotificationModalProps) => void;
-  showErrorModal: (props: ApiError | unknown) => void
+  showErrorModal: (props: ApiError | unknown,forceRedirect?:boolean) => void
 
   closeModal: () => void;
 }

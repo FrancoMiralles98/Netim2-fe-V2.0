@@ -2,7 +2,7 @@ import { NetimButton } from "../../button/ButtomNetim"
 import { NetimText } from "../../typography/components/NetimText"
 import type { ErrorModalProps } from "../types/modals/error-modal-props.type"
 
-export const ErrorModal = ({ message, errors, onAccept }: ErrorModalProps) => {
+export const ErrorModal = ({ message, onAccept }: ErrorModalProps) => {
     return (
         <div className="fixed  inset-0 z-[9999] flex justify-center max-h-full">
             <section className='relative '>

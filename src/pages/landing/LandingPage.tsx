@@ -12,10 +12,6 @@ export const LandingPage = () => {
         setType(value)
     }
 
-    function ffef() {
-
-    }
-
     return (
         <>
             <main className="relative w-300 mx-auto overflow-hidden bg-center bg-[url('/landing/bg_pattern.jpg')]">

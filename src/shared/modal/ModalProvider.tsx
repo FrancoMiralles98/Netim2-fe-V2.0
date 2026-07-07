@@ -53,10 +53,10 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         })
     }
 
-    const showErrorModal = (error: ApiError | unknown) => {
+    const showErrorModal = (error: ApiError | unknown,forceRedirect?: boolean) => {
         if (error instanceof ApiError) {
       
-            const shouldRedirect = error.status === 0 || error.status >= 500
+            const shouldRedirect = error.status === 0 || error.status >= 500 || forceRedirect
 
             actionRef.current = shouldRedirect
                 ? () => {

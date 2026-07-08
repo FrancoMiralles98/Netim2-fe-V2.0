@@ -3,6 +3,9 @@ import type { UserSession } from "../auth/types/user-session.types";
 import { UserSessionContext } from "./context/user-session.context";
 import { refreshUserSessionRequest } from "./api/user-session.services";
 import { useModal } from "../../shared/modal/hooks/useModal";
+import { logoutRequest } from "../auth/api/auth.services";
+import { useNavigate } from "react-router";
+import { RouterPaths } from "../../app/router/router-paths.types";
 
 
 export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
@@ -11,10 +14,26 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
     const [loadingUserAuthenticate, setLoadingUserAuthenticate] = useState(false)
     const loading = useRef(false)
     const modal = useModal()
+    const navigate = useNavigate()
 
     const clearUserSession = () => {
         SetUser(null)
         setIsUserAuthenticated(false)
+    }
+
+    const logout = async () => {
+        if (loading.current) return
+        loading.current = true
+        try {
+            modal.showLoadingModal('Saliendo...')
+            await logoutRequest()
+            modal.closeLoadingModal()
+            navigate(RouterPaths.LANDING_PAG)
+        } catch (error) {
+            modal.showErrorModal(error, true)
+        } finally {
+            clearUserSession()
+        }
     }
 
     const startUserSession = (user: UserSession) => {
@@ -47,7 +66,8 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
             loadingUserAuthenticate,
             clearUserSession,
             startUserSession,
-            refreshUserSession
+            refreshUserSession,
+            logout
         }}>
             {children}
         </UserSessionContext.Provider>

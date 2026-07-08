@@ -1,25 +1,34 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter } from "react-router";
 import { LandingPage } from "../../pages/landing/LandingPage";
 import { AppLayout } from "../layouts/AppLayout";
 import { CharacterSelection } from "../../pages/characterSelection/CharacterSelection";
+import { PublicLayout } from "../layouts/PublicLayout";
+import { AuthUserSessionLayout } from "../layouts/AuthUserSessionLayout";
+import { RouterPaths } from "./router-paths.types";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: RouterPaths.LANDING_PAG,
     element: <AppLayout />,
     children: [
       {
-        index: true,
-        Component: LandingPage
+        element: <PublicLayout />,
+        children: [
+          {
+            index: true,
+            element: <LandingPage />
+          }
+        ]
       },
       {
-        path: 'character-selection',
-        element: <CharacterSelection />,
-      },
-      {
-        path: '*',
-        element: <Navigate to="/" replace />,
-      },
+        element: <AuthUserSessionLayout />,
+        children: [
+          {
+            path: RouterPaths.CHARACTER_SELECTION,
+            element: <CharacterSelection />
+          }
+        ]
+      }
     ]
   },
 ]);

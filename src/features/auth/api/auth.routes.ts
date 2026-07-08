@@ -4,5 +4,8 @@ export const AUTH_ROUTES = {
     },
     login: () => {
         return `auth/login`
+    },
+    logout: () => {
+        return `auth/logout`
     }
 }

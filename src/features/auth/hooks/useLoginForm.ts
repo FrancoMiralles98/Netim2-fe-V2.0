@@ -3,11 +3,13 @@ import { useModal } from "../../../shared/modal/hooks/useModal"
 import { useNavigate } from "react-router"
 import { loginSchema } from "../schema/login.schema"
 import { loginRequest } from "../api/auth.services"
+import { useUserSession } from "../../userSession/hook/useUserSession"
 
 export const useLoginForm = () => {
     const loading = useRef(false)
     const modal = useModal()
     const navigate = useNavigate()
+    const userSession = useUserSession()
 
     const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault()
@@ -27,7 +29,7 @@ export const useLoginForm = () => {
             const data = verifyResult.data
             modal.showLoadingModal('Por favor, espera. Te éstas conectando al servidor.')
             const response = await loginRequest(data)
-            console.log('respuesta',response);
+            userSession.startUserSession(response)
             
             setTimeout(() => {
                 modal.showLoadingModal('Has sido conectado al servidor.')

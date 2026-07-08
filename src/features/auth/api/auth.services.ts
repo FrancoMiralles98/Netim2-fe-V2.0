@@ -14,6 +14,12 @@ export const registerRequest = async (body: RegisterFormData) => {
 
 export const loginRequest = async (body: LoginForm): Promise<UserSession> => {
     const response = await http.post<ApiResponse<UserSession>>(AUTH_ROUTES.login(), body)
-    
+
     return response.data.data
+}
+
+export const logoutRequest = async () => {
+    const response = await http.post(AUTH_ROUTES.logout())
+
+    return response
 }

@@ -7,4 +7,5 @@ export interface UserSessionContextValue {
     startUserSession: (user:UserSession) => void
     refreshUserSession: () => Promise<void>;
     clearUserSession: () => void;
+    logout: () => void;
 }

@@ -1,0 +1,1 @@
+export type LandingSectionType = 'register' | 'password' | 'parche';

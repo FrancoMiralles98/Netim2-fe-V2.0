@@ -1,5 +1,7 @@
 import { useCreation } from "../../hooks/useCreation"
 import type { CharacterSelectionType } from "../../types/character-selection.type"
+import { CharacterCreation } from "./CharacterCreation"
+import { ReinoSelection } from "./ReinoSelection"
 
 export const Creation = ({ changeType }: { changeType: (typeToChange: CharacterSelectionType) => void }) => {
 
@@ -7,8 +9,20 @@ export const Creation = ({ changeType }: { changeType: (typeToChange: CharacterS
 
     return (
         <div>
-            <h1>Crea tu personaje</h1>
-            
+
+            {
+                creationInstance === 'select_reino' &&
+                <>
+                    <ReinoSelection changeInstance={changeInstance} changeType={changeType}/>
+                </>
+            }
+            {
+                creationInstance === 'select_raza' &&
+                <>
+                    <CharacterCreation changeType={changeType} />
+                </>
+            }
+
         </div>
     )
 }

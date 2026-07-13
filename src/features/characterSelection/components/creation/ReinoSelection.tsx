@@ -1,8 +1,8 @@
 import { useState } from "react"
-import type { ReinosNames } from "../../../../shared/types/backend/character/character-backend.types";
 import { Reinos } from "../../utils/character-selecition-utils";
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import type { CharacterSelectionType } from "../../types/character-selection.type";
+import type { ReinosNames } from "netim2-shared";
 
 export const ReinoSelection = (
   { changeInstance,
@@ -23,14 +23,13 @@ export const ReinoSelection = (
   };
 
   return (
-    <>
+    <section className="relative">
       <p className="text-center text-lg text-orange-500">
         Seleccione el Reino
       </p>
-      <div className="absolute left-[-10rem] top-0 z-20">
+      <div className="absolute left-10 top-0 z-20">
         <NetimButton onClickButtom={() => changeType("selection")} widthButtom="w-[70px]" text="Volver" />
       </div>
-
       <div className="flex justify-center gap-4">
         <div className="relative w-full max-w-[720px]">
           <img src="/characterSelection/kingdoms.png" className="block w-full select-none" alt="Mapa de reinos" />
@@ -80,42 +79,45 @@ export const ReinoSelection = (
           </button>
         </div>
 
-        {selectedReinoInfo && (
-          <section
-            id="info_kingdom"
-            className={`max-w-[250px] self-center p-1 ${selectedReinoInfo.bgClassName}`}
-          >
-            <div className="grid grid-cols-2 items-center bg-black/30">
-              <div
-                className={`
+        <div className="max-w-[250px] self-center p-1">
+
+          {selectedReinoInfo && (
+            <section
+              id="info_kingdom"
+              className={`  ${selectedReinoInfo.bgClassName}`}
+            >
+              <div className="grid grid-cols-2 items-center bg-black/30">
+                <div
+                  className={`
                 h-[50px] w-[105px]
                 bg-[url('/characterSelection/flags.jpg')]
                 bg-cover
                 ${selectedReinoInfo.flagClassName}
               `}
+                />
+
+                <h1 className={`text-[14px] ${selectedReinoInfo.colorNameClassName}`}>
+                  Reino de {selectedReinoInfo.name}
+                </h1>
+              </div>
+
+              <textarea
+                className="mi-contenedor custom-scrollbar mt-3 h-[300px] w-full bg-black py-1 pl-1 text-white"
+                readOnly
+                value={selectedReinoInfo.description}
               />
 
-              <h1 className={`text-[14px] ${selectedReinoInfo.colorNameClassName}`}>
-                Reino de {selectedReinoInfo.name}
-              </h1>
-            </div>
+              <p className="text-[13px] font-medium text-white">
+                *La elección del reino es solo para el personaje creado, no para la cuenta.
+              </p>
 
-            <textarea
-              className="mi-contenedor custom-scrollbar mt-3 h-[300px] w-full bg-black py-1 pl-1 text-white"
-              readOnly
-              value={selectedReinoInfo.description}
-            />
-
-            <p className="text-[13px] font-medium text-white">
-              *La elección del reino es solo para el personaje creado, no para la cuenta.
-            </p>
-
-            <div className="mt-3 flex justify-center">
-              <NetimButton onClickButtom={() => changeInstance('select_raza')} text="siguiente" />
-            </div>
-          </section>
-        )}
+              <div className="mt-3 flex justify-center">
+                <NetimButton onClickButtom={() => changeInstance('select_raza')} text="siguiente" />
+              </div>
+            </section>
+          )}
+        </div>
       </div>
-    </>
+    </section>
   );
 }

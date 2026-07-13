@@ -1,4 +1,5 @@
-import type { CharacterAttribute, CharacterRace, CharacterSpeciality, ReinosNames } from "../../../shared/types/backend/character/character-backend.types";
+import type { ReinosNames } from "netim2-shared/dist/gamedata/reinos-names.type";
+import type { CharacterAttribute, CharacterRace, CharacterSpeciality } from "../../../shared/types/backend/character/character-backend.types";
 
 export type CharacterSpecializationType = 'base' | 'especialidad-1' | 'especialidad-2';
 
@@ -42,5 +43,4 @@ export interface CharacterCreationValues {
     genero?: 'masculino' | 'femenino';
     reino?: ReinosNames;
     raza?: CharacterRace;
-
 }

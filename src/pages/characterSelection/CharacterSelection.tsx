@@ -4,19 +4,31 @@ import { useCharacterSelection } from "../../features/characterSelection/hooks/u
 
 export const CharacterSelection = () => {
 
-    const { changeType, type } = useCharacterSelection()
+    const { changeType, type, characterCreationConfig } = useCharacterSelection()
 
     return (
-        <div className="min-w-[1200px] relative bg-[url('/characterSelection/Fond2015.jpg')] bg-[center_top_100%] bg-no-repeat bg-cover min-h-[100vh]">
-            <div id='image' className="w-[250px] pt-7 mx-auto">
-                <img src="/landing/Netim2_2.png" alt="" />
+        <main className="min-h-[100dvh] w-full overflow-x-auto overflow-y-auto bg-[url('/characterSelection/Fond2015.jpg')] bg-cover bg-[center_top_100%] bg-no-repeat">
+            <div className="relative mx-auto min-h-[100dvh] w-full max-w-[1200px] px-4">
+                <div id="image" className="mx-auto w-[250px] pt-7">
+                    <img src="/landing/Netim2_2.png" alt="Netim2" />
+                </div>
+
+                {characterCreationConfig && (
+                    <>
+                        {type === 'selection' && (
+                            <Selection changeType={changeType} />
+                        )}
+
+                        {type === 'creation' && (
+                            <Creation
+                                races={characterCreationConfig.races}
+                                attributeLimit={characterCreationConfig.attributeLimit}
+                                changeType={changeType}
+                            />
+                        )}
+                    </>
+                )}
             </div>
-            {
-                type === 'selection' && <Selection changeType={changeType} />
-            }
-            {
-                type === 'creation' && <Creation changeType={changeType} />
-            }
-        </div>
+        </main>
     )
 }

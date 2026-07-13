@@ -17,8 +17,3 @@ export type CharacterSpeciality =
     'Flecha' |
     'Luz' |
     'Dragon'
-
-export type ReinosNames =
-    'shinsoo' |
-    'jinno' |
-    'chunjo'

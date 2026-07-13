@@ -1,13 +1,15 @@
 import { StatBar } from "../../../../shared/bars/components/StatBar"
 import { NetimText } from "../../../../shared/typography/components/NetimText"
-import type { CharacterRaceInfo } from "../../types/character-creation-card.types";
 import { getExplicationByRaceSelected, getHistoriaByRace, getIconRace, getNameRace } from "../../utils/character-selecition-utils";
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import { InfoTooltip } from "../../../../shared/tooltip/components/InfoToolTip";
 import { SpecialityEffectIcons } from "./SpecialityEffectIcons";
 import { useCharacterCreationCard } from "../../hooks/useCharacterCreationCard";
+import type { RaceInfo } from "netim2-shared";
 
-export const CharacterCreationCard = ({ isActive, raceInfo }: { isActive: boolean, raceInfo: CharacterRaceInfo }) => {
+export const CharacterCreationCard = (
+    { isActive, raceInfo, attributeLimit }:
+        { isActive: boolean, raceInfo: RaceInfo, attributeLimit: number }) => {
 
     const {
         genero,
@@ -133,10 +135,10 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
 
                     {selectedStats && (
                         <section>
-                            <StatBar name="VIT" value={selectedStats.VIT} isActive={isActive} animationKey={selectedSpeciality} />
-                            <StatBar name="STR" value={selectedStats.STR} isActive={isActive} animationKey={selectedSpeciality} />
-                            <StatBar name="INT" value={selectedStats.INT} isActive={isActive} animationKey={selectedSpeciality} />
-                            <StatBar name="DEX" value={selectedStats.DEX} isActive={isActive} animationKey={selectedSpeciality} />
+                            <StatBar maxValue={attributeLimit} name="VIT" value={selectedStats.VIT} isActive={isActive} animationKey={selectedSpeciality} />
+                            <StatBar maxValue={attributeLimit} name="STR" value={selectedStats.STR} isActive={isActive} animationKey={selectedSpeciality} />
+                            <StatBar maxValue={attributeLimit} name="INT" value={selectedStats.INT} isActive={isActive} animationKey={selectedSpeciality} />
+                            <StatBar maxValue={attributeLimit} name="DEX" value={selectedStats.DEX} isActive={isActive} animationKey={selectedSpeciality} />
                         </section>
                     )}
                     <div className="flex gap-3">

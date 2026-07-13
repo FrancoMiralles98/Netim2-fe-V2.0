@@ -1,23 +1,24 @@
 import { useState } from "react";
-import type { CharacterRaceInfo } from "../../types/character-creation-card.types";
 import { CharacterCreationCard } from "./CharacterCreationCard"
-import { characterEjChaman, characterEjGuerrero, characterEjNinja, characterEjSura } from "./characterEj";
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import type { CharacterSelectionType } from "../../types/character-selection.type";
+import type { RaceInfo } from "netim2-shared";
 
-export const CharacterCreation = ({ changeType }: { changeType: (type: CharacterSelectionType) => void }) => {
-    const characters: CharacterRaceInfo[] = [characterEjGuerrero, characterEjNinja, characterEjSura, characterEjChaman]
+export const CharacterCreation = (
+    { changeType, races, attributeLimit }: 
+    { changeType: (type: CharacterSelectionType) => void, races: RaceInfo[], attributeLimit: number }
+) => {
     const [currentSlide, setCurrentSlide] = useState(0)
 
     const passRight = () => {
         setCurrentSlide((prev) =>
-            prev === characters.length - 1 ? 0 : prev + 1
+            prev === races.length - 1 ? 0 : prev + 1
         );
     };
 
     const passLeft = () => {
         setCurrentSlide((prev) =>
-            prev === 0 ? characters.length - 1 : prev - 1
+            prev === 0 ? races.length - 1 : prev - 1
         );
     };
 
@@ -45,11 +46,12 @@ export const CharacterCreation = ({ changeType }: { changeType: (type: Character
                     className="flex transition-transform duration-500"
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
-                    {characters.map((character, i) => (
+                    {races.map((race, i) => (
                         <div key={i} className="min-w-full flex-shrink-0">
                             <CharacterCreationCard
                                 isActive={i === currentSlide}
-                                raceInfo={character}
+                                raceInfo={race}
+                                attributeLimit={attributeLimit}
                             />
                         </div>
                     ))}

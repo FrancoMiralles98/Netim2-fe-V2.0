@@ -2,14 +2,17 @@ import { useState } from "react"
 import { Reinos } from "../../utils/character-selecition-utils";
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import type { CharacterSelectionType } from "../../types/character-selection.type";
-import type { ReinosNames } from "netim2-shared";
+import type { ReinosBuffType, ReinosNames } from "netim2-shared";
+import { NetimText } from "../../../../shared/typography/components/NetimText";
 
 export const ReinoSelection = (
   { changeInstance,
-    changeType
+    changeType,
+    reinoBuff
   }: {
     changeInstance: (prop: 'select_raza' | 'select_reino') => void,
-    changeType: (type: CharacterSelectionType) => void
+    changeType: (type: CharacterSelectionType) => void,
+    reinoBuff: ReinosBuffType
   }
 ) => {
   const [selectedReino, setSelectedReino] = useState<ReinosNames | null>(null);
@@ -18,13 +21,14 @@ export const ReinoSelection = (
     ? Reinos[selectedReino]
     : null;
 
+
   const selectKingdom = (reino: ReinosNames) => {
     setSelectedReino(reino);
   };
 
   return (
     <section className="relative">
-      <p className="text-center text-lg text-orange-500">
+      <p className="text-center text-lg text-orange-500 mt-2">
         Seleccione el Reino
       </p>
       <div className="absolute left-10 top-0 z-20">
@@ -79,12 +83,12 @@ export const ReinoSelection = (
           </button>
         </div>
 
-        <div className="max-w-[250px] self-center p-1">
+        <div className="max-w-[260px]  min-w-[260px] self-start p-1">
 
           {selectedReinoInfo && (
             <section
               id="info_kingdom"
-              className={`  ${selectedReinoInfo.bgClassName}`}
+              className="bg-[url('/characterSelection/bg-pj_2.png')] p-2"
             >
               <div className="grid grid-cols-2 items-center bg-black/30">
                 <div
@@ -107,12 +111,26 @@ export const ReinoSelection = (
                 value={selectedReinoInfo.description}
               />
 
-              <p className="text-[13px] font-medium text-white">
-                *La elección del reino es solo para el personaje creado, no para la cuenta.
-              </p>
+              <NetimText cssAditionals="!text-red-300 !text-sm mt-1" text="*Importante: la elección del reino será aplicada a toda tu cuenta." />
+
+              {
+                selectedReino &&
+                <div>
+                  <div className="my-2">
+                    <p className="text-center text-orange-300">Buffos de Reino</p>
+                    <hr className="mx-auto border-amber-300 w-[70%]" />
+                  </div>
+                  {Object.entries(reinoBuff[selectedReino]).map(([bonus, value], index) => (
+                    <div key={`buffReino ${index}`} className="flex mt-1">
+                      <NetimText cssAditionals="!text-sm" text={`${bonus} :`} />
+                      <NetimText cssAditionals="!text-sm !text-emerald-200" text={`+${value.toString()}%`} />
+                    </div>
+                  ))}
+                </div>
+              }
 
               <div className="mt-3 flex justify-center">
-                <NetimButton onClickButtom={() => changeInstance('select_raza')} text="siguiente" />
+                <NetimButton onClickButtom={() => changeInstance('select_raza')} text="Siguiente" />
               </div>
             </section>
           )}

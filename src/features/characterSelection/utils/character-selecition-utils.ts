@@ -1,4 +1,4 @@
-import type { CharacterRace, CharacterSpeciality, ReinosNames } from "../../../shared/types/backend/character/character-backend.types";
+import type { CharacterRace, CharacterSpeciality, ReinosNames } from "netim2-shared";
 import type { MainDamageInfo, ReinosInfo, SkillEffectConfig, SkillEffectsType } from "../types/character-creation-card.types";
 
 

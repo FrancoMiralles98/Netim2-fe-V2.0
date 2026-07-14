@@ -21,8 +21,7 @@ export const CharacterSelection = () => {
 
                         {type === 'creation' && (
                             <Creation
-                                races={characterCreationConfig.races}
-                                attributeLimit={characterCreationConfig.attributeLimit}
+                                characterCreationConfig={characterCreationConfig}
                                 changeType={changeType}
                             />
                         )}

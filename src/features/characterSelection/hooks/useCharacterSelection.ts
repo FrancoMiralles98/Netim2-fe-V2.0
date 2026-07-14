@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import type { CharacterSelectionType } from "../types/character-selection.type"
-import type { CharacterSelectionDataType } from "../../../shared/types/backend/gameData/character-selection-data.types"
 import { useModal } from "../../../shared/modal/hooks/useModal"
 import { characterSelectionDataRequest } from "../api/characterSelection.services"
+import type { CharacterSelectionDataType } from "netim2-shared"
 
 export const useCharacterSelection = () => {
     const [type, setType] = useState<CharacterSelectionType>('selection')
@@ -20,8 +20,6 @@ export const useCharacterSelection = () => {
             try {
                 modal.showLoadingModal('Cargando...')
                 const request = await characterSelectionDataRequest()
-                console.log('personajes',request);
-                
                 setCharacterCreationCOnfig(request)
                 modal.closeLoadingModal()
             } catch (error) {

@@ -1,12 +1,12 @@
-import type { RaceInfo } from "netim2-shared"
+import type { CharacterSelectionDataType } from "netim2-shared"
 import { useCreation } from "../../hooks/useCreation"
 import type { CharacterSelectionType } from "../../types/character-selection.type"
 import { CharacterCreation } from "./CharacterCreation"
 import { ReinoSelection } from "./ReinoSelection"
 
 export const Creation = (
-    { changeType, races, attributeLimit }:
-        { changeType: (typeToChange: CharacterSelectionType) => void, races: RaceInfo[], attributeLimit: number }
+    { changeType, characterCreationConfig }:
+        { changeType: (typeToChange: CharacterSelectionType) => void, characterCreationConfig: CharacterSelectionDataType | null }
 ) => {
 
     const { changeInstance, creationInstance } = useCreation()
@@ -14,15 +14,21 @@ export const Creation = (
     return (
         <div>
             {
-                creationInstance === 'select_reino' &&
+                creationInstance === 'select_reino' && characterCreationConfig &&
                 <>
-                    <ReinoSelection changeInstance={changeInstance} changeType={changeType} />
+                    <ReinoSelection
+                        reinoBuff={characterCreationConfig.reinoBuff}
+                        changeInstance={changeInstance}
+                        changeType={changeType} />
                 </>
             }
             {
-                creationInstance === 'select_raza' &&
+                creationInstance === 'select_raza' && characterCreationConfig &&
                 <>
-                    <CharacterCreation attributeLimit={attributeLimit} races={races} changeType={changeType} />
+                    <CharacterCreation
+                        attributeLimit={characterCreationConfig.attributeLimit}
+                        races={characterCreationConfig.races}
+                        changeType={changeType} />
                 </>
             }
 

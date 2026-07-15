@@ -3,10 +3,12 @@ import type { CharacterCreationValues } from "../types/character-creation-card.t
 import { useModal } from "../../../shared/modal/hooks/useModal"
 import { creationCharacterSchema } from "../schema/creationCharacterSchema"
 import { useUserSession } from "../../userSession/hook/useUserSession"
+import type { CharacterRace } from "netim2-shared"
 
 export const useCreation = () => {
-    const [creationInstance, setCreationInstance] = useState<'select_raza' | 'select_reino'>('select_reino')
+    const [creationInstance, setCreationInstance] = useState<'select_raza' | 'select_reino'>('select_raza')
     const [characterCreationValues, setCharacterCreationValues] = useState<CharacterCreationValues>({})
+    const [newAccount, setNewAccount] = useState(true)
     const modal = useModal()
     const { user } = useUserSession()
 
@@ -18,29 +20,52 @@ export const useCreation = () => {
         if (!user) return;
 
         if (user.reino) {
-            setCreationInstance('select_raza');
+            setNewAccount(false)
             setCharacterCreationValues((prev) => ({
                 ...prev,
                 reino: user.reino,
             }));
             return;
         }
-
-        setCreationInstance('select_reino');
     }, [user]);
 
-    const createCharacter = async (nombre: string) => {
+    const handleCreateCharacter = async (
+        nombre: string,
+        genero: 'femenino' | 'masculino',
+        raza: CharacterRace
+    ) => {
+        const validResult = verifyName(nombre)
+        if (!validResult) return
+
+        setCharacterCreationValues((prev) => ({
+            ...prev, nombre, genero, raza
+        }))
+        if (newAccount) {
+            setCreationInstance('select_reino')
+            return
+        }
+        await createCharacter(nombre)
+    }
+
+    const verifyName = (nombre?: string): boolean => {
+        const nombreToVerify = nombre ? nombre : characterCreationValues.nombre
+        const verifyResult = creationCharacterSchema.safeParse({ nombre: nombreToVerify })
+        if (!verifyResult.success) {
+            const errors = verifyResult.error.issues.map(issue => issue.message)
+            modal.showFeedBackModal({
+                title: 'Error al Crear el personjae',
+                messages: errors,
+                onAccept: modal.closeModal
+            })
+            return false
+        }
+        return true
+    }
+
+    const createCharacter = async (nombre?: string) => {
         try {
-            const verifyResult = creationCharacterSchema.safeParse({ nombre })
-            if (!verifyResult.success) {
-                const errors = verifyResult.error.issues.map(issue => issue.message)
-                modal.showFeedBackModal({
-                    title: 'Error al Crear el personjae',
-                    messages: errors,
-                    onAccept: modal.closeModal
-                })
-                return
-            }
+            const validResult = verifyName(nombre)
+            if (!validResult) return
 
         } catch (error) {
             modal.showErrorModal(error)
@@ -50,6 +75,8 @@ export const useCreation = () => {
 
     return {
         creationInstance,
-        changeInstance
+        changeInstance,
+        newAccount,
+        handleCreateCharacter
     }
 }

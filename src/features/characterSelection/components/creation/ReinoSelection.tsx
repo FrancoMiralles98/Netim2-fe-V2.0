@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Reinos } from "../../utils/character-selecition-utils";
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import type { CharacterSelectionType } from "../../types/character-selection.type";
-import type { ReinosBuffType, ReinosNames } from "netim2-shared";
+import { bonusFullNameByRef, type BonusRefKeys, type ReinosBuffType, type ReinosNames } from "netim2-shared";
 import { NetimText } from "../../../../shared/typography/components/NetimText";
 
 export const ReinoSelection = (
@@ -83,7 +83,7 @@ export const ReinoSelection = (
           </button>
         </div>
 
-        <div className="max-w-[260px]  min-w-[260px] self-start p-1">
+        <div className="max-w-[270px]  min-w-[270px] self-start p-1">
 
           {selectedReinoInfo && (
             <section
@@ -122,7 +122,7 @@ export const ReinoSelection = (
                   </div>
                   {Object.entries(reinoBuff[selectedReino]).map(([bonus, value], index) => (
                     <div key={`buffReino ${index}`} className="flex mt-1">
-                      <NetimText cssAditionals="!text-sm" text={`${bonus} :`} />
+                      <NetimText cssAditionals="!text-sm" text={`${bonusFullNameByRef(bonus as BonusRefKeys)} :`} />
                       <NetimText cssAditionals="!text-sm !text-emerald-200" text={`+${value.toString()}%`} />
                     </div>
                   ))}
@@ -130,7 +130,7 @@ export const ReinoSelection = (
               }
 
               <div className="mt-3 flex justify-center">
-                <NetimButton onClickButtom={() => changeInstance('select_raza')} text="Siguiente" />
+                <NetimButton onClickButtom={() => changeInstance('select_raza')} text="Finalizar" />
               </div>
             </section>
           )}

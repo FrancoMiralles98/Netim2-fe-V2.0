@@ -9,12 +9,14 @@ export const Creation = (
         { changeType: (typeToChange: CharacterSelectionType) => void, characterCreationConfig: CharacterSelectionDataType | null }
 ) => {
 
-    const { changeInstance, creationInstance } = useCreation()
+    const { changeInstance, creationInstance, newAccount, handleCreateCharacter } = useCreation()
 
     return (
         <div>
             {
-                creationInstance === 'select_reino' && characterCreationConfig &&
+                creationInstance === 'select_reino' &&
+                characterCreationConfig &&
+                newAccount &&
                 <>
                     <ReinoSelection
                         reinoBuff={characterCreationConfig.reinoBuff}
@@ -26,9 +28,12 @@ export const Creation = (
                 creationInstance === 'select_raza' && characterCreationConfig &&
                 <>
                     <CharacterCreation
+                        handleCreateCharacter={handleCreateCharacter}
                         attributeLimit={characterCreationConfig.attributeLimit}
                         races={characterCreationConfig.races}
-                        changeType={changeType} />
+                        changeType={changeType}
+
+                    />
                 </>
             }
 

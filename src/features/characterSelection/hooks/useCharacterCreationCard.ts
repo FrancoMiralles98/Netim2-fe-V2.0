@@ -5,12 +5,16 @@ import { getBackGroundColor, getMainDamageInfo } from "../utils/character-seleci
 
 export const useCharacterCreationCard = (raceInfo: CharacterRaceInfo) => {
     const [selectedSpeciality, setSelectedSpeciality] = useState<CharacterSpeciality | 'base'>('base');
-
+    const [characterName, setCharacterName] = useState('');
     const [genero, setGenero] = useState<'masculino' | 'femenino'>('masculino');
 
     const specialityKeys = Object.keys(raceInfo.especialidades).filter(
         (key): key is CharacterSpeciality => key !== 'base',
     );
+
+    const changeName = (value: string) => {
+        setCharacterName(value);
+    };
 
     const changeGenero = (newGenero: 'masculino' | 'femenino') => {
         setGenero(newGenero);
@@ -44,6 +48,8 @@ export const useCharacterCreationCard = (raceInfo: CharacterRaceInfo) => {
         speciality2,
         selectedStats,
         mainDamageInfo,
-        getImageClass,
+        characterName,
+        getImageClass, 
+        changeName
     };
 };

@@ -7,8 +7,10 @@ export const CharacterSelection = () => {
     const { changeType, type, characterCreationConfig } = useCharacterSelection()
 
     return (
-        <main className="min-h-[100dvh] w-full overflow-x-auto overflow-y-auto bg-[url('/characterSelection/Fond2015.jpg')] bg-cover bg-[center_top_100%] bg-no-repeat">
-            <div className="relative mx-auto min-h-[100dvh] w-full max-w-[1200px] px-4">
+        <main className="relative h-[100dvh] w-full overflow-x-auto overflow-y-auto">
+            <div className="fixed inset-0  bg-[url('/characterSelection/Fond2015.jpg')] bg-cover bg-[center_top] bg-no-repeat" />
+
+            <div className="relative z-10 mx-auto min-h-[100dvh] w-full max-w-[1200px] px-4">
                 <div id="image" className="mx-auto w-[250px] pt-7">
                     <img src="/landing/Netim2_2.png" alt="Netim2" />
                 </div>
@@ -29,5 +31,5 @@ export const CharacterSelection = () => {
                 )}
             </div>
         </main>
-    )
+    );
 }

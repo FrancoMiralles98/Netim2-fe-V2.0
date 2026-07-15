@@ -121,7 +121,7 @@ export function getMainDamageInfo(
 export const getInfoEffect = (effect: SkillEffectsType) => {
     const EFFECT_DESCRIPTION: Record<SkillEffectsType, string> = {
         curacion: 'Tiene habilidades que le permite curarse.',
-        desmayo: 'Tiene habilidades que pueden causar desmayo al enemigo, impidiendo realizar acciones por algunos turnos.',
+        desmayo: 'Tiene habilidades que pueden causar desmayo al enemigo, impidiendole realizar acciones por algunos turnos.',
         incendio: 'TIene habilidades que pueden causar efecto de incendio a su enemigo.',
         penetracion: 'Tiene habilidades que pueden perforar las defensas del enemigo.',
         potenciador: 'Tiene habilidades que tienen chances de multiplicar su daño.',
@@ -156,7 +156,6 @@ export const SPECIALITY_EFFECTS: Partial<Record<CharacterSpeciality, SkillEffect
     Flecha: [
         { effect: 'veneno', icon: '/characterSelection/posion-icon.png' },
         { effect: 'incendio', icon: '/characterSelection/fire-icon.png' },
-        { effect: 'desmayo', icon: '/characterSelection/desmayo-icon.png' },
         { effect: 'potenciador', icon: '/characterSelection/potenciator-icon.png' },
     ],
 
@@ -171,7 +170,6 @@ export const SPECIALITY_EFFECTS: Partial<Record<CharacterSpeciality, SkillEffect
     ],
 
     Espejo: [
-        { effect: 'retardo', icon: '/characterSelection/retardo-icon.png' },
         { effect: 'penetracion', icon: '/characterSelection/perforation-icon.png' },
         { effect: 'vampirismo', icon: '/characterSelection/vampirismo-icon.png' },
     ],

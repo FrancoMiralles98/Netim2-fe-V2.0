@@ -5,11 +5,16 @@ import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import { InfoTooltip } from "../../../../shared/tooltip/components/InfoToolTip";
 import { SpecialityEffectIcons } from "./SpecialityEffectIcons";
 import { useCharacterCreationCard } from "../../hooks/useCharacterCreationCard";
-import type { RaceInfo } from "netim2-shared";
+import type { CharacterRace, RaceInfo } from "netim2-shared";
 
 export const CharacterCreationCard = (
-    { isActive, raceInfo, attributeLimit }:
-        { isActive: boolean, raceInfo: RaceInfo, attributeLimit: number }) => {
+    { isActive, raceInfo, attributeLimit, handleCreateCharacter }:
+        {
+            isActive: boolean,
+            raceInfo: RaceInfo,
+            attributeLimit: number,
+            handleCreateCharacter: (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => Promise<void>
+        }) => {
 
     const {
         genero,
@@ -21,10 +26,12 @@ export const CharacterCreationCard = (
         selectedStats,
         mainDamageInfo,
         getImageClass,
+        changeName,
+        characterName
     } = useCharacterCreationCard(raceInfo);
 
     return (
-        <section className="text-orange-200  p-2 bg-[url('/characterSelection/bg-pj_2.png')] bg-repeat bg-center border border-black w-[500px]">
+        <section className="text-orange-200 mb-[3rem]  p-2 bg-[url('/characterSelection/bg-pj_2.png')] bg-repeat bg-center border border-black w-[500px]">
             {
                 raceInfo &&
                 <>
@@ -146,15 +153,24 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
                         <NetimText cssAditionals={`text-start mt-3 ${mainDamageInfo.textClassName}`} text={mainDamageInfo.label} />
                     </div>
 
-                    <div>
+                    <div className="grid grid-cols-2">
                         {
                             selectedSpeciality !== 'base' &&
-                            <>
-                                <p className="mt-3">Posibles efectos de sus habilidades de daño: </p>
-                                <div className="flex min-h-9 gap-3 mt-2 mb-3">
+                            <div>
+                                <p className="mt-3 text-center">Efectos de sus skills de daño </p>
+                                <div className="flex justify-center min-h-9 gap-3 mt-2 mb-3">
                                     <SpecialityEffectIcons selectedSpeciality={selectedSpeciality} />
                                 </div>
-                            </>
+                            </div>
+                        }
+                        {
+                            selectedSpeciality !== 'base' &&
+                            <div>
+                                <p className="mt-3 text-center">Efectos de sus Auras </p>
+                                <div className="flex justify-center min-h-9 gap-3 mt-2 mb-3">
+                                   <NetimText text="Esta especialidad no tiene auras"/>
+                                </div>
+                            </div>
                         }
                     </div>
 
@@ -166,16 +182,23 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
                             {getHistoriaByRace(raceInfo.raza)}
                         </div>
                     </div>
-                    <form className="flex flex-col justify-center">
+                    <div className="flex flex-col justify-center">
                         <h1 className="mt-3 text-center">Ingrese un nombre para su personaje: </h1>
                         <hr className="w-[75%] my-1 self-center" />
-                        <input autoComplete='off' type="text" className="w-[50%] self-center bg-black my-3 text-white border border-white text-center text-sm" name="nombre" />
+                        <input
+                            autoComplete="off"
+                            type="text"
+                            className="w-[50%] self-center bg-black my-3 text-white border border-white text-center text-sm"
+                            name="nombre"
+                            value={characterName}
+                            onChange={(event) => changeName(event.target.value)}
+                        />
                         <div className="flex justify-center mt-3">
                             <button type="submit">
-                                <NetimButton onClickButtom={() => { }} text="Crear" />
+                                <NetimButton onClickButtom={() => handleCreateCharacter(characterName, genero, raceInfo.raza)} text="Crear" />
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </>
 
             }

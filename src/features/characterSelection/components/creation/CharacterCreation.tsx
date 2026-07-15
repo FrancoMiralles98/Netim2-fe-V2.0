@@ -2,11 +2,20 @@ import { useState } from "react";
 import { CharacterCreationCard } from "./CharacterCreationCard"
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import type { CharacterSelectionType } from "../../types/character-selection.type";
-import type { RaceInfo } from "netim2-shared";
+import type { CharacterRace, RaceInfo } from "netim2-shared";
 
 export const CharacterCreation = (
-    { changeType, races, attributeLimit }: 
-    { changeType: (type: CharacterSelectionType) => void, races: RaceInfo[], attributeLimit: number }
+    { changeType,
+        handleCreateCharacter,
+        races,
+        attributeLimit
+    }:
+        {
+            changeType: (type: CharacterSelectionType) => void,
+            races: RaceInfo[],
+            attributeLimit: number,
+            handleCreateCharacter: (nombre:string,genero: 'femenino' | 'masculino',raza:CharacterRace) => Promise<void>
+        }
 ) => {
     const [currentSlide, setCurrentSlide] = useState(0)
 
@@ -24,7 +33,7 @@ export const CharacterCreation = (
 
     return (
         <section className="relative mx-auto w-full max-w-[580px]">
-            <div className="absolute left-[-10rem] top-0 z-20">
+            <div className="absolute left-[-10rem] top-15 z-20">
                 <NetimButton onClickButtom={() => changeType("selection")} widthButtom="w-[70px]" text="Volver" />
             </div>
             <p className="text-center text-orange-500 font-semibold text-lg my-3">Crea tu personaje</p>
@@ -49,6 +58,7 @@ export const CharacterCreation = (
                     {races.map((race, i) => (
                         <div key={i} className="min-w-full flex-shrink-0">
                             <CharacterCreationCard
+                                handleCreateCharacter={handleCreateCharacter}
                                 isActive={i === currentSlide}
                                 raceInfo={race}
                                 attributeLimit={attributeLimit}

@@ -24,6 +24,13 @@ export interface MainDamageInfo {
 
 export type SkillEffectsType = 'desmayo' | 'retardo' | 'incendio' | 'veneno' | 'sangrado' | 'penetracion' | 'potenciador' | 'curacion' | 'vampirismo'
 
+export type AuraEffectType = 'va' | 'vm' | 'cdr' | 'def' | 'media' | 'hab' | 'stats' | 'critico'
+
+export interface AuraEffectConfig {
+    effect: AuraEffectType,
+    icon: string
+}
+
 export interface SkillEffectConfig {
     effect: SkillEffectsType,
     icon: string

@@ -7,17 +7,26 @@ import { logoutRequest } from "../auth/api/auth.services";
 import { useNavigate } from "react-router";
 import { RouterPaths } from "../../app/router/router-paths.types";
 
-
 export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
-    const [user, SetUser] = useState<UserSession | null>(null)
+    const [user, setUser] = useState<UserSession | null>(null)
     const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
     const [loadingUserAuthenticate, setLoadingUserAuthenticate] = useState(false)
     const loading = useRef(false)
     const modal = useModal()
     const navigate = useNavigate()
 
+    const updateUserData = (data: Partial<UserSession>) => {
+        setUser((prev) => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                ...data
+            }
+        })
+    }
+
     const clearUserSession = () => {
-        SetUser(null)
+        setUser(null)
         setIsUserAuthenticated(false)
     }
 
@@ -32,12 +41,13 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
             modal.showErrorModal(error, true)
         } finally {
+            loading.current = false
             clearUserSession()
         }
     }
 
     const startUserSession = (user: UserSession) => {
-        SetUser(user)
+        setUser(user)
         setIsUserAuthenticated(true)
     }
 
@@ -47,7 +57,7 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
         try {
             setIsUserAuthenticated(true)
             const response = await refreshUserSessionRequest()
-            SetUser(response)
+            setUser(response)
             setIsUserAuthenticated(true)
             setLoadingUserAuthenticate(false)
         } catch (error) {
@@ -67,6 +77,7 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
             clearUserSession,
             startUserSession,
             refreshUserSession,
+            updateUserData,
             logout
         }}>
             {children}

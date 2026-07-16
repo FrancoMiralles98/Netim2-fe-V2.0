@@ -1,5 +1,5 @@
 import type { CharacterRace, CharacterSpeciality, ReinosNames } from "netim2-shared";
-import type { MainDamageInfo, ReinosInfo, SkillEffectConfig, SkillEffectsType } from "../types/character-creation-card.types";
+import type { AuraEffectConfig, AuraEffectType, MainDamageInfo, ReinosInfo, SkillEffectConfig, SkillEffectsType } from "../types/character-creation-card.types";
 
 
 
@@ -135,6 +135,21 @@ export const getInfoEffect = (effect: SkillEffectsType) => {
     return EFFECT_DESCRIPTION[effect]
 }
 
+export const getInfoAuraEffect = (effect: AuraEffectType) => {
+    const EFFECT_DESCRIPTION: Record<AuraEffectType, string> = {
+        cdr: 'Aumenta la velocidad de hechizo, reduciendo el tiempo de espera de sus habilidades.',
+        critico: 'Aumenta las chances de hacer critico',
+        def: 'Aumenta los valores ciertas estadisiticas defensivas.',
+        hab: 'Aumenta el daño que realizan sus habilidades.',
+        media: 'Aumenta el daño que realizan sus ataques básicos.',
+        stats: 'Aumenta los valores de ciertas estadisitcas generales.',
+        va: 'Aumenta la velocidad de ataques básicos.',
+        vm: 'Aumenta la velocidad de movimiento, permitiendo tener más chances de esquivar ataques básicos.',
+    }
+
+    return EFFECT_DESCRIPTION[effect]
+}
+
 export const SPECIALITY_EFFECTS: Partial<Record<CharacterSpeciality, SkillEffectConfig[]>> = {
     Corporal: [
         { effect: 'sangrado', icon: '/characterSelection/bleed-icon.png' },
@@ -180,35 +195,74 @@ export const SPECIALITY_EFFECTS: Partial<Record<CharacterSpeciality, SkillEffect
     ],
 };
 
+export const SPECIALITY_AURA_EFFECTS: Partial<Record<CharacterSpeciality, AuraEffectConfig[]>> = {
+    Corporal: [
+        { effect: 'media', icon: '/characterSelection/media-icon.png' },
+        { effect: 'va', icon: '/characterSelection/va-icon.png' },
+        { effect: 'vm', icon: '/characterSelection/mv-icon.png' },
+    ],
+
+    Mental: [
+        { effect: 'def', icon: '/characterSelection/def-icon.png' },
+        { effect: 'stats', icon: '/characterSelection/stats-icon.png' },
+    ],
+
+    Daga: [],
+
+    Flecha: [
+        { effect: 'vm', icon: '/characterSelection/mv-icon.png' },
+    ],
+
+    Dragon: [
+        { effect: 'def', icon: '/characterSelection/def-icon.png' },
+        { effect: 'critico', icon: '/characterSelection/critico-icon.png' },
+    ],
+
+    Luz: [
+        { effect: 'cdr', icon: '/characterSelection/cdr-icon.png' },
+        { effect: 'vm', icon: '/characterSelection/mv-icon.png' },
+        { effect: 'media', icon: '/characterSelection/media-icon.png' },
+    ],
+
+    Espejo: [
+        { effect: 'media', icon: '/characterSelection/media-icon.png' },
+        { effect: 'def', icon: '/characterSelection/def-icon.png' },
+    ],
+
+    MagiaNegra: [
+        { effect: 'def', icon: '/characterSelection/def-icon.png' },
+    ],
+};
+
 export const Reinos: Record<ReinosNames, ReinosInfo> = {
-  chunjo: {
-    id: 'chunjo',
-    name: 'Chunjo',
-    flagClassName: 'bg-[position:0px_0px]',
-    colorNameClassName: 'text-yellow-100 font-bold',
-    bgClassName: 'bg-yellow-600/40',
-    description:
-      'El reino de Chunjo está situado al oeste del continente. Es un reino teócrata dirigido por líderes espirituales. Fue fundado por Yoon-Young, primo del anterior Emperador. Su mujer, que tenía poderes mágicos muy fuertes, le ayudó a ver la amenaza causada por las piedras Metin. Aunque advirtió muchas veces que había que hacer algo, fue ignorado. Así que condujo a su gente a una rebelión contra el imperio. Después de que el imperio sucumbiera, su reino entró en guerra con las regiones del este y tuvo problemas con el sur. La gente del Reino de Chunjo quiere reinar sobre todo el continente para poder controlar el creciente poder de las piedras Metin.',
-  },
+    chunjo: {
+        id: 'chunjo',
+        name: 'Chunjo',
+        flagClassName: 'bg-[position:0px_0px]',
+        colorNameClassName: 'text-yellow-100 font-bold',
+        bgClassName: 'bg-yellow-600/40',
+        description:
+            'El reino de Chunjo está situado al oeste del continente. Es un reino teócrata dirigido por líderes espirituales. Fue fundado por Yoon-Young, primo del anterior Emperador. Su mujer, que tenía poderes mágicos muy fuertes, le ayudó a ver la amenaza causada por las piedras Metin. Aunque advirtió muchas veces que había que hacer algo, fue ignorado. Así que condujo a su gente a una rebelión contra el imperio. Después de que el imperio sucumbiera, su reino entró en guerra con las regiones del este y tuvo problemas con el sur. La gente del Reino de Chunjo quiere reinar sobre todo el continente para poder controlar el creciente poder de las piedras Metin.',
+    },
 
-  jinno: {
-    id: 'jinno',
-    name: 'Jinno',
-    flagClassName: 'bg-[position:-104px_0px]',
-    colorNameClassName: 'text-blue-100 font-bold',
-    bgClassName: 'bg-blue-600/40',
-    description:
-      'El Reino de Jinno está en las regiones del este del continente. Este reino está basado en su poder militar. Sus gentes son agresivas y guerreras. Jinno es liderado por Ee-Ryoong, el hijo del último Emperador. Él se considera el elegido para restaurar el antiguo imperio bajo su reinado y con sus fuerzas militares. El miedo por el significado y los efectos de las piedras Metin se ignora oficialmente en el Reino de Jinno. En secreto, Ee-Ryoong pretende apoderarse de los poderes destructivos de las piedras Metin para su ejército.',
-  },
+    jinno: {
+        id: 'jinno',
+        name: 'Jinno',
+        flagClassName: 'bg-[position:-104px_0px]',
+        colorNameClassName: 'text-blue-100 font-bold',
+        bgClassName: 'bg-blue-600/40',
+        description:
+            'El Reino de Jinno está en las regiones del este del continente. Este reino está basado en su poder militar. Sus gentes son agresivas y guerreras. Jinno es liderado por Ee-Ryoong, el hijo del último Emperador. Él se considera el elegido para restaurar el antiguo imperio bajo su reinado y con sus fuerzas militares. El miedo por el significado y los efectos de las piedras Metin se ignora oficialmente en el Reino de Jinno. En secreto, Ee-Ryoong pretende apoderarse de los poderes destructivos de las piedras Metin para su ejército.',
+    },
 
-  shinsoo: {
-    id: 'shinsoo',
-    name: 'Shinsoo',
-    flagClassName: 'bg-[position:-208px_0px]',
-    colorNameClassName: 'text-red-100 font-bold',
-    bgClassName: 'bg-red-600/40',
-    description:
-      'El Reino de Shinsoo está al sur del continente. Sus habitantes trabajan principalmente en el comercio. Fundado por Yoon-Yoing después de que el imperio sucumbiese, sus relaciones comerciales se dirigieron rápidamente a la quiebra. Los habitantes luchan constantemente con el oeste y su ruta comercial está totalmente desconectada. Sabiendo que las piedras Metin son una amenaza para su forma de vida, los comerciantes se armaron. Su objetivo es resistir los ataques del oeste, reanudar todas las rutas comerciales y unir todo el continente bajo su mandato.',
-  },
+    shinsoo: {
+        id: 'shinsoo',
+        name: 'Shinsoo',
+        flagClassName: 'bg-[position:-208px_0px]',
+        colorNameClassName: 'text-red-100 font-bold',
+        bgClassName: 'bg-red-600/40',
+        description:
+            'El Reino de Shinsoo está al sur del continente. Sus habitantes trabajan principalmente en el comercio. Fundado por Yoon-Yoing después de que el imperio sucumbiese, sus relaciones comerciales se dirigieron rápidamente a la quiebra. Los habitantes luchan constantemente con el oeste y su ruta comercial está totalmente desconectada. Sabiendo que las piedras Metin son una amenaza para su forma de vida, los comerciantes se armaron. Su objetivo es resistir los ataques del oeste, reanudar todas las rutas comerciales y unir todo el continente bajo su mandato.',
+    },
 };
 

@@ -6,6 +6,7 @@ export interface UserSessionContextValue {
     loadingUserAuthenticate: boolean;
     startUserSession: (user:UserSession) => void
     refreshUserSession: () => Promise<void>;
+    updateUserData: (data:Partial<UserSession>) => void
     clearUserSession: () => void;
     logout: () => void;
 }

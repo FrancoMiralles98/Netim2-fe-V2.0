@@ -6,6 +6,7 @@ export const InfoTooltip = ({
   title,
   message,
   position = 'bottom',
+  size = 'normal'
 }: InfoTooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,19 +17,25 @@ export const InfoTooltip = ({
     right: 'left-full top-1/2 ml-2 -translate-y-1/2',
   };
 
+  const sizeClass = {
+    normal: 'h-5 w-5 text-[12px]',
+    small: 'h-4 w-4 text-[10px]',
+  };
+
   return (
     <div className="relative re inline-block">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="
-          flex h-5 w-5 items-center justify-center
+        className={`
+          flex items-center justify-center
           rounded-full border border-yellow-500
-          bg-black/80 text-xs font-bold text-yellow-400
+          bg-black/80 font-bold text-yellow-400
           shadow-[0_0_8px_rgba(234,179,8,0.6)]
           transition-all duration-200
           hover:scale-110 hover:bg-yellow-500 hover:text-black
-        "
+          ${sizeClass[size]}
+        `}
       >
         ?
       </button>
@@ -58,7 +65,7 @@ export const InfoTooltip = ({
           </div>
 
           {message && (
-            <NetimText text={message} cssAditionals="text-start"/>
+            <NetimText text={message} cssAditionals="text-start" />
           )}
 
         </div>

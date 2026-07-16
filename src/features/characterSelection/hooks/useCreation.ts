@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { CharacterCreationValues } from "../types/character-creation-card.types"
 import { useModal } from "../../../shared/modal/hooks/useModal"
 import { creationCharacterSchema } from "../schema/creationCharacterSchema"
 import { useUserSession } from "../../userSession/hook/useUserSession"
-import type { CharacterRace } from "netim2-shared"
+import type { CharacterRace, ReinosNames } from "netim2-shared"
+import { createCharacterRequest } from "../api/characterSelection.services"
 
 export const useCreation = () => {
     const [creationInstance, setCreationInstance] = useState<'select_raza' | 'select_reino'>('select_raza')
     const [characterCreationValues, setCharacterCreationValues] = useState<CharacterCreationValues>({})
     const [newAccount, setNewAccount] = useState(true)
+    const loading = useRef(false)
     const modal = useModal()
-    const { user } = useUserSession()
+    const { user, updateUserData } = useUserSession()
 
     const changeInstance = (instance: 'select_raza' | 'select_reino') => {
         setCreationInstance(instance)
@@ -44,7 +46,8 @@ export const useCreation = () => {
             setCreationInstance('select_reino')
             return
         }
-        await createCharacter(nombre)
+        
+        await createCharacter(nombre,genero,raza)
     }
 
     const verifyName = (nombre?: string): boolean => {
@@ -62,13 +65,45 @@ export const useCreation = () => {
         return true
     }
 
-    const createCharacter = async (nombre?: string) => {
+    const createCharacterAfterReinoSeleciton = async (reino: ReinosNames) => {
+        if (!reino) return
+        if (loading.current) return
         try {
+            loading.current = true
+            modal.showLoadingModal('Creando personaje...')
+            const character = await createCharacterRequest({ ...characterCreationValues, reino })
+            updateUserData({ reino })
+            modal.closeLoadingModal()
+            console.log('aca estaria el character', character);
+        } catch (error) {
+            modal.closeLoadingModal()
+            modal.showErrorModal(error)
+        } finally {
+            loading.current = false
+        }
+    }
+
+    const createCharacter = async (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => {
+        if (loading.current) return
+        try {
+            loading.current = true
             const validResult = verifyName(nombre)
             if (!validResult) return
-
+            modal.showLoadingModal('Creando personaje...')
+            const character = await createCharacterRequest({
+                genero,
+                nombre,
+                raza,
+                reino: characterCreationValues.reino
+            })
+            modal.closeLoadingModal()
+            console.log('character',character);
+            
         } catch (error) {
+            modal.closeLoadingModal()
             modal.showErrorModal(error)
+        } finally {
+            loading.current = false
         }
     }
 
@@ -77,6 +112,7 @@ export const useCreation = () => {
         creationInstance,
         changeInstance,
         newAccount,
-        handleCreateCharacter
+        handleCreateCharacter,
+        createCharacterAfterReinoSeleciton
     }
 }

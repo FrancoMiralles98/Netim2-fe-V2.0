@@ -6,6 +6,7 @@ import { InfoTooltip } from "../../../../shared/tooltip/components/InfoToolTip";
 import { SpecialityEffectIcons } from "./SpecialityEffectIcons";
 import { useCharacterCreationCard } from "../../hooks/useCharacterCreationCard";
 import type { CharacterRace, RaceInfo } from "netim2-shared";
+import { SpecialityAuraEffectIcons } from "./SpecialityAuraEffectIcon";
 
 export const CharacterCreationCard = (
     { isActive, raceInfo, attributeLimit, handleCreateCharacter }:
@@ -13,7 +14,7 @@ export const CharacterCreationCard = (
             isActive: boolean,
             raceInfo: RaceInfo,
             attributeLimit: number,
-            handleCreateCharacter: (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => Promise<void>
+            handleCreateCharacter: (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => void
         }) => {
 
     const {
@@ -168,7 +169,7 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
                             <div>
                                 <p className="mt-3 text-center">Efectos de sus Auras </p>
                                 <div className="flex justify-center min-h-9 gap-3 mt-2 mb-3">
-                                   <NetimText text="Esta especialidad no tiene auras"/>
+                                    <SpecialityAuraEffectIcons selectedSpeciality={selectedSpeciality} />
                                 </div>
                             </div>
                         }

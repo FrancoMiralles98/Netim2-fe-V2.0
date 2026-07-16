@@ -8,13 +8,15 @@ export const CharacterCreation = (
     { changeType,
         handleCreateCharacter,
         races,
-        attributeLimit
+        attributeLimit,
+        newAccount
     }:
         {
             changeType: (type: CharacterSelectionType) => void,
             races: RaceInfo[],
             attributeLimit: number,
-            handleCreateCharacter: (nombre:string,genero: 'femenino' | 'masculino',raza:CharacterRace) => Promise<void>
+            handleCreateCharacter: (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => Promise<void>,
+            newAccount: boolean
         }
 ) => {
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -30,6 +32,17 @@ export const CharacterCreation = (
             prev === 0 ? races.length - 1 : prev - 1
         );
     };
+
+    //Se hace esta funcion ya que si ya tiene un reino no pasara al componente de seleccion de reinos, entonces
+    //al crear el personaje volvera al componente de seleccion de personajes
+    const handleSelection = (characterName: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => {
+        if (newAccount) {
+            handleCreateCharacter(characterName, genero, raza)
+        } else {
+            handleCreateCharacter(characterName, genero, raza)
+            changeType('selection')
+        }
+    }
 
     return (
         <section className="relative mx-auto w-full max-w-[580px]">
@@ -58,7 +71,7 @@ export const CharacterCreation = (
                     {races.map((race, i) => (
                         <div key={i} className="min-w-full flex-shrink-0">
                             <CharacterCreationCard
-                                handleCreateCharacter={handleCreateCharacter}
+                                handleCreateCharacter={handleSelection}
                                 isActive={i === currentSlide}
                                 raceInfo={race}
                                 attributeLimit={attributeLimit}

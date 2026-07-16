@@ -4,13 +4,15 @@ import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import type { CharacterSelectionType } from "../../types/character-selection.type";
 import { bonusFullNameByRef, type BonusRefKeys, type ReinosBuffType, type ReinosNames } from "netim2-shared";
 import { NetimText } from "../../../../shared/typography/components/NetimText";
+import { InfoTooltip } from "../../../../shared/tooltip/components/InfoToolTip";
+import { BonusInfoToolTip } from "../../../../shared/tooltip/components/BonusInfoToolTip";
 
 export const ReinoSelection = (
-  { changeInstance,
+  { createCharacter,
     changeType,
     reinoBuff
   }: {
-    changeInstance: (prop: 'select_raza' | 'select_reino') => void,
+    createCharacter: (reino: ReinosNames) => void,
     changeType: (type: CharacterSelectionType) => void,
     reinoBuff: ReinosBuffType
   }
@@ -83,7 +85,7 @@ export const ReinoSelection = (
           </button>
         </div>
 
-        <div className="max-w-[270px]  min-w-[270px] self-start p-1">
+        <div className="max-w-[270px]  min-w-[290px] self-start p-1">
 
           {selectedReinoInfo && (
             <section
@@ -116,21 +118,32 @@ export const ReinoSelection = (
               {
                 selectedReino &&
                 <div>
-                  <div className="my-2">
+                  <div className="my-2 relative">
+                    <div className="absolute right-11 bottom-1">
+                      <InfoTooltip
+                        title="Buffo de Reino"
+                        message="Cada reino otorga buffos especiales a los personajes creados en él. Estos bonus representan la cultura y filosofía de cada reino. Según el reino que elijas, tus personajes recibirán distintos beneficios pasivos que pueden mejorar aspectos como combate y recompensas."
+                        position="left"
+                      />
+                    </div>
                     <p className="text-center text-orange-300">Buffos de Reino</p>
                     <hr className="mx-auto border-amber-300 w-[70%]" />
                   </div>
                   {Object.entries(reinoBuff[selectedReino]).map(([bonus, value], index) => (
-                    <div key={`buffReino ${index}`} className="flex mt-1">
+                    <div key={`buffReino ${index}`} className="flex gap-1 items-center mt-1">
                       <NetimText cssAditionals="!text-sm" text={`${bonusFullNameByRef(bonus as BonusRefKeys)} :`} />
                       <NetimText cssAditionals="!text-sm !text-emerald-200" text={`+${value.toString()}%`} />
+                      <BonusInfoToolTip bonusRef={bonus as BonusRefKeys} />
                     </div>
                   ))}
                 </div>
               }
 
               <div className="mt-3 flex justify-center">
-                <NetimButton onClickButtom={() => changeInstance('select_raza')} text="Finalizar" />
+                <NetimButton onClickButtom={() => { 
+                  createCharacter(selectedReino!)
+                  changeType('selection') 
+                  }} text="Finalizar" />
               </div>
             </section>
           )}

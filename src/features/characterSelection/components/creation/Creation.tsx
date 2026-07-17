@@ -1,18 +1,15 @@
-import type { CharacterSelectionDataType } from "netim2-shared"
 import { useCreation } from "../../hooks/useCreation"
-import type { CharacterSelectionType } from "../../types/character-selection.type"
 import { CharacterCreation } from "./CharacterCreation"
 import { ReinoSelection } from "./ReinoSelection"
+import type { CreationProps } from "../../types/props/creation-props"
 
-export const Creation = (
-    { changeType, characterCreationConfig }:
-        { changeType: (typeToChange: CharacterSelectionType) => void, characterCreationConfig: CharacterSelectionDataType | null }
-) => {
+export const Creation = ({ addCharacter, changeType, characterCreationConfig }: CreationProps) => {
 
     const { createCharacterAfterReinoSeleciton,
         creationInstance,
         newAccount,
-        handleCreateCharacter } = useCreation()
+        handleCreateCharacter,
+     } = useCreation({ addCharacter })
 
     return (
         <div>

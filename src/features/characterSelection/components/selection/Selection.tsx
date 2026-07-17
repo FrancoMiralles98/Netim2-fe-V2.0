@@ -1,20 +1,26 @@
-import type { CharacterSummary } from "netim2-shared"
 import { NetimButton } from "../../../../shared/button/ButtomNetim"
 import { useUserSession } from "../../../userSession/hook/useUserSession"
-import type { CharacterSelectionType } from "../../types/character-selection.type"
 import { CharacterSelectionCard } from "./CharacterSelectionCard"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import type { SelectionProps } from "../../types/props/selection-props"
+import { useSelection } from "../../hooks/useSelection"
+import { NetimText } from "../../../../shared/typography/components/NetimText"
+import { BonusInfoToolTip } from "../../../../shared/tooltip/components/BonusInfoToolTip"
+import { bonusFullNameByRef, type BonusRefKeys } from "netim2-shared"
+import { Reinos } from "../../utils/character-selecition-utils"
+import type { ReinosInfo } from "../../types/character-creation-card.types"
 
 export const Selection = ({
     changeType,
-    characters }:
-    {
-        changeType: (typeToChange: CharacterSelectionType) => void,
-        characters: CharacterSummary[]
-    }) => {
+    characters,
+    characterCreationConfig,
+    deleteCharacter
+}: SelectionProps) => {
 
-    const { logout } = useUserSession()
+    const { logout, user } = useUserSession()
     const [currentSlide, setCurrentSlide] = useState(0)
+    const { handleDeleteCharacter } = useSelection(deleteCharacter)
+    const [reinoData, setReinoData] = useState<ReinosInfo | null>(null)
 
     const passRight = () => {
         setCurrentSlide((prev) =>
@@ -28,11 +34,35 @@ export const Selection = ({
         );
     };
 
+    useEffect(() => {
+        if (!user || !user.reino) return
+        setReinoData(Reinos[user.reino])
+    }, [user])
+
     return (
-        <section className="">
+        <section className="relative w-[1200px]">
             <div className="flex justify-center items-center">
                 <img src="/landing/Netim2_2.png" className="relative mx-auto mt-10 z-10 w-60 h-30" alt="" />
             </div>
+            <section className="absolute right-0" id='buff-reino'>
+                {
+                    characterCreationConfig && reinoData &&
+                    <div className={`h-[180px] w-[320px] p-2  bg-[url('/modal/moda-reino.png')] bg-repeat bg-cover bg-center`}>
+                        <p className="text-center pt-5 text-white">Buffos del Reino de</p>
+                        <p className={`text-center ${reinoData.colorNameClassName}`}>{reinoData.name}</p>
+                        <hr className={`text-white my-1 mx-auto w-[75%]`} />
+                        <div className="mb-3 ml-4 grid justify-center items-center">
+                            {Object.entries(characterCreationConfig.reinoBuff[reinoData.id]).map(([bonus, value], index) => (
+                                <div key={`buffReino ${index}`} className="flex gap-1 items-center mt-1">
+                                    <NetimText cssAditionals="!text-sm" text={`${bonusFullNameByRef(bonus as BonusRefKeys)} :`} />
+                                    <NetimText cssAditionals="!text-sm !text-emerald-200" text={`+${value.toString()}%`} />
+                                    <BonusInfoToolTip bonusRef={bonus as BonusRefKeys} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                }
+            </section>
             <section className="relative mx-auto w-full max-w-[580px]">
                 <div className="absolute left-[-10rem] top-7 z-20">
                     <NetimButton onClickButtom={() => changeType("creation")} widthButtom="w-[110px]" text="Crear Personaje" />
@@ -61,7 +91,12 @@ export const Selection = ({
                     >
                         {characters.map((character, i) => (
                             <div key={`selection ${i}`} className="min-w-full flex-shrink-0">
-                                <CharacterSelectionCard character={character} />
+                                <CharacterSelectionCard
+                                    isActive={i === currentSlide}
+                                    character={character}
+                                    maxAttributeValue={characterCreationConfig.attributeLimit}
+                                    handleDeleteCharacter={handleDeleteCharacter}
+                                />
                             </div>
                         ))}
                     </section>

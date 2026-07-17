@@ -1,21 +1,17 @@
 import { useState } from "react"
 import { Reinos } from "../../utils/character-selecition-utils";
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
-import type { CharacterSelectionType } from "../../types/character-selection.type";
-import { bonusFullNameByRef, type BonusRefKeys, type ReinosBuffType, type ReinosNames } from "netim2-shared";
+import { bonusFullNameByRef, type BonusRefKeys, type ReinosNames } from "netim2-shared";
 import { NetimText } from "../../../../shared/typography/components/NetimText";
 import { InfoTooltip } from "../../../../shared/tooltip/components/InfoToolTip";
 import { BonusInfoToolTip } from "../../../../shared/tooltip/components/BonusInfoToolTip";
+import type { ReinoSelectionProps } from "../../types/props/reino-selection-props";
 
 export const ReinoSelection = (
   { createCharacter,
     changeType,
     reinoBuff
-  }: {
-    createCharacter: (reino: ReinosNames) => void,
-    changeType: (type: CharacterSelectionType) => void,
-    reinoBuff: ReinosBuffType
-  }
+  }: ReinoSelectionProps
 ) => {
   const [selectedReino, setSelectedReino] = useState<ReinosNames | null>(null);
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { CharacterCreationCard } from "./CharacterCreationCard"
 import { NetimButton } from "../../../../shared/button/ButtomNetim";
-import type { CharacterSelectionType } from "../../types/character-selection.type";
-import type { CharacterRace, RaceInfo } from "netim2-shared";
+import type { CharacterRace } from "netim2-shared";
+import type { CharacterCreationProps } from "../../types/props/character-creation-props";
 
 export const CharacterCreation = (
     { changeType,
@@ -10,14 +10,8 @@ export const CharacterCreation = (
         races,
         attributeLimit,
         newAccount
-    }:
-        {
-            changeType: (type: CharacterSelectionType) => void,
-            races: RaceInfo[],
-            attributeLimit: number,
-            handleCreateCharacter: (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => Promise<void>,
-            newAccount: boolean
-        }
+    }: CharacterCreationProps
+
 ) => {
     const [currentSlide, setCurrentSlide] = useState(0)
 

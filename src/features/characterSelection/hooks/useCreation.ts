@@ -5,8 +5,9 @@ import { creationCharacterSchema } from "../schema/creationCharacterSchema"
 import { useUserSession } from "../../userSession/hook/useUserSession"
 import type { CharacterRace, ReinosNames } from "netim2-shared"
 import { createCharacterRequest } from "../api/characterSelection.services"
+import type { useCreationProps } from "../types/props/use-creation-props.type"
 
-export const useCreation = () => {
+export const useCreation = ({ addCharacter }: useCreationProps) => {
     const [creationInstance, setCreationInstance] = useState<'select_raza' | 'select_reino'>('select_raza')
     const [characterCreationValues, setCharacterCreationValues] = useState<CharacterCreationValues>({})
     const [newAccount, setNewAccount] = useState(true)
@@ -20,7 +21,6 @@ export const useCreation = () => {
 
     useEffect(() => {
         if (!user) return;
-
         if (user.reino) {
             setNewAccount(false)
             setCharacterCreationValues((prev) => ({
@@ -46,8 +46,8 @@ export const useCreation = () => {
             setCreationInstance('select_reino')
             return
         }
-        
-        await createCharacter(nombre,genero,raza)
+
+        await createCharacter(nombre, genero, raza)
     }
 
     const verifyName = (nombre?: string): boolean => {
@@ -73,8 +73,8 @@ export const useCreation = () => {
             modal.showLoadingModal('Creando personaje...')
             const character = await createCharacterRequest({ ...characterCreationValues, reino })
             updateUserData({ reino })
+            addCharacter(character)
             modal.closeLoadingModal()
-            console.log('aca estaria el character', character);
         } catch (error) {
             modal.closeLoadingModal()
             modal.showErrorModal(error)
@@ -96,9 +96,9 @@ export const useCreation = () => {
                 raza,
                 reino: characterCreationValues.reino
             })
+            addCharacter(character)
             modal.closeLoadingModal()
-            console.log('character',character);
-            
+
         } catch (error) {
             modal.closeLoadingModal()
             modal.showErrorModal(error)
@@ -106,6 +106,7 @@ export const useCreation = () => {
             loading.current = false
         }
     }
+
 
 
     return {

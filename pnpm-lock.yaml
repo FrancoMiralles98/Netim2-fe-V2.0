@@ -12,8 +12,8 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1
       netim2-shared:
-        specifier: github:FrancoMiralles98/netim2-shared#v0.1.6
-        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/83269aabb6f5a6193836b86bddd97b9f68ff3148
+        specifier: github:FrancoMiralles98/netim2-shared#v0.1.7
+        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/d5290294c05e6ecd5532ef3fa32fe42706c34005
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -975,9 +975,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/83269aabb6f5a6193836b86bddd97b9f68ff3148:
-    resolution: {gitHosted: true, integrity: sha512-GLZA9XlsuHvmCWIIhldJRRHAs9I0X/8U/dCSROwyR1CavS0SDqdYbKvwv4qjnpvGmOznP6rwgjNzyAzHhyd2iA==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/83269aabb6f5a6193836b86bddd97b9f68ff3148}
-    version: 0.1.6
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/d5290294c05e6ecd5532ef3fa32fe42706c34005:
+    resolution: {gitHosted: true, integrity: sha512-712dZPbrGcWSC84nfP/fBcs8GKC2hPBMTBvX9Vm91KwidYRKMZDeFd33y6HnxxTl6ZXQBral6nqa0ma3zfEjfQ==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/d5290294c05e6ecd5532ef3fa32fe42706c34005}
+    version: 0.1.7
 
   node-releases@2.0.50:
     resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
@@ -2067,7 +2067,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/83269aabb6f5a6193836b86bddd97b9f68ff3148: {}
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/d5290294c05e6ecd5532ef3fa32fe42706c34005: {}
 
   node-releases@2.0.50: {}
 

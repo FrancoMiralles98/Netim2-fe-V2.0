@@ -4,24 +4,35 @@ import { useCharacterSelection } from "../../features/characterSelection/hooks/u
 
 export const CharacterSelection = () => {
 
-    const { changeType, type, characterCreationConfig } = useCharacterSelection()
+    const {
+        changeType,
+        type,
+        characterCreationConfig,
+        addCharacter,
+        deleteCharacter
+    } = useCharacterSelection()
 
     return (
-        <main className="relative h-[100dvh] w-full overflow-x-auto overflow-y-auto">
-            <div className="fixed inset-0  bg-[url('/characterSelection/Fond2015.jpg')] bg-cover bg-[center_top] bg-no-repeat" />
+        <main className="relative min-h-[100dvh] w-full">
+            <div className="fixed inset-0 bg-[url('/characterSelection/Fond2015.jpg')] bg-cover bg-[center_top] bg-no-repeat" />
 
-            <div className="relative z-10 mx-auto min-h-[100dvh] w-full max-w-[1200px] px-4">
-
+            <div className="relative z-10 mx-auto min-h-[100dvh] w-[1200px] px-4">
                 {characterCreationConfig && (
                     <>
                         {type === 'selection' && (
-                            <Selection characters={characterCreationConfig.characters} changeType={changeType} />
+                            <Selection
+                                characterCreationConfig={characterCreationConfig}
+                                characters={characterCreationConfig.characters}
+                                changeType={changeType}
+                                deleteCharacter={deleteCharacter}
+                            />
                         )}
 
                         {type === 'creation' && (
                             <Creation
                                 characterCreationConfig={characterCreationConfig}
                                 changeType={changeType}
+                                addCharacter={addCharacter}
                             />
                         )}
                     </>

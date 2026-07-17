@@ -5,17 +5,15 @@ import { NetimButton } from "../../../../shared/button/ButtomNetim";
 import { InfoTooltip } from "../../../../shared/tooltip/components/InfoToolTip";
 import { SpecialityEffectIcons } from "./SpecialityEffectIcons";
 import { useCharacterCreationCard } from "../../hooks/useCharacterCreationCard";
-import type { CharacterRace, RaceInfo } from "netim2-shared";
 import { SpecialityAuraEffectIcons } from "./SpecialityAuraEffectIcon";
+import type { CharacterCreationCardProps } from "../../types/props/character-creation-card-props";
 
 export const CharacterCreationCard = (
-    { isActive, raceInfo, attributeLimit, handleCreateCharacter }:
-        {
-            isActive: boolean,
-            raceInfo: RaceInfo,
-            attributeLimit: number,
-            handleCreateCharacter: (nombre: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => void
-        }) => {
+    { isActive,
+        raceInfo,
+        attributeLimit,
+        handleCreateCharacter
+    }: CharacterCreationCardProps) => {
 
     const {
         genero,

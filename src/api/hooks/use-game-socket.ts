@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { UseGameSocketResult } from "../types/use-game-socket.type";
 import { createGameSocket } from "../socket";
 import type { GameSocket } from "../types/socket.types";
 
-export function useGameSocket(characterId: string | null): UseGameSocketResult {
+export function useGameSocket(characterId?: string): UseGameSocketResult {
     const socketRef = useRef<GameSocket | null>(null);
 
     const [isConnected, setIsConnected] = useState(false);
@@ -11,12 +11,9 @@ export function useGameSocket(characterId: string | null): UseGameSocketResult {
     const [worldSessionId, setWorldSessionId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!characterId) {
-            return;
-        }
+        if (!characterId) return;
 
         const socket = createGameSocket(characterId);
-
         socketRef.current = socket;
 
         socket.on('connect', () => {
@@ -54,15 +51,25 @@ export function useGameSocket(characterId: string | null): UseGameSocketResult {
         return () => {
             socket.removeAllListeners();
             socket.disconnect();
-
             socketRef.current = null;
         };
-    }, [characterId])
+    }, [characterId]);
+
+    const emit = useCallback<UseGameSocketResult['emit']>((event, ...args) => {
+        socketRef.current?.emit(event, ...args);
+    }, []);
+
+
+
+    const disconnect = useCallback(() => {
+        socketRef.current?.disconnect();
+    }, []);
 
     return {
-        socket: socketRef.current,
         isConnected,
         isReady,
+        emit,
         worldSessionId,
+        disconnect,
     };
 }

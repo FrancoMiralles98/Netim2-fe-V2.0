@@ -22,3 +22,13 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #777;             
 }
+
+@keyframes statBarFill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}

@@ -5,6 +5,7 @@ import { CharacterSelection } from "../../pages/characterSelection/CharacterSele
 import { PublicLayout } from "../layouts/PublicLayout";
 import { AuthUserSessionLayout } from "../layouts/AuthUserSessionLayout";
 import { RouterPaths } from "./router-paths.types";
+import { Game } from "../../pages/game/Game";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
           {
             path: RouterPaths.CHARACTER_SELECTION,
             element: <CharacterSelection />
+          },
+          {
+            path: RouterPaths.GAME,
+            element: <Game/>
           }
         ]
       }

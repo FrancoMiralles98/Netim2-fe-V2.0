@@ -28,7 +28,7 @@ export const useLoginForm = () => {
             }
             const data = verifyResult.data
             modal.showLoadingModal('Por favor, espera. Te éstas conectando al servidor.')
-            const response = await loginRequest(data)
+            const response = await loginRequest(data)            
             userSession.startUserSession(response)
             
             setTimeout(() => {

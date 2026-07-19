@@ -3,4 +3,5 @@ export interface StatBarProps {
     value: number;
     maxValue?: number;
     isActive: boolean;
+     animationKey?: string;
 }

@@ -5,7 +5,7 @@ export const registerSchema = z.object({
         .string({ error: 'se requiere el campo: username.' })
         .min(3, 'El username debe tener como minimo 3 caracteres.')
         .max(15, 'el username debe tener como maximo 15 caracteres.')
-        .regex(/[A-Za-z0-9]/i, { error: 'El nombre solo de tener letras y/o números.' }),
+        .regex(/^[A-Za-z0-9]+$/i, { error: 'El nombre solo de tener letras y/o números.' }),
 
     password: z
         .string({ error: 'se requiere el campo: contraseña.' })

@@ -29,12 +29,14 @@ export const CharacterCreation = (
 
     //Se hace esta funcion ya que si ya tiene un reino no pasara al componente de seleccion de reinos, entonces
     //al crear el personaje volvera al componente de seleccion de personajes
-    const handleSelection = (characterName: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => {
+    const handleSelection = async (characterName: string, genero: 'femenino' | 'masculino', raza: CharacterRace) => {
         if (newAccount) {
             handleCreateCharacter(characterName, genero, raza)
         } else {
-            handleCreateCharacter(characterName, genero, raza)
-            changeType('selection')
+            const success = await handleCreateCharacter(characterName, genero, raza)
+            if (success) {
+                changeType('selection')
+            }
         }
     }
 
@@ -48,7 +50,7 @@ export const CharacterCreation = (
                 type="button"
                 onClick={passLeft}
                 className="
-      absolute left-0 top-1/2 z-20
+      absolute -left-8 top-1/2 z-20
       -translate-y-1/2
       cursor-pointer-custom
       text-2xl text-orange-200
@@ -57,7 +59,7 @@ export const CharacterCreation = (
                 <i className="bi bi-arrow-left" />
             </button>
 
-            <div className="mx-auto max-w-[500px] overflow-hidden">
+            <div className="mx-auto max-w-[580px] overflow-hidden">
                 <section
                     className="flex transition-transform duration-500"
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -76,7 +78,7 @@ export const CharacterCreation = (
             </div>
 
             <button type="button" onClick={passRight} className="
-      absolute right-0 top-1/2 z-20
+      absolute -right-8 top-1/2 z-20
       -translate-y-1/2
       cursor-pointer-custom
       text-2xl text-orange-200

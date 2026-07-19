@@ -5,4 +5,5 @@ export interface CharacterSelectionCardProps {
     isActive: boolean,
     maxAttributeValue: number,
     handleDeleteCharacter: (character: CharacterSummary) => void
+    handleConnectCharacter: (character: CharacterSummary) => void
 }

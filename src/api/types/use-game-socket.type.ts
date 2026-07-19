@@ -1,8 +1,12 @@
-import type { GameSocket } from "./socket.types";
+import type { ClientToServerEvents } from "./socket.types";
 
 export interface UseGameSocketResult {
-    socket: GameSocket | null;
     isConnected: boolean;
     isReady: boolean;
     worldSessionId: string | null;
+    disconnect: () => void;
+    emit: <TEvent extends keyof ClientToServerEvents>(
+        event: TEvent,
+        ...args: Parameters<ClientToServerEvents[TEvent]>
+    ) => void;
 }

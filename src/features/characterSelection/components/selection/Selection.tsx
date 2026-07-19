@@ -1,14 +1,13 @@
 import { NetimButton } from "../../../../shared/button/ButtomNetim"
 import { useUserSession } from "../../../userSession/hook/useUserSession"
 import { CharacterSelectionCard } from "./CharacterSelectionCard"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import type { SelectionProps } from "../../types/props/selection-props"
 import { useSelection } from "../../hooks/useSelection"
 import { NetimText } from "../../../../shared/typography/components/NetimText"
 import { BonusInfoToolTip } from "../../../../shared/tooltip/components/BonusInfoToolTip"
 import { bonusFullNameByRef, type BonusRefKeys } from "netim2-shared"
 import { Reinos } from "../../utils/character-selecition-utils"
-import type { ReinosInfo } from "../../types/character-creation-card.types"
 
 export const Selection = ({
     changeType,
@@ -19,8 +18,7 @@ export const Selection = ({
 
     const { logout, user } = useUserSession()
     const [currentSlide, setCurrentSlide] = useState(0)
-    const { handleDeleteCharacter } = useSelection(deleteCharacter)
-    const [reinoData, setReinoData] = useState<ReinosInfo | null>(null)
+    const { handleDeleteCharacter, handleConnectCharacter } = useSelection(deleteCharacter)
 
     const passRight = () => {
         setCurrentSlide((prev) =>
@@ -34,10 +32,8 @@ export const Selection = ({
         );
     };
 
-    useEffect(() => {
-        if (!user || !user.reino) return
-        setReinoData(Reinos[user.reino])
-    }, [user])
+    const reinoData = user?.reino ? Reinos[user.reino] : null;
+
 
     return (
         <section className="relative w-[1200px]">
@@ -71,45 +67,50 @@ export const Selection = ({
                     <NetimButton onClickButtom={logout} widthButtom="w-[70px]" text="Salir" />
                 </div>
                 <p className="text-center text-orange-500 font-semibold text-lg my-3">Seleccione tu personaje</p>
-                <button
-                    type="button"
-                    onClick={passLeft}
-                    className="
-              absolute left-0 top-1/2 z-20
+                {
+                    characters && characters.length > 0 &&
+                    <>
+                        <button
+                            type="button"
+                            onClick={passLeft}
+                            className="
+              absolute left-[-1rem] top-1/2 z-20
               -translate-y-1/2
               cursor-pointer-custom
               text-2xl text-orange-200
               hover:scale-110
             ">
-                    <i className="bi bi-arrow-left" />
-                </button>
-
-                <div className="mx-auto max-w-[500px] overflow-hidden">
-                    <section
-                        className="flex transition-transform duration-500"
-                        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                    >
-                        {characters.map((character, i) => (
-                            <div key={`selection ${i}`} className="min-w-full flex-shrink-0">
-                                <CharacterSelectionCard
-                                    isActive={i === currentSlide}
-                                    character={character}
-                                    maxAttributeValue={characterCreationConfig.attributeLimit}
-                                    handleDeleteCharacter={handleDeleteCharacter}
-                                />
-                            </div>
-                        ))}
-                    </section>
-                </div>
-
-                <button type="button" onClick={passRight} className="
-              absolute right-0 top-1/2 z-20
+                            <i className="bi bi-arrow-left" />
+                        </button>
+                        <div className="mx-auto max-w-[550px] overflow-hidden">
+                            <section
+                                className="flex transition-transform duration-500"
+                                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                            >
+                                {characters.map((character, i) => (
+                                    <div key={`selection ${i}`} className="min-w-full flex-shrink-0">
+                                        <CharacterSelectionCard
+                                            isActive={i === currentSlide}
+                                            character={character}
+                                            maxAttributeValue={characterCreationConfig.attributeLimit}
+                                            handleDeleteCharacter={handleDeleteCharacter}
+                                            handleConnectCharacter={handleConnectCharacter}
+                                        />
+                                    </div>
+                                ))}
+                            </section>
+                        </div>
+                        <button type="button" onClick={passRight} className="
+              absolute right-[-1rem] top-1/2 z-20
               -translate-y-1/2
               cursor-pointer-custom
               text-2xl text-orange-200
               hover:scale-110">
-                    <i className="bi bi-arrow-right" />
-                </button>
+                            <i className="bi bi-arrow-right" />
+                        </button>
+
+                    </>
+                }
             </section>
         </section>
     )

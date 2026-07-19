@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import type { CharacterCreationValues } from "../types/character-creation-card.types"
 import { useModal } from "../../../shared/modal/hooks/useModal"
 import { creationCharacterSchema } from "../schema/creationCharacterSchema"
@@ -10,44 +10,36 @@ import type { useCreationProps } from "../types/props/use-creation-props.type"
 export const useCreation = ({ addCharacter }: useCreationProps) => {
     const [creationInstance, setCreationInstance] = useState<'select_raza' | 'select_reino'>('select_raza')
     const [characterCreationValues, setCharacterCreationValues] = useState<CharacterCreationValues>({})
-    const [newAccount, setNewAccount] = useState(true)
     const loading = useRef(false)
     const modal = useModal()
     const { user, updateUserData } = useUserSession()
+    const newAccount = !user?.reino;
+    const accountReino = user?.reino;
 
     const changeInstance = (instance: 'select_raza' | 'select_reino') => {
         setCreationInstance(instance)
     }
 
-    useEffect(() => {
-        if (!user) return;
-        if (user.reino) {
-            setNewAccount(false)
-            setCharacterCreationValues((prev) => ({
-                ...prev,
-                reino: user.reino,
-            }));
-            return;
-        }
-    }, [user]);
-
     const handleCreateCharacter = async (
         nombre: string,
         genero: 'femenino' | 'masculino',
         raza: CharacterRace
-    ) => {
+    ): Promise<boolean> => {
         const validResult = verifyName(nombre)
-        if (!validResult) return
+        if (!validResult){
+            return false
+        }
 
         setCharacterCreationValues((prev) => ({
             ...prev, nombre, genero, raza
         }))
         if (newAccount) {
             setCreationInstance('select_reino')
-            return
+            return true
         }
 
         await createCharacter(nombre, genero, raza)
+        return true
     }
 
     const verifyName = (nombre?: string): boolean => {
@@ -94,7 +86,7 @@ export const useCreation = ({ addCharacter }: useCreationProps) => {
                 genero,
                 nombre,
                 raza,
-                reino: characterCreationValues.reino
+                reino: accountReino
             })
             addCharacter(character)
             modal.closeLoadingModal()

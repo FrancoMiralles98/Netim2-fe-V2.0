@@ -11,4 +11,8 @@ export interface ServerToClientEvents {
     'session:expired': () => void;
 }
 
-export type GameSocket = Socket<ServerToClientEvents>
+export interface ClientToServerEvents {
+    'player:ping': () => void;
+}
+
+export type GameSocket = Socket<ServerToClientEvents, ClientToServerEvents>

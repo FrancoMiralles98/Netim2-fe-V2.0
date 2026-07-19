@@ -2,10 +2,16 @@ import { useRef } from "react"
 import { useModal } from "../../../shared/modal/hooks/useModal"
 import type { CharacterSummary } from "netim2-shared"
 import { deleteCharacterRequest } from "../api/characterSelection.services"
+import { useNavigate } from "react-router"
+import { useCharacterSession } from "../../characterSession/hooks/useCharacterSession"
+import type { CharacterSession } from "../../characterSession/types/character-session.types"
+import { RouterPaths } from "../../../app/router/router-paths.types"
 
 export const useSelection = (deleteCharacter: (nombre: string) => void) => {
     const loading = useRef(false)
     const modal = useModal()
+    const navigate = useNavigate()
+    const { enterGame } = useCharacterSession()
 
     const handleDeleteCharacter = async (character: CharacterSummary) => {
         if (loading.current) return
@@ -26,5 +32,10 @@ export const useSelection = (deleteCharacter: (nombre: string) => void) => {
         }
     }
 
-    return { handleDeleteCharacter }
+    const handleConnectCharacter = (character: CharacterSummary) => {
+        enterGame(character as CharacterSession)
+        navigate(RouterPaths.GAME)
+    }
+
+    return { handleDeleteCharacter, handleConnectCharacter }
 }

@@ -30,11 +30,11 @@ export const CharacterCreationCard = (
     } = useCharacterCreationCard(raceInfo);
 
     return (
-        <section className="text-orange-200 mb-[3rem]  p-2 bg-[url('/characterSelection/bg-pj_2.png')] bg-repeat bg-center border border-black w-[500px]">
+        <section className="text-orange-200 mb-[3rem] bg-[length:100%_100%] h-[820px]  p-2 bg-[url('/modal/character-creation.png')] bg-no-repeat bg-center  w-[580px]">
             {
                 raceInfo &&
-                <>
-                    <section className="grid relative grid-cols-[45%_auto]">
+                <section className="mt-[3.6rem] mx-[2.2rem]">
+                    <section className="grid relative grid-cols-[50%_auto]">
                         <div className="absolute top-20 w-44 h-10">
                             <NetimText text="Elige el genero:" />
                             <div className="flex items-center justify-center gap-3 mt-2">
@@ -173,7 +173,7 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
                         }
                     </div>
 
-                    <div className="mt-3">
+                    <div className="">
                         <h1>Historia</h1>
                         <hr className="w-[50%]" />
 
@@ -198,7 +198,7 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
                             </button>
                         </div>
                     </div>
-                </>
+                </section>
 
             }
         </section>

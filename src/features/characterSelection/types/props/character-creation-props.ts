@@ -5,6 +5,6 @@ export interface CharacterCreationProps {
     changeType: (type: CharacterSelectionType) => void,
     races: RaceInfo[],
     attributeLimit: number,
-    handleCreateCharacter: (nombre: string, genero: CharacterGenero, raza: CharacterRace) => Promise<void>,
+    handleCreateCharacter: (nombre: string, genero: CharacterGenero, raza: CharacterRace) => Promise<boolean>,
     newAccount: boolean
 }

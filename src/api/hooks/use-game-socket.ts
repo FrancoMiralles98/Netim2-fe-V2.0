@@ -2,8 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { UseGameSocketResult } from "../types/use-game-socket.type";
 import { createGameSocket } from "../socket";
 import type { GameSocket } from "../types/socket.types";
+import type { UseGameSocketParams } from "../types/useGameSocketParams";
 
-export function useGameSocket(characterId?: string): UseGameSocketResult {
+export function useGameSocket({ characterId, onSessionReplaced }: UseGameSocketParams): UseGameSocketResult {
     const socketRef = useRef<GameSocket | null>(null);
 
     const [isConnected, setIsConnected] = useState(false);
@@ -20,7 +21,7 @@ export function useGameSocket(characterId?: string): UseGameSocketResult {
             setIsConnected(true);
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', (reason) => {
             setIsConnected(false);
             setIsReady(false);
             setWorldSessionId(null);
@@ -33,12 +34,11 @@ export function useGameSocket(characterId?: string): UseGameSocketResult {
         socket.on('session:ready', (data) => {
             setIsReady(true);
             setWorldSessionId(data.worldSessionId);
-
-            console.log('Sesión lista:', data);
         });
 
         socket.on('session:replaced', () => {
-            console.warn('La sesión fue reemplazada por otra conexión.');
+            onSessionReplaced?.()
+            socket.disconnect();
         });
 
         socket.on('session:expired', () => {

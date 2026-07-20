@@ -1,0 +1,1 @@
+export type SessionEndReason = 'replaced' | 'expired' | null;

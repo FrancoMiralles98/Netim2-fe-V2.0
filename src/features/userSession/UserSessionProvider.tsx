@@ -6,11 +6,14 @@ import { useModal } from "../../shared/modal/hooks/useModal";
 import { logoutRequest } from "../auth/api/auth.services";
 import { useNavigate } from "react-router";
 import { RouterPaths } from "../../app/router/router-paths.types";
+import type { AuthStatus } from "./types/auth-status.types";
 
 export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<UserSession | null>(null)
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
-    const [loadingUserAuthenticate, setLoadingUserAuthenticate] = useState(false)
+    const [authStatus, setAuthStatus] = useState<AuthStatus>('idle');
+    const isUserAuthenticated = authStatus === 'authenticated';
+    const loadingUserAuthenticate = authStatus === 'checking';
+    
     const loading = useRef(false)
     const modal = useModal()
     const navigate = useNavigate()
@@ -27,7 +30,7 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const clearUserSession = () => {
         setUser(null)
-        setIsUserAuthenticated(false)
+        setAuthStatus('unauthenticated');
     }
 
     const logout = async () => {
@@ -48,21 +51,20 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const startUserSession = (user: UserSession) => {
         setUser(user)
-        setIsUserAuthenticated(true)
+        setAuthStatus('authenticated');
     }
 
     const refreshUserSession = async () => {
         if (loading.current) return
         loading.current = true
+        setAuthStatus('checking');
         try {
-            setIsUserAuthenticated(true)
             const response = await refreshUserSessionRequest()
             setUser(response)
-            setIsUserAuthenticated(true)
-            setLoadingUserAuthenticate(false)
+            setAuthStatus('authenticated');
         } catch (error) {
             clearUserSession()
-            setLoadingUserAuthenticate(false)
+            setAuthStatus('unauthenticated');
             modal.showErrorModal(error, true)
         } finally {
             loading.current = false
@@ -74,6 +76,7 @@ export const UserSessionProvider = ({ children }: { children: ReactNode }) => {
             user,
             isUserAuthenticated,
             loadingUserAuthenticate,
+            authStatus,
             clearUserSession,
             startUserSession,
             refreshUserSession,

@@ -1,0 +1,1 @@
+export type AuthStatus = 'idle' | 'checking' | 'authenticated' | 'unauthenticated'

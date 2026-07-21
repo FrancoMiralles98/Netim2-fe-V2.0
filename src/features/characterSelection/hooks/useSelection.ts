@@ -4,7 +4,6 @@ import type { CharacterSummary } from "netim2-shared"
 import { deleteCharacterRequest } from "../api/characterSelection.services"
 import { useNavigate } from "react-router"
 import { useCharacterSession } from "../../characterSession/hooks/useCharacterSession"
-import type { CharacterSession } from "../../characterSession/types/character-session.types"
 import { RouterPaths } from "../../../app/router/router-paths.types"
 
 export const useSelection = (deleteCharacter: (nombre: string) => void) => {
@@ -33,7 +32,7 @@ export const useSelection = (deleteCharacter: (nombre: string) => void) => {
     }
 
     const handleConnectCharacter = (character: CharacterSummary) => {
-        enterGame(character as CharacterSession)
+        enterGame(character)
         navigate(RouterPaths.GAME)
     }
 

@@ -1,3 +1,5 @@
 allowBuilds:
   netim2-shared: true
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/37fc594be3d41ec7c50c6d5b27c129fc4fb6ab87: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/3ac2cef7b7d81b1e79429738bdd5f961bf089d27: false
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/5c17f606c7a98ed7c9c01358cacc8fc1ddb28bc0: false

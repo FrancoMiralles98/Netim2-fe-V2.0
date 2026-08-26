@@ -28,7 +28,7 @@ export const GuereroState: FightFighterState = {
         },
 
         mana: {
-            current: 500,
+            current: 450,
             max: 500
         }
     },
@@ -36,13 +36,21 @@ export const GuereroState: FightFighterState = {
     /*
      * Al comienzo ninguna skill está en cooldown.
      */
-    cooldowns: [],
+    cooldowns: [{ initialTurns: 10, remainingTurns: 10, skillId: 17 }],
 
     /*
      * Si el fighter comienza la pelea sin efectos,
      * buffs o auras, todos empiezan vacíos.
      */
-    activeEffects: [],
+    activeEffects: [{
+        effectId: 'electrico',
+        instanceId: 'electrico-insta',
+        remainingTurns: 9,
+        sourceFighterId: 'mob-id',
+        damage: 50,
+        stacks: { current: 3, toApplyExtraDamage: 3 }
+    }
+    ],
     activeAuras: [],
     activeBuffs: [],
 
@@ -87,7 +95,7 @@ export const MobState: FightFighterState = {
     /*
      * Al comienzo ninguna skill está en cooldown.
      */
-    cooldowns: [{ skillId: UNIQUE_ID_SKILLS.AURA_DE_ESPADA, initialTurns: 100, remainingTurns: 100 }],
+    cooldowns: [],
 
     /*
      * Si el fighter comienza la pelea sin efectos,

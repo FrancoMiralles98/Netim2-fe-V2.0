@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import type { FightFighterState } from "../../card/fighter-state";
 import type { FightPlaybackState } from "../animations.types";
-import type { ActionSelectedEvent, BasicAttackUsedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightEvent, HitResolvedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
+import type { ActionSelectedEvent, BasicAttackUsedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
 import type { FightPlaybackSpeed, UseFightPlayBackProps } from "../use-fight-play-back.type";
 
 export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackProps) => {
@@ -238,6 +238,10 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 await playActionSelected(event);
                 break;
 
+            case 'resource_changed':
+                await playResourceChanged(event);
+                break;
+
             case 'basic_attack_used':
                 await playBasicAttack(event);
                 break;
@@ -254,8 +258,20 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 await playDamageResolved(event);
                 break;
 
+            case 'status_effect_ticked':
+                await playStatusEffectTicked(event);
+                break;
+
+            case 'status_effect_stack_proc':
+                await playStatusEffectStackProc(event);
+                break;
+
             case 'turn_ended':
                 await playTurnEnded(event);
+                break;
+
+            case 'cooldown_updated':
+                await playCooldownUpdated(event);
                 break;
         }
     };
@@ -270,6 +286,158 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         });
 
         await wait(400);
+    };
+
+    const playCooldownUpdated = async (
+        event: CooldownUpdatedEvent
+    ) => {
+        setFightersState(prev =>
+            prev.map(fighter => {
+                if (fighter.fighterId !== event.fighterId) {
+                    return fighter;
+                }
+
+                if (event.remainingTurns <= 0) {
+                    return {
+                        ...fighter,
+                        cooldowns: fighter.cooldowns.filter(
+                            cooldown => cooldown.skillId !== event.skillId
+                        )
+                    };
+                }
+
+                return {
+                    ...fighter,
+                    cooldowns: fighter.cooldowns.map(cooldown =>
+                        cooldown.skillId === event.skillId
+                            ? {
+                                ...cooldown,
+                                remainingTurns: event.remainingTurns
+                            }
+                            : cooldown
+                    )
+                };
+            })
+        );
+    };
+
+    const playStatusEffectStackProc = async (event: StatusEffectStackProcEvent) => {
+        setFightersState(prev =>
+            prev.map(fighter => {
+                if (fighter.fighterId !== event.targetFighterId) {
+                    return fighter;
+                }
+
+                return {
+                    ...fighter,
+
+                    resources: {
+                        ...fighter.resources,
+
+                        hp: {
+                            ...fighter.resources.hp,
+                            current: event.targetCurrentHp
+                        }
+                    },
+
+                    activeEffects: fighter.activeEffects.map(effect => {
+                        if (effect.instanceId !== event.effectInstanceId) {
+                            return effect;
+                        }
+
+                        if (!effect.stacks) {
+                            return effect;
+                        }
+
+                        return {
+                            ...effect,
+
+                            stacks: {
+                                ...effect.stacks,
+                                current: event.currentStacks
+                            }
+                        };
+                    })
+                };
+            })
+        );
+
+        setPlayback(prev => ({
+            ...prev,
+
+            animation: {
+                type: 'status_effect_damage',
+                eventId: event.eventId,
+                targetId: event.targetFighterId,
+                effectId: event.effectId,
+                amount: event.appliedDamage
+            }
+        }));
+
+        await wait(950);
+
+        setPlayback(prev => ({
+            ...prev,
+            animation: undefined
+        }));
+    };
+
+    const playResourceChanged = async (event: ResourceChangedEvent) => {
+        setFightersState(prev =>
+            prev.map(fighter => {
+                if (fighter.fighterId !== event.fighterId) {
+                    return fighter;
+                }
+
+                if (event.resource === 'hp') {
+                    return {
+                        ...fighter,
+                        resources: {
+                            ...fighter.resources,
+                            hp: {
+                                ...fighter.resources.hp,
+                                current: event.currentValue
+                            }
+                        }
+                    };
+                }
+
+                return {
+                    ...fighter,
+                    resources: {
+                        ...fighter.resources,
+                        mana: {
+                            ...fighter.resources.mana,
+                            current: event.currentValue
+                        }
+                    }
+                };
+            })
+        );
+
+        const increased =
+            event.currentValue > event.previousValue;
+
+        setPlayback(prev => ({
+            ...prev,
+
+            animation: {
+                type: 'resource_changed',
+                fighterId: event.fighterId,
+                resource: event.resource,
+                reason: event.reason,
+                amount: event.amount,
+                eventId: event.eventId,
+                increased
+            }
+        }));
+
+        await wait(950);
+
+        setPlayback(prev => ({
+            ...prev,
+            animation: undefined
+        }));
     };
 
     const playActionSelected = async (
@@ -327,6 +495,65 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         }));
     };
 
+    const playStatusEffectTicked = async (event: StatusEffectTickedEvent
+    ) => {
+        setFightersState(prev =>
+            prev.map(fighter => {
+                if (fighter.fighterId !== event.targetFighterId) {
+                    return fighter;
+                }
+
+                return {
+                    ...fighter,
+
+                    resources: {
+                        ...fighter.resources,
+
+                        hp: {
+                            ...fighter.resources.hp,
+                            current: event.targetCurrentHp
+                        }
+                    },
+
+                    activeEffects: fighter.activeEffects.map(effect =>
+                        effect.instanceId === event.effectInstanceId
+                            ? {
+                                ...effect,
+                                remainingTurns: event.remainingTurns
+                            }
+                            : effect
+                    )
+                };
+            })
+        );
+
+        setPlayback(prev => ({
+            ...prev,
+
+            animation: {
+                type: 'status_effect_damage',
+                eventId: event.eventId,
+
+                targetId: event.targetFighterId,
+
+                effectId: event.effectId,
+
+                amount: event.appliedDamage
+            }
+        }));
+
+        await wait(950);
+
+        setPlayback(prev => ({
+            ...prev,
+            animation: undefined
+        }));
+    };
+
+
+
+
+
 
 
     const playHitResolved = async (
@@ -364,7 +591,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                     message: 'MISS'
                 }));
 
-                await wait(500);
+                await wait(900);
 
                 break;
             }
@@ -427,11 +654,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                             : undefined
                 }));
 
-                await wait(
-                    resolution.critical
-                        ? 500
-                        : 350
-                );
+                await wait(400);
 
                 break;
             }
@@ -487,11 +710,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
             })
         );
 
-        await wait(
-            event.critical
-                ? 900
-                : 700
-        );
+        await wait(1050);
 
         setPlayback(prev => ({
             ...prev,

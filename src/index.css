@@ -124,28 +124,45 @@
 }
 
 @keyframes fight-damage-number {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -25%) scale(0.8);
-    }
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -25%) scale(1);
+  }
 
-    15% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.15);
-    }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -60px) scale(1.05);
+  }
 
-    65% {
-        opacity: 1;
-        transform: translate(-50%, -70%) scale(1);
-    }
+  90% {
+    opacity: 1;
+    transform: translate(-50%, -80px) scale(1);
+  }
 
-    85% {
-        opacity: 1;
-        transform: translate(-50%, -80%) scale(1);
-    }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -90px) scale(0.95);
+  }
+}
 
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -110%) scale(0.95);
-    }
+@keyframes fight-resource-number {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -25%) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -60px) scale(1.05);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translate(-50%, -80px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -90px) scale(0.95);
+  }
 }

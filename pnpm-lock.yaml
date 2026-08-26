@@ -12,8 +12,8 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1(debug@4.4.3)
       netim2-shared:
-        specifier: github:FrancoMiralles98/netim2-shared#v0.2.2
-        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/3ac2cef7b7d81b1e79429738bdd5f961bf089d27
+        specifier: github:FrancoMiralles98/netim2-shared#v0.2.4
+        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/5c17f606c7a98ed7c9c01358cacc8fc1ddb28bc0
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -975,9 +975,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/3ac2cef7b7d81b1e79429738bdd5f961bf089d27:
-    resolution: {gitHosted: true, integrity: sha512-4g4nY5IG9FCH4ksNSj4L6gRrUtf7FN4U3XdKhaLdwnD41scR123TjzHHBKokfJpRsjksoRVoqU+stpmYUxn4PA==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/3ac2cef7b7d81b1e79429738bdd5f961bf089d27}
-    version: 0.2.2
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/5c17f606c7a98ed7c9c01358cacc8fc1ddb28bc0:
+    resolution: {gitHosted: true, integrity: sha512-Ho+0SAZSYz82ixJsW8JjiLgrUKAMWh78RNIB5igFVRcZ14ZquxhmzE3/g2PV3UB+MhCKxWpZFxy1YB7Lpoe7Sg==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/5c17f606c7a98ed7c9c01358cacc8fc1ddb28bc0}
+    version: 0.2.4
 
   node-releases@2.0.50:
     resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
@@ -2069,7 +2069,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/3ac2cef7b7d81b1e79429738bdd5f961bf089d27: {}
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/5c17f606c7a98ed7c9c01358cacc8fc1ddb28bc0: {}
 
   node-releases@2.0.50: {}
 

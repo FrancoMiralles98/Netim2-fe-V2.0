@@ -6,6 +6,7 @@ import { CompactFighterCard } from "./CompactFighterCard";
 import type { CombatAction } from "netim2-shared";
 import { FightActionIndicator } from "../animations/components/FightActionIndicator";
 import type { FightAnimationState } from "../animations/animations.types";
+import { getStatusEffectDamageColor } from "../animations/utils/animation-utils";
 
 export interface FightFighterCardProps {
     fighter: FightFighterState;
@@ -85,6 +86,18 @@ export const FightFighterCard = ({
             }[animation.damageType]
             : '';
 
+    const resourceAnimation =
+        animation?.type === 'resource_changed' &&
+            animation.fighterId === fighter.fighterId
+            ? animation
+            : undefined;
+
+    const statusEffectDamageAnimation =
+        animation?.type === 'status_effect_damage' &&
+            animation.targetId === fighter.fighterId
+            ? animation
+            : undefined;
+
     /*
      * Recursos.
      */
@@ -119,15 +132,70 @@ export const FightFighterCard = ({
             `}
         >
 
-            {isTakingDamage && (
+            {statusEffectDamageAnimation && (
                 <div
+                    key={statusEffectDamageAnimation.eventId}
                     className={`
             pointer-events-none
             absolute
             left-1/2
             top-1/2
             z-[70]
-            animate-[fight-damage-number_500ms_ease-out_forwards]
+
+            whitespace-nowrap
+            font-black
+            text-xl
+            drop-shadow-lg
+
+            animate-[fight-damage-number_1000ms_linear_forwards]
+
+            ${getStatusEffectDamageColor(
+                        statusEffectDamageAnimation.effectId
+                    )}
+        `}
+                >
+                    -{statusEffectDamageAnimation.amount}
+                </div>
+            )}
+
+            {resourceAnimation && (
+                <div
+                    key={resourceAnimation.eventId}
+                    className={`
+                        
+            pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
+            whitespace-nowrap
+            font-black
+            text-xl
+            drop-shadow-lg
+
+            animate-[fight-resource-number_900ms_linear_forwards]
+
+            ${resourceAnimation.resource === 'hp'
+                            ? 'text-green-500'
+                            : 'text-blue-400'
+                        }
+        `}
+                >
+                    {resourceAnimation.increased ? '+' : '-'}
+                    {resourceAnimation.amount}
+                </div>
+            )}
+
+            {isTakingDamage && (
+                <div
+                    className={`
+            pointer-events-none
+            absolute
+            bg-black/50
+            left-1/2
+            top-1/2
+            z-[70]
+            animate-[fight-damage-number_1000ms_linear_forwards]
             whitespace-nowrap
             font-black
             drop-shadow-lg

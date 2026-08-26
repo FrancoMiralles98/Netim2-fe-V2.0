@@ -1,4 +1,4 @@
-import type { CombatAction, DamageType } from "netim2-shared";
+import type { ActiveStatusEffectId, CombatAction, DamageType, FighterResourceType, ResourceChangeReason } from "netim2-shared";
 
 export interface FightPlaybackState {
     currentTurn: number;
@@ -49,6 +49,27 @@ export type FightAnimationState =
         attackerId: string;
         targetId: string;
         hitIndex: number;
+    }
+    | {
+        type: 'resource_changed';
+        fighterId: string;
+        eventId: string;
+        resource: FighterResourceType;
+        reason: ResourceChangeReason;
+        amount: number;
+        increased: boolean;
+    }
+    |
+    {
+        type: 'status_effect_damage';
+
+        eventId: string;
+
+        targetId: string;
+
+        effectId: ActiveStatusEffectId;
+
+        amount: number;
     }
     | {
         type: 'damage';

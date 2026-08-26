@@ -16,7 +16,7 @@ export const STATUS_EFFECT_DISPLAY_CONFIG = {
 
     electrico: {
         name: 'Eléctrico',
-        icon: '/fight/status-effects/electrico.png'
+        icon: './characterSelection/posion-icon.png'
     },
 
     desmayo: {

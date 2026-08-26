@@ -1,4 +1,4 @@
-import type { CombatAction } from "netim2-shared";
+import type { ActiveStatusEffectId, CombatAction } from "netim2-shared";
 import type { FightFighterState } from "../../card/fighter-state";
 
 export const getFightActionDisplay = (
@@ -43,5 +43,26 @@ export const getFightActionDisplay = (
                 icon: '/fight/icons/skip-turn.png',
                 name: 'Pasar turno'
             };
+    }
+};
+
+export const getStatusEffectDamageColor = (
+    effectId: ActiveStatusEffectId
+) => {
+    switch (effectId) {
+        case 'veneno':
+            return 'text-green-500';
+
+        case 'incendio':
+            return 'text-orange-500';
+
+        case 'sangrado':
+            return 'text-red-500';
+
+        case 'electrico':
+            return 'text-cyan-400';
+
+        default:
+            return 'text-white';
     }
 };

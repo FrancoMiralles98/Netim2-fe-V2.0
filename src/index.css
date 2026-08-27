@@ -166,3 +166,29 @@
     transform: translate(-50%, -90px) scale(0.95);
   }
 }
+
+@keyframes fight-stunned {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  20% {
+    transform: rotate(-1.5deg);
+  }
+
+  40% {
+    transform: rotate(1.5deg);
+  }
+
+  60% {
+    transform: rotate(-1deg);
+  }
+
+  80% {
+    transform: rotate(1deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}

@@ -77,4 +77,15 @@ export type FightAnimationState =
         amount: number;
         damageType: DamageType;
         critical: boolean;
+    }
+    | {
+        type: 'stunned';
+        fighterId: string;
+        remainingTurns?: number;
+        expired: boolean;
+    }
+    | {
+        type: 'healing';
+        targetId: string;
+        amount: number;
     };

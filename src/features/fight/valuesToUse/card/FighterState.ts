@@ -10,8 +10,8 @@ export const GuereroState: FightFighterState = {
 
     skills: [
         {
-            skillId: UNIQUE_ID_SKILLS.AURA_DE_ESPADA,
-            name: 'Aura de Espada',
+            skillId: UNIQUE_ID_SKILLS.EMBOSCADA,
+            name: 'Emboscada',
             icon: '/characterSelection/Daga.png'
         },
         {
@@ -67,18 +67,7 @@ export const MobState: FightFighterState = {
 
     alive: true,
 
-    skills: [
-        {
-            skillId: UNIQUE_ID_SKILLS.AURA_DE_ESPADA,
-            name: 'Aura de Espada',
-            icon: '/characterSelection/Daga.png'
-        },
-        {
-            skillId: UNIQUE_ID_SKILLS.ROCIADA,
-            name: 'Rociada',
-            icon: '/characterSelection/Daga.png'
-        }
-    ],
+    skills: [],
 
     resources: {
         hp: {

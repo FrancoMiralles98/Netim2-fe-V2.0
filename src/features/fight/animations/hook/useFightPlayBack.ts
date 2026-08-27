@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import type { FightFighterState } from "../../card/fighter-state";
+import type { FightAuraState, FightBuffState, FightFighterState, FightStatusEffectState } from "../../card/fighter-state";
 import type { FightPlaybackState } from "../animations.types";
-import type { ActionSelectedEvent, BasicAttackUsedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
+import type { ActionSelectedEvent, AuraActivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightEvent, FightFinishedEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
 import type { FightPlaybackSpeed, UseFightPlayBackProps } from "../use-fight-play-back.type";
 
 export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackProps) => {
@@ -19,6 +19,12 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
     const isPausedRef = useRef(false);
     const speedRef = useRef<FightPlaybackSpeed>(1);
     const playbackSessionRef = useRef(0);
+
+    const [fightResult, setFightResult] = useState<FightResult | null>(null);
+
+    const closeFightResult = (): void => {
+        setFightResult(null);
+    };
 
     /*
      * Índice del siguiente evento a reproducir.
@@ -168,6 +174,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
 
         setIsPlaying(false);
         setIsPaused(false);
+        setFightResult(null);
 
         /*
          * Restauramos velocidad.
@@ -262,8 +269,36 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 await playStatusEffectTicked(event);
                 break;
 
+            case 'control_effect_processed':
+                await playControlEffectProcessed(event)
+                break
+
             case 'status_effect_stack_proc':
                 await playStatusEffectStackProc(event);
+                break;
+
+            case 'status_effect_duration_updated':
+                playStatusEffectDurationUpdated(event);
+                break;
+
+            case 'aura_duration_updated':
+                playAuraDurationUpdated(event);
+                break;
+
+            case 'status_effect_applied':
+                playStatusEffectApplied(event);
+                break;
+
+            case 'buff_duration_updated':
+                playBuffDurationUpdated(event);
+                break;
+
+            case 'healing_resolved':
+                await playHealingResolved(event);
+                break;
+
+            case 'status_effect_updated':
+                playStatusEffectUpdated(event);
                 break;
 
             case 'turn_ended':
@@ -273,6 +308,367 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
             case 'cooldown_updated':
                 await playCooldownUpdated(event);
                 break;
+
+            case 'aura_activated':
+                playAuraActivated(event);
+                break;
+
+            case 'buff_applied':
+                playBuffApplied(event);
+                break;
+
+            case 'fight_finished':
+                await playFightFinished(event);
+                break;
+        }
+    };
+
+    const playFightFinished = async (
+        event: FightFinishedEvent
+    ): Promise<void> => {
+
+        /*
+         * Limpiamos cualquier estado temporal
+         * que haya quedado de la última acción.
+         */
+        setPlayback(prev => ({
+            ...prev,
+
+            currentActorId: undefined,
+            currentTargetId: undefined,
+            currentAction: undefined,
+
+            animation: undefined,
+            hitSequence: undefined,
+            message: undefined
+        }));
+
+        /*
+         * Abrir el modal final.
+         */
+        setFightResult(event.result);
+    };
+
+    const playBuffApplied = (
+        event: BuffAppliedEvent
+    ): void => {
+
+        setFightersState(current => {
+
+            const sourceFighter =
+                current.find(
+                    fighter =>
+                        fighter.fighterId ===
+                        event.sourceFighterId
+                );
+
+            const skill =
+                sourceFighter?.skills.find(
+                    skill =>
+                        skill.skillId ===
+                        event.skillId
+                );
+
+            const newBuff: FightBuffState = {
+                instanceId:
+                    event.buffInstanceId,
+
+                buffId:
+                    event.skillId,
+
+                name:
+                    skill?.name ?? 'Buff',
+
+                sourceFighterId:
+                    event.sourceFighterId,
+
+                remainingTurns:
+                    event.remainingTurns
+            };
+
+            return current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.targetFighterId
+                ) {
+                    return fighter;
+                }
+
+                const buffAlreadyExists =
+                    fighter.activeBuffs.some(
+                        buff =>
+                            buff.instanceId ===
+                            event.buffInstanceId
+                    );
+
+                return {
+                    ...fighter,
+
+                    activeBuffs:
+                        buffAlreadyExists
+                            ? fighter.activeBuffs.map(
+                                buff =>
+                                    buff.instanceId ===
+                                        event.buffInstanceId
+                                        ? newBuff
+                                        : buff
+                            )
+                            : [
+                                ...fighter.activeBuffs,
+                                newBuff
+                            ]
+                };
+            });
+        });
+    };
+
+    const playAuraActivated = (
+        event: AuraActivatedEvent
+    ): void => {
+
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.fighterId
+                ) {
+                    return fighter;
+                }
+
+                const skill = fighter.skills.find(
+                    skill =>
+                        skill.skillId ===
+                        event.skillId
+                );
+
+                const newAura: FightAuraState = {
+                    instanceId:
+                        event.auraInstanceId,
+
+                    auraId:
+                        event.skillId,
+
+                    name:
+                        skill?.name ?? 'Aura',
+
+                    sourceFighterId:
+                        event.fighterId,
+
+                    remainingTurns:
+                        event.remainingTurns
+                };
+
+                const auraAlreadyExists =
+                    fighter.activeAuras.some(
+                        aura =>
+                            aura.instanceId ===
+                            event.auraInstanceId
+                    );
+
+                return {
+                    ...fighter,
+
+                    activeAuras:
+                        auraAlreadyExists
+                            ? fighter.activeAuras.map(
+                                aura =>
+                                    aura.instanceId ===
+                                        event.auraInstanceId
+                                        ? newAura
+                                        : aura
+                            )
+                            : [
+                                ...fighter.activeAuras,
+                                newAura
+                            ]
+                };
+            })
+        );
+    };
+
+    const playStatusEffectUpdated = (
+        event: StatusEffectUpdatedEvent
+    ): void => {
+
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.targetFighterId
+                ) {
+                    return fighter;
+                }
+
+                const updatedEffect: FightStatusEffectState = {
+                    instanceId:
+                        event.current.instanceId,
+
+                    effectId:
+                        event.current.effectId,
+
+                    sourceFighterId:
+                        event.current.sourceFighterId,
+
+                    remainingTurns:
+                        event.current.remainingTurns,
+
+                    damage:
+                        event.current.damagePerTick,
+
+                    stacks:
+                        event.current.stacks
+                };
+
+                return {
+                    ...fighter,
+
+                    activeEffects:
+                        fighter.activeEffects.map(
+                            effect =>
+                                effect.instanceId ===
+                                    event.effectInstanceId
+                                    ? updatedEffect
+                                    : effect
+                        )
+                };
+            })
+        );
+    };
+
+    const playStatusEffectApplied = (
+        event: StatusEffectAppliedEvent
+    ): void => {
+
+        const effect = event.effect;
+
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    effect.targetFighterId
+                ) {
+                    return fighter;
+                }
+
+                const newEffect: FightStatusEffectState = {
+                    instanceId:
+                        effect.instanceId,
+
+                    effectId:
+                        effect.effectId,
+
+                    sourceFighterId:
+                        effect.sourceFighterId,
+
+                    remainingTurns:
+                        effect.remainingTurns,
+
+                    damage:
+                        effect.damagePerTick,
+
+                    stacks:
+                        effect.stacks
+                };
+
+                const effectAlreadyExists =
+                    fighter.activeEffects.some(
+                        activeEffect =>
+                            activeEffect.instanceId ===
+                            effect.instanceId
+                    );
+
+                return {
+                    ...fighter,
+
+                    activeEffects: effectAlreadyExists
+                        ? fighter.activeEffects.map(
+                            activeEffect =>
+                                activeEffect.instanceId ===
+                                    effect.instanceId
+                                    ? newEffect
+                                    : activeEffect
+                        )
+                        : [
+                            ...fighter.activeEffects,
+                            newEffect
+                        ]
+                };
+            })
+        );
+    };
+
+    const playHealingResolved = async (
+        event: HealingResolvedEvent
+    ): Promise<void> => {
+
+        /*
+         * Curación REAL aplicada.
+         *
+         * Usamos los snapshots del backend para contemplar
+         * correctamente casos de overhealing.
+         */
+        const appliedHealing =
+            event.targetCurrentHp -
+            event.targetPreviousHp;
+
+        /*
+         * Actualizamos el HP autoritativo.
+         */
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.targetFighterId
+                ) {
+                    return fighter;
+                }
+
+                return {
+                    ...fighter,
+
+                    resources: {
+                        ...fighter.resources,
+
+                        hp: {
+                            ...fighter.resources.hp,
+                            current: event.targetCurrentHp
+                        }
+                    }
+                };
+            })
+        );
+
+        /*
+         * Mostramos la curación solamente si
+         * realmente recuperó HP.
+         */
+        if (appliedHealing > 0) {
+            setPlayback(prev => ({
+                ...prev,
+
+                animation: {
+                    type: 'healing',
+
+                    targetId:
+                        event.targetFighterId,
+
+                    amount:
+                        appliedHealing
+                }
+            }));
+
+            await wait(900);
+
+            setPlayback(prev => ({
+                ...prev,
+                animation: undefined,
+                message: undefined
+            }));
         }
     };
 
@@ -288,34 +684,280 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         await wait(400);
     };
 
-    const playCooldownUpdated = async (
-        event: CooldownUpdatedEvent
-    ) => {
-        setFightersState(prev =>
-            prev.map(fighter => {
-                if (fighter.fighterId !== event.fighterId) {
+    const playBuffDurationUpdated = (
+        event: BuffDurationUpdatedEvent
+    ): void => {
+
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.fighterId
+                ) {
                     return fighter;
                 }
 
-                if (event.remainingTurns <= 0) {
-                    return {
-                        ...fighter,
-                        cooldowns: fighter.cooldowns.filter(
-                            cooldown => cooldown.skillId !== event.skillId
+                const activeBuffs =
+                    event.remainingTurns <= 0
+                        ? fighter.activeBuffs.filter(
+                            buff =>
+                                buff.instanceId !==
+                                event.buffInstanceId
                         )
-                    };
-                }
+                        : fighter.activeBuffs.map(
+                            buff =>
+                                buff.instanceId ===
+                                    event.buffInstanceId
+                                    ? {
+                                        ...buff,
+                                        remainingTurns:
+                                            event.remainingTurns
+                                    }
+                                    : buff
+                        );
 
                 return {
                     ...fighter,
-                    cooldowns: fighter.cooldowns.map(cooldown =>
-                        cooldown.skillId === event.skillId
-                            ? {
-                                ...cooldown,
-                                remainingTurns: event.remainingTurns
+                    activeBuffs
+                };
+            })
+        );
+    };
+
+    const playAuraDurationUpdated = (
+        event: AuraDurationUpdatedEvent
+    ): void => {
+
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.fighterId
+                ) {
+                    return fighter;
+                }
+
+                const activeAuras =
+                    event.remainingTurns <= 0
+                        ? fighter.activeAuras.filter(
+                            aura =>
+                                aura.instanceId !==
+                                event.auraInstanceId
+                        )
+                        : fighter.activeAuras.map(
+                            aura =>
+                                aura.instanceId ===
+                                    event.auraInstanceId
+                                    ? {
+                                        ...aura,
+                                        remainingTurns:
+                                            event.remainingTurns
+                                    }
+                                    : aura
+                        );
+
+                return {
+                    ...fighter,
+                    activeAuras
+                };
+            })
+        );
+    };
+
+    const playCooldownUpdated = (event: CooldownUpdatedEvent): void => {
+        setFightersState(prev =>
+            prev.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.fighterId
+                ) {
+                    return fighter;
+                }
+
+                /*
+                 * Si llegó a 0, eliminamos el cooldown.
+                 */
+                if (event.remainingTurns <= 0) {
+                    return {
+                        ...fighter,
+
+                        cooldowns:
+                            fighter.cooldowns.filter(
+                                cooldown =>
+                                    cooldown.skillId !==
+                                    event.skillId
+                            )
+                    };
+                }
+
+                const cooldownExists =
+                    fighter.cooldowns.some(
+                        cooldown =>
+                            cooldown.skillId ===
+                            event.skillId
+                    );
+
+                /*
+                 * Si no existe, lo agregamos.
+                 */
+                if (!cooldownExists) {
+                    return {
+                        ...fighter,
+
+                        cooldowns: [
+                            ...fighter.cooldowns,
+
+                            {
+                                skillId: event.skillId,
+
+                                initialTurns:
+                                    event.remainingTurns,
+
+                                remainingTurns:
+                                    event.remainingTurns
                             }
-                            : cooldown
-                    )
+                        ]
+                    };
+                }
+
+                /*
+                 * Si ya existe, actualizamos
+                 * únicamente sus turnos restantes.
+                 */
+                return {
+                    ...fighter,
+
+                    cooldowns:
+                        fighter.cooldowns.map(
+                            cooldown =>
+                                cooldown.skillId ===
+                                    event.skillId
+                                    ? {
+                                        ...cooldown,
+
+                                        remainingTurns:
+                                            event.remainingTurns
+                                    }
+                                    : cooldown
+                        )
+                };
+            })
+        );
+    };
+
+    const playControlEffectProcessed = async (event: ControlEffectProcessedEvent): Promise<void> => {
+
+        /*
+         * El efecto fue procesado pero no impidió
+         * la acción, por lo tanto no mostramos nada.
+         */
+        if (!event.preventedAction) {
+            return;
+        }
+
+        switch (event.controlType) {
+
+            case 'stun': {
+                setPlayback(prev => ({
+                    ...prev,
+
+                    currentActorId: event.fighterId,
+
+                    /*
+                     * No hay acción ni target porque
+                     * el stun impidió actuar.
+                     */
+                    currentTargetId: undefined,
+                    currentAction: undefined,
+
+                    animation: {
+                        type: 'stunned',
+
+                        fighterId: event.fighterId,
+
+                        remainingTurns:
+                            event.remainingTurns,
+
+                        expired:
+                            event.expired
+                    },
+
+                    message: 'STUNNED'
+                }));
+
+                await wait(900);
+
+                setPlayback(prev => ({
+                    ...prev,
+
+                    animation: undefined,
+                    message: undefined
+                }));
+
+                break;
+            }
+        }
+    };
+
+    const playStatusEffectDurationUpdated = (
+        event: StatusEffectDurationUpdatedEvent
+    ): void => {
+
+        setFightersState(current =>
+            current.map(fighter => {
+
+                if (
+                    fighter.fighterId !==
+                    event.targetFighterId
+                ) {
+                    return fighter;
+                }
+
+                /*
+                 * Si llegó a 0, eliminamos directamente
+                 * la instancia del efecto.
+                 */
+                if (event.remainingTurns <= 0) {
+                    return {
+                        ...fighter,
+
+                        activeEffects:
+                            fighter.activeEffects.filter(
+                                effect =>
+                                    effect.instanceId !==
+                                    event.effectInstanceId
+                            )
+                    };
+                }
+
+                /*
+                 * Si todavía sigue activo,
+                 * actualizamos únicamente su duración.
+                 */
+                return {
+                    ...fighter,
+
+                    activeEffects:
+                        fighter.activeEffects.map(
+                            effect => {
+
+                                if (
+                                    effect.instanceId !==
+                                    event.effectInstanceId
+                                ) {
+                                    return effect;
+                                }
+
+                                return {
+                                    ...effect,
+                                    remainingTurns:
+                                        event.remainingTurns
+                                };
+                            }
+                        )
                 };
             })
         );
@@ -483,8 +1125,6 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 attackerId: event.attackerId,
                 targetId: event.targetId
             },
-
-            message: 'Ataque básico'
         }));
 
         await wait(400);
@@ -781,6 +1421,8 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         play,
         pause,
         isPlaying,
+        fightResult,
+        closeFightResult,
         isPaused,
         speed,
         changeSpeed,

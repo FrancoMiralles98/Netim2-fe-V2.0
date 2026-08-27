@@ -40,7 +40,7 @@ export interface FightSkillCooldown {
 export interface FightStatusEffectState {
     instanceId: string;
 
-    effectId: ActiveStatusEffectId; //Esto se sca del backend
+    effectId: ActiveStatusEffectId; 
 
     sourceFighterId: string;
 
@@ -61,7 +61,7 @@ export interface FightAuraState {
 
 export interface FightBuffState {
     instanceId: string;
-    buffId: string;
+    buffId: UNIQUE_ID_SKILLS;
     name: string;
     sourceFighterId: string;
     remainingTurns?: number;

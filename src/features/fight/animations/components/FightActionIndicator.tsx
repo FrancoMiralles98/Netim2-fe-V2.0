@@ -2,7 +2,7 @@ import type { CombatAction } from "netim2-shared";
 import type { FightFighterState } from "../../card/fighter-state";
 import { getFightActionDisplay } from "../utils/animation-utils";
 
-interface FightActionIndicatorProps {
+export interface FightActionIndicatorProps {
     fighter: FightFighterState;
     action: CombatAction;
 }
@@ -12,52 +12,53 @@ export const FightActionIndicator = ({
     action
 }: FightActionIndicatorProps) => {
 
-    const display =
-        getFightActionDisplay(
-            fighter,
-            action
-        );
+    const actionDisplay = getFightActionDisplay(
+        fighter,
+        action
+    );
 
-    if (!display) {
+    if (!actionDisplay) {
         return null;
     }
 
     return (
         <div
             className="
+                pointer-events-none
                 absolute
-                -top-14
+                -top-16
                 left-1/2
                 z-50
+
                 flex
                 -translate-x-1/2
                 flex-col
                 items-center
                 gap-1
-                pointer-events-none
             "
         >
             <div
                 className="
                     flex
-                    h-10
-                    w-10
+                    h-11
+                    w-11
                     items-center
                     justify-center
+
                     rounded-lg
                     border
-                    border-yellow-400
+                    border-yellow-400/70
                     bg-slate-950
-                    shadow-[0_0_16px_rgba(250,204,21,0.45)]
-                    animate-pulse
+
+                    shadow-[0_0_16px_rgba(250,204,21,0.35)]
                 "
             >
                 <img
-                    src={display.icon}
-                    alt={display.name}
+                    src={actionDisplay.icon}
+                    alt={actionDisplay.name}
                     className="
-                        h-7
-                        w-7
+                        h-8
+                        w-8
                         object-contain
                     "
                 />
@@ -70,14 +71,13 @@ export const FightActionIndicator = ({
                     bg-slate-950/95
                     px-2
                     py-0.5
+
                     text-[10px]
-                    font-semibold
-                    uppercase
-                    tracking-wide
+                    font-bold
                     text-yellow-300
                 "
             >
-                {display.name}
+                {actionDisplay.name}
             </span>
         </div>
     );

@@ -7,6 +7,7 @@ import { GuereroState, MobState } from "./valuesToUse/card/FighterState"
 import type { FightFighterState } from "./card/fighter-state"
 import { useFightPlayBack } from "./animations/hook/useFightPlayBack"
 import { EXPLICIT_EVENTS } from "./animations/Test/explicits-events"
+import { FightResultModal } from "./animations/components/FightResultModal"
 
 export const FightTest = () => {
     const [openInitiative, setOpenInitiative] = useState(false);
@@ -19,6 +20,8 @@ export const FightTest = () => {
         play,
         pause,
         reset,
+        closeFightResult,
+        fightResult,
         isPlaying,
         isPaused,
         speed,
@@ -48,6 +51,12 @@ export const FightTest = () => {
 
     return (
         <section className="mx-auto w-[80%] pt-[5rem]">
+
+            <FightResultModal
+                result={fightResult}
+                fighters={fightersState}
+                onClose={closeFightResult}
+            />
 
             {/* Controles temporales */}
             <div className="flex items-center gap-2">
@@ -216,6 +225,11 @@ export const FightTest = () => {
                                     : undefined
                                 }
                                 animation={playback.animation}
+                                message={
+                                    playback.currentActorId === fighter.fighterId
+                                        ? playback.message
+                                        : undefined
+                                }
                             />
                         ))}
                     </div>
@@ -260,6 +274,11 @@ export const FightTest = () => {
                                         : undefined
                                 }
                                 animation={playback.animation}
+                                message={
+                                    playback.currentActorId === fighter.fighterId
+                                        ? playback.message
+                                        : undefined
+                                }
                             />
                         ))}
                     </div>

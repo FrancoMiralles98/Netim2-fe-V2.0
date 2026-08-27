@@ -18,6 +18,7 @@ export interface FightFighterCardProps {
     selectedAction?: CombatAction;
 
     animation?: FightAnimationState;
+    message?: string;
 }
 
 export const FightFighterCard = ({
@@ -26,7 +27,8 @@ export const FightFighterCard = ({
     isCurrentActor = false,
     isCurrentTarget = false,
     selectedAction,
-    animation
+    animation,
+    message
 }: FightFighterCardProps) => {
 
     const [expanded, setExpanded] = useState(false);
@@ -55,6 +57,13 @@ export const FightFighterCard = ({
         animation?.type === 'damage' &&
         animation.targetId === fighter.fighterId;
 
+    const isStunned =
+        animation?.type === 'stunned' &&
+        animation.fighterId === fighter.fighterId;
+
+    const isReceivingHealing =
+        animation?.type === 'healing' &&
+        animation.targetId === fighter.fighterId;
     /*
      * Animación física de la card.
      */
@@ -63,6 +72,11 @@ export const FightFighterCard = ({
             ? animation.critical
                 ? 'animate-[fight-critical-hit_450ms_ease-out]'
                 : 'animate-[fight-hit_350ms_ease-out]'
+            : '';
+
+    const stunnedAnimationClass =
+        isStunned
+            ? 'animate-[fight-stunned_700ms_ease-in-out]'
             : '';
 
     const dodgeAnimationClass =
@@ -131,6 +145,71 @@ export const FightFighterCard = ({
                 }
             `}
         >
+
+            {message && (
+                <div
+                    className="
+              pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
+
+            whitespace-nowrap
+            font-black
+            text-xl
+            drop-shadow-lg
+            text-violet-200
+            animate-[fight-damage-number_1000ms_linear_forwards]
+        "
+                >
+                    {message}
+                </div>
+            )}
+
+            {isReceivingHealing && (
+                <div
+                    className="
+            pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
+
+            animate-[fight-damage-number_1000ms_linear_forwards]
+
+            whitespace-nowrap
+            text-xl
+            font-black
+            text-green-400
+            drop-shadow-lg
+        "
+                >
+                    +{animation.amount}
+                </div>
+            )}
+
+            {isStunned && (
+                <div
+                    key={resourceAnimation?.eventId}
+                    className="
+              pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
+
+            whitespace-nowrap
+            font-black
+            text-xl
+            drop-shadow-lg
+            text-violet-200
+            animate-[fight-damage-number_1000ms_linear_forwards]
+        "
+                >
+                    STUNNED
+                </div>
+            )}
 
             {statusEffectDamageAnimation && (
                 <div
@@ -370,6 +449,7 @@ export const FightFighterCard = ({
                     ${hitAnimationClass}
                     ${dodgeAnimationClass}
                     ${blockAnimationClass}
+                    ${stunnedAnimationClass}
                 `}
             >
                 {expanded ? (

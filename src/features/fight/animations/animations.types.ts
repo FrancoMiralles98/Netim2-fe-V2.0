@@ -58,6 +58,7 @@ export type FightAnimationState =
         reason: ResourceChangeReason;
         amount: number;
         increased: boolean;
+        critical: boolean;
     }
     |
     {
@@ -77,6 +78,7 @@ export type FightAnimationState =
         amount: number;
         damageType: DamageType;
         critical: boolean;
+        penetrating: boolean;
     }
     | {
         type: 'stunned';
@@ -88,4 +90,5 @@ export type FightAnimationState =
         type: 'healing';
         targetId: string;
         amount: number;
+        critical: boolean;
     };

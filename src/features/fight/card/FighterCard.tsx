@@ -6,7 +6,8 @@ import { CompactFighterCard } from "./CompactFighterCard";
 import type { CombatAction } from "netim2-shared";
 import { FightActionIndicator } from "../animations/components/FightActionIndicator";
 import type { FightAnimationState } from "../animations/animations.types";
-import { getStatusEffectDamageColor } from "../animations/utils/animation-utils";
+import { getFighterAnimationVisualState, getFighterCardAnimationClass } from "../utils/get-visual-animation.helper";
+import { CombatFloatingValue } from "./components/CombatFloatingValue";
 
 export interface FightFighterCardProps {
     fighter: FightFighterState;
@@ -33,84 +34,25 @@ export const FightFighterCard = ({
 
     const [expanded, setExpanded] = useState(false);
 
+    const animationState =
+        getFighterAnimationVisualState(
+            animation,
+            fighter.fighterId
+        );
 
-    /*
-     * Resolución visual del hit.
-     */
-    const isHit =
-        animation?.type === 'hit' &&
-        animation.targetId === fighter.fighterId;
+    const cardAnimationClass =
+        getFighterCardAnimationClass(
+            animationState,
+            fighter.side
+        );
 
-    const isDodging =
-        animation?.type === 'dodged' &&
-        animation.targetId === fighter.fighterId;
-
-    const isBlocking =
-        animation?.type === 'blocked' &&
-        animation.targetId === fighter.fighterId;
-
-    const attackMissed =
-        animation?.type === 'missed' &&
-        animation.targetId === fighter.fighterId;
-
-    const isTakingDamage =
-        animation?.type === 'damage' &&
-        animation.targetId === fighter.fighterId;
-
-    const isStunned =
-        animation?.type === 'stunned' &&
-        animation.fighterId === fighter.fighterId;
-
-    const isReceivingHealing =
-        animation?.type === 'healing' &&
-        animation.targetId === fighter.fighterId;
-    /*
-     * Animación física de la card.
-     */
-    const hitAnimationClass =
-        isHit
-            ? animation.critical
-                ? 'animate-[fight-critical-hit_450ms_ease-out]'
-                : 'animate-[fight-hit_350ms_ease-out]'
-            : '';
-
-    const stunnedAnimationClass =
-        isStunned
-            ? 'animate-[fight-stunned_700ms_ease-in-out]'
-            : '';
-
-    const dodgeAnimationClass =
-        isDodging
-            ? fighter.side === 'allies'
-                ? 'animate-[fight-dodge-left_450ms_ease-out]'
-                : 'animate-[fight-dodge-right_450ms_ease-out]'
-            : '';
-
-    const blockAnimationClass =
-        isBlocking
-            ? 'animate-[fight-block_400ms_ease-out]'
-            : '';
-
-    const damageColorClass =
-        isTakingDamage
-            ? {
-                ad: 'text-orange-400',
-                ap: 'text-cyan-400',
-                true: 'text-white'
-            }[animation.damageType]
-            : '';
-
-    const resourceAnimation =
-        animation?.type === 'resource_changed' &&
-            animation.fighterId === fighter.fighterId
-            ? animation
-            : undefined;
-
-    const statusEffectDamageAnimation =
-        animation?.type === 'status_effect_damage' &&
-            animation.targetId === fighter.fighterId
-            ? animation
-            : undefined;
+    const {
+        isDodging,
+        isBlocking,
+        isMissed,
+        isStunned,
+        floatingAnimation,
+    } = animationState;
 
     /*
      * Recursos.
@@ -167,7 +109,15 @@ export const FightFighterCard = ({
                 </div>
             )}
 
-            {isReceivingHealing && (
+            {floatingAnimation && (
+                <CombatFloatingValue
+                    animation={floatingAnimation}
+                />
+            )}
+
+
+
+            {isStunned && (
                 <div
                     className="
             pointer-events-none
@@ -176,34 +126,12 @@ export const FightFighterCard = ({
             top-1/2
             z-[70]
 
-            animate-[fight-damage-number_1000ms_linear_forwards]
-
-            whitespace-nowrap
-            text-xl
-            font-black
-            text-green-400
-            drop-shadow-lg
-        "
-                >
-                    +{animation.amount}
-                </div>
-            )}
-
-            {isStunned && (
-                <div
-                    key={resourceAnimation?.eventId}
-                    className="
-              pointer-events-none
-            absolute
-            left-1/2
-            top-1/2
-            z-[70]
-
             whitespace-nowrap
             font-black
             text-xl
-            drop-shadow-lg
             text-violet-200
+            drop-shadow-lg
+
             animate-[fight-damage-number_1000ms_linear_forwards]
         "
                 >
@@ -211,84 +139,6 @@ export const FightFighterCard = ({
                 </div>
             )}
 
-            {statusEffectDamageAnimation && (
-                <div
-                    key={statusEffectDamageAnimation.eventId}
-                    className={`
-            pointer-events-none
-            absolute
-            left-1/2
-            top-1/2
-            z-[70]
-
-            whitespace-nowrap
-            font-black
-            text-xl
-            drop-shadow-lg
-
-            animate-[fight-damage-number_1000ms_linear_forwards]
-
-            ${getStatusEffectDamageColor(
-                        statusEffectDamageAnimation.effectId
-                    )}
-        `}
-                >
-                    -{statusEffectDamageAnimation.amount}
-                </div>
-            )}
-
-            {resourceAnimation && (
-                <div
-                    key={resourceAnimation.eventId}
-                    className={`
-                        
-            pointer-events-none
-            absolute
-            left-1/2
-            top-1/2
-            z-[70]
-            whitespace-nowrap
-            font-black
-            text-xl
-            drop-shadow-lg
-
-            animate-[fight-resource-number_900ms_linear_forwards]
-
-            ${resourceAnimation.resource === 'hp'
-                            ? 'text-green-500'
-                            : 'text-blue-400'
-                        }
-        `}
-                >
-                    {resourceAnimation.increased ? '+' : '-'}
-                    {resourceAnimation.amount}
-                </div>
-            )}
-
-            {isTakingDamage && (
-                <div
-                    className={`
-            pointer-events-none
-            absolute
-            bg-black/50
-            left-1/2
-            top-1/2
-            z-[70]
-            animate-[fight-damage-number_1000ms_linear_forwards]
-            whitespace-nowrap
-            font-black
-            drop-shadow-lg
-
-            ${animation.critical
-                            ? 'text-2xl '
-                            : 'text-xl '
-                        }
-            ${damageColorClass}
-        `}
-                >
-                    -{animation.amount}
-                </div>
-            )}
 
             {/* Acción seleccionada */}
             {selectedAction && (
@@ -383,7 +233,7 @@ export const FightFighterCard = ({
                 </div>
             )}
 
-            {attackMissed && (
+            {isMissed && (
                 <div
                     className="
                         pointer-events-none
@@ -446,10 +296,7 @@ export const FightFighterCard = ({
                         : ''
                     }
 
-                    ${hitAnimationClass}
-                    ${dodgeAnimationClass}
-                    ${blockAnimationClass}
-                    ${stunnedAnimationClass}
+                    ${cardAnimationClass}
                 `}
             >
                 {expanded ? (

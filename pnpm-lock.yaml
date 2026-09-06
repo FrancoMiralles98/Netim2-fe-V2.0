@@ -10,7 +10,7 @@ importers:
     dependencies:
       axios:
         specifier: ^1.18.1
-        version: 1.18.1(debug@4.4.3)
+        version: 1.18.1
       netim2-shared:
         specifier: github:FrancoMiralles98/netim2-shared#v0.2.5
         version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/dddbb052a803dcdfdd976656f69fc9d0fccecb04
@@ -1671,9 +1671,9 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.18.1(debug@4.4.3):
+  axios@1.18.1:
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3)
+      follow-redirects: 1.16.0
       form-data: 4.0.6
       https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
@@ -1883,9 +1883,7 @@ snapshots:
 
   flatted@3.4.2: {}
 
-  follow-redirects@1.16.0(debug@4.4.3):
-    optionalDependencies:
-      debug: 4.4.3
+  follow-redirects@1.16.0: {}
 
   form-data@4.0.6:
     dependencies:

@@ -2,32 +2,22 @@ import type { FightEvent } from "netim2-shared";
 
 export const EXPLICIT_EVENTS: FightEvent[] = [
     {
-        type: 'fight_finished',
-
-        eventId: 'event-finished',
-        fightId: 'fight-test',
-        turnNumber: 8,
-
-        result: {
-            outcome: 'winner',
-
-            winnerSide: 'allies',
-
-            winnerFighterIds: [
-                'guerrero-id1'
-            ],
-
-            survivingFighterIds: [
-                'guerrero-id1'
-            ],
-
-            defeatedFighterIds: [
-                'mob-id'
-            ],
-
-            reason: 'team_defeated',
-
-            finishedOnTurn: 8
-        }
+        type: 'damage_resolved',
+        critical: false,
+        eventId: 'dwakdaf',
+        fightId: 'fight-id',
+        penetrating: false,
+        resolution: {
+            appliedDamage: 100,
+            damageType: 'ad',
+            delivery: 'direct'
+        },
+        source: {type: 'basic_attack',sourceFighterId:'guerrero-id'},
+        targetCurrentHp: 1000,
+        targetDefeated: false,
+        targetFighterId: 'mob-id',
+        targetPreviousHp: 1100,
+        turnNumber: 1,
+        componentIndex: 1,
     }
 ];

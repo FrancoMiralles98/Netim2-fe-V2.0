@@ -1,4 +1,15 @@
-import type { ActiveStatusEffectId, CombatAction, DamageType, FighterResourceType, ResourceChangeReason } from "netim2-shared";
+import type { ActiveStatusEffectId, CombatAction, DamageType, FighterResourceType, FightEvent, ResourceChangeReason } from "netim2-shared";
+
+export interface PlaybackEventEntry {
+    fightId: string;
+
+    turnNumber: number;
+
+    fighterId: string;
+    targetId: string;
+
+    event: FightEvent;
+}
 
 export interface FightPlaybackState {
     currentTurn: number;

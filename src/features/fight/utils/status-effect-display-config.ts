@@ -36,100 +36,61 @@ export const STATUS_EFFECT_DISPLAY_CONFIG = {
 } as const;
 
 
-export const getCombatVisualIconConfig = {
-    veneno: {
-        icon: './fight/poison-icon.png'
-    },
-    sangrado: {
-        icon: './fight/icon-bleed-mana.png'
-    },
-
-    incendio: {
-        icon: '/fight/icon-fire.png'
-    },
-    electrico: {
-        icon: './fight/electric-icon.png'
-    },
-    ad: {
-        icon: './fight/icono-ad.png'
-    },
-    ap: {
-        icon: './fight/icono-ap.png'
-    },
-    true: {
-        icon: './fight/true-icon.png'
-    },
-    critico: {
-        icon: './fight/critico.png'
-    },
-    heal: {
-        icon: './fight/healt-icon1.png'
-    }
-
-} as const
-
 export const COMBAT_VISUAL_ICON_CONFIG = {
     veneno: {
         icon: '/fight/poison-icon.png',
+        color: 'text-orange-300'
     },
 
     sangrado: {
         icon: '/fight/icon-bleed-mana.png',
+        color: 'text-orange-300'
     },
 
     incendio: {
         icon: '/fight/icon-fire.png',
+        color: 'text-orange-300'
     },
 
     electrico: {
         icon: '/fight/electric-icon.png',
+        color: 'text-orange-300'
     },
 
     ad: {
         icon: '/fight/icono-ad.png',
+        color: 'text-orange-300'
     },
 
     ap: {
         icon: '/fight/icono-ap.png',
+        color: 'text-orange-300'
     },
 
     true: {
         icon: '/fight/true-icon.png',
+        color: 'text-orange-300'
     },
 
     critico: {
         icon: '/fight/critico.png',
+        color: 'text-orange-300'
     },
 
     heal: {
         icon: '/fight/healt-icon1.png',
+        color: 'text-orange-300'
     },
 
     mana: {
         icon: '/fight/mana-icon.png',
+        color: 'text-orange-300'
     },
 } as const;
 
 export type CombatVisualIconKey =
     keyof typeof COMBAT_VISUAL_ICON_CONFIG;
 
-
-export const getDamageColor = (
-    damageType: DamageType
-): string => {
-
-    switch (damageType) {
-
-        case 'ad':
-            return 'text-red-400';
-
-        case 'ap':
-            return 'text-violet-400';
-
-        case 'true':
-            return 'text-white';
-    }
-};
 
 export const getStatusEffectDamageIcon = (
     effectId: ActiveStatusEffectId

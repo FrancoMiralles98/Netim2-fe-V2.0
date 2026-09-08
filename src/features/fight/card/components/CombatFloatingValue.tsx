@@ -1,6 +1,6 @@
 import type { FightAnimationState } from "../../animations/animations.types";
 import { getStatusEffectDamageColor } from "../../animations/utils/animation-utils";
-import { COMBAT_VISUAL_ICON_CONFIG, getDamageColor, getStatusEffectDamageIcon } from "../../utils/status-effect-display-config";
+import { COMBAT_VISUAL_ICON_CONFIG, getStatusEffectDamageIcon } from "../../utils/status-effect-display-config";
 
 export type CombatFloatingAnimation = Extract<
     FightAnimationState,
@@ -36,13 +36,12 @@ export const CombatFloatingValue = ({
                             animation.damageType
                         ].icon,
 
-                    colorClass:
-                        getDamageColor(animation.damageType),
-
+                    colorClass: COMBAT_VISUAL_ICON_CONFIG[animation.damageType].color,
+                    
                     critical: animation.critical,
 
                     animationClass:
-                        'animate-[fight-damage-number_1000ms_linear_forwards]',
+                        'animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]',
                 };
             }
 
@@ -61,7 +60,7 @@ export const CombatFloatingValue = ({
                     critical: false,
 
                     animationClass:
-                        'animate-[fight-damage-number_1000ms_linear_forwards]',
+                        'animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]',
                 };
             }
 
@@ -92,7 +91,7 @@ export const CombatFloatingValue = ({
                     critical: animation.critical,
 
                     animationClass:
-                        'animate-[fight-resource-number_900ms_linear_forwards]',
+                       'animate-[fight-resource-number_var(--fight-resource-duration)_linear_forwards]'
                 };
             }
 
@@ -117,7 +116,7 @@ export const CombatFloatingValue = ({
                     critical: false,
 
                     animationClass:
-                        'animate-[fight-damage-number_1000ms_linear_forwards]',
+                        'animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]',
                 };
             }
         }

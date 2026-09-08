@@ -8,6 +8,7 @@ import { FightActionIndicator } from "../animations/components/FightActionIndica
 import type { FightAnimationState } from "../animations/animations.types";
 import { getFighterAnimationVisualState, getFighterCardAnimationClass } from "../utils/get-visual-animation.helper";
 import { CombatFloatingValue } from "./components/CombatFloatingValue";
+import type { FightPlaybackSpeed } from "../animations/use-fight-play-back.type";
 
 export interface FightFighterCardProps {
     fighter: FightFighterState;
@@ -20,6 +21,7 @@ export interface FightFighterCardProps {
 
     animation?: FightAnimationState;
     message?: string;
+    speed: FightPlaybackSpeed
 }
 
 export const FightFighterCard = ({
@@ -29,10 +31,31 @@ export const FightFighterCard = ({
     isCurrentTarget = false,
     selectedAction,
     animation,
-    message
+    message,
+    speed
 }: FightFighterCardProps) => {
 
     const [expanded, setExpanded] = useState(false);
+
+    const animationVariables = {
+        '--fight-damage-duration':
+            `${1300 / speed}ms`,
+
+        '--fight-resource-duration':
+            `${1300 / speed}ms`,
+
+        '--fight-hit-duration':
+            `${400 / speed}ms`,
+
+        '--fight-dodge-duration':
+            `${500 / speed}ms`,
+
+        '--fight-block-duration':
+            `${500 / speed}ms`,
+
+        '--fight-stun-duration':
+            `${900 / speed}ms`
+    } as React.CSSProperties;
 
     const animationState =
         getFighterAnimationVisualState(
@@ -75,6 +98,7 @@ export const FightFighterCard = ({
 
     return (
         <div
+            style={animationVariables}
             className={`
                 relative
                 mt-9
@@ -102,7 +126,7 @@ export const FightFighterCard = ({
             text-xl
             drop-shadow-lg
             text-violet-200
-            animate-[fight-damage-number_1000ms_linear_forwards]
+            animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]
         "
                 >
                     {message}
@@ -132,7 +156,7 @@ export const FightFighterCard = ({
             text-violet-200
             drop-shadow-lg
 
-            animate-[fight-damage-number_1000ms_linear_forwards]
+            animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]
         "
                 >
                     STUNNED

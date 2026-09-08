@@ -6,7 +6,7 @@ export interface FightFighterState {
     fighterId: string;
     name: string;
     side: FighterSide;
-
+    icon: string;
     alive: boolean;
 
     skills: FightSkillDisplay[]
@@ -25,9 +25,12 @@ export interface FightFighterState {
 
     cooldowns: FightSkillCooldown[];
 
-    activeEffects: FightStatusEffectState[];
-    activeAuras: FightAuraState[];
-    activeBuffs: FightBuffState[];
+    activeEffects: Map<ActiveStatusEffectId, FightStatusEffectState>;
+
+    activeAuras: Map<UNIQUE_ID_SKILLS, FightAuraState>;
+
+    activeBuffs: Map<UNIQUE_ID_SKILLS, FightBuffState>;
+
     statModifiers: FightStatModifierDisplay[];
 }
 
@@ -38,9 +41,7 @@ export interface FightSkillCooldown {
 }
 
 export interface FightStatusEffectState {
-    instanceId: string;
-
-    effectId: ActiveStatusEffectId; 
+    effectId: ActiveStatusEffectId;
 
     sourceFighterId: string;
 
@@ -52,7 +53,6 @@ export interface FightStatusEffectState {
 }
 
 export interface FightAuraState {
-    instanceId: string;
     auraId: UNIQUE_ID_SKILLS;
     name: string;
     sourceFighterId: string;
@@ -60,7 +60,6 @@ export interface FightAuraState {
 }
 
 export interface FightBuffState {
-    instanceId: string;
     buffId: UNIQUE_ID_SKILLS;
     name: string;
     sourceFighterId: string;

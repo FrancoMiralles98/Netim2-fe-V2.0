@@ -182,6 +182,24 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 eventIndexRef.current += 1;
             }
 
+            /*
+             * La reproducción terminó correctamente.
+             */
+            const playbackFinished =
+                eventIndexRef.current >=
+                playbackEvents.length;
+
+            if (
+                playbackFinished &&
+                events?.result &&
+                sessionId ===
+                playbackSessionRef.current
+            ) {
+                showFightResult(
+                    events.result
+                );
+            }
+
         } finally {
 
             if (
@@ -204,14 +222,8 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
          */
         playbackSessionRef.current += 1;
 
-        /*
-         * Vuelve al primer FightEvent.
-         */
         eventIndexRef.current = 0;
 
-        /*
-         * Detiene reproducción y pausa.
-         */
         isPlayingRef.current = false;
         isPausedRef.current = false;
 
@@ -219,25 +231,16 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         setIsPaused(false);
         setFightResult(null);
 
-        /*
-         * Restauramos velocidad.
-         */
+
         speedRef.current = 1;
         setSpeedState(1);
 
-        /*
-         * Restauramos completamente los fighters.
-         *
-         * structuredClone evita compartir referencias
-         * con el snapshot original.
-         */
+
         setFightersState(
             structuredClone(initialFighters)
         );
 
-        /*
-         * Limpiamos todo el estado visual temporal.
-         */
+
         setPlayback({
             currentTurn: 0,
             currentActorId: undefined,
@@ -246,6 +249,25 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
             animation: undefined,
             message: undefined
         });
+    };
+
+    const showFightResult = (
+        result: FightResult
+    ): void => {
+
+        setPlayback(prev => ({
+            ...prev,
+
+            currentActorId: undefined,
+            currentTargetId: undefined,
+            currentAction: undefined,
+
+            animation: undefined,
+            hitSequence: undefined,
+            message: undefined
+        }));
+
+        setFightResult(result);
     };
 
     const playDoubleHit = async (
@@ -273,7 +295,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 `Golpe x${event.generatedHitCount}`
         }));
 
-        await wait(450);
+        await wait(950);
 
         setPlayback(prev => ({
             ...prev,
@@ -394,37 +416,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
             case 'buff_applied':
                 playBuffApplied(event, fighterId, targetId);
                 break;
-
-            case 'fight_finished':
-                await playFightFinished(event);
-                break;
         }
-    };
-
-    const playFightFinished = async (
-        event: FightFinishedEvent
-    ): Promise<void> => {
-
-        /*
-         * Limpiamos cualquier estado temporal
-         * que haya quedado de la última acción.
-         */
-        setPlayback(prev => ({
-            ...prev,
-
-            currentActorId: undefined,
-            currentTargetId: undefined,
-            currentAction: undefined,
-
-            animation: undefined,
-            hitSequence: undefined,
-            message: undefined
-        }));
-
-        /*
-         * Abrir el modal final.
-         */
-        setFightResult(event.result);
     };
 
     const playBuffApplied = (
@@ -1409,8 +1401,6 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                         hitIndex:
                             event.hitIndex
                     },
-
-                    message: 'MISS'
                 }));
 
                 await wait(900);
@@ -1434,12 +1424,9 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                         hitIndex:
                             event.hitIndex
                     },
-
-                    message:
-                        'ESQUIVADO'
                 }));
 
-                await wait(500);
+                await wait(900);
 
                 break;
             }
@@ -1460,12 +1447,9 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                         hitIndex:
                             event.hitIndex
                     },
-
-                    message:
-                        'BLOQUEADO'
                 }));
 
-                await wait(500);
+                await wait(900);
 
                 break;
             }
@@ -1490,7 +1474,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                     }
                 }));
 
-                await wait(400);
+                await wait(100);
 
                 break;
             }

@@ -1,6 +1,7 @@
 import type { FightAnimationState } from "../../animations/animations.types";
 import { getStatusEffectDamageColor } from "../../animations/utils/animation-utils";
 import { COMBAT_VISUAL_ICON_CONFIG, getStatusEffectDamageIcon } from "../../utils/status-effect-display-config";
+import { CombatColoredIcon } from "./icons/CombatColorIcon";
 
 export type CombatFloatingAnimation = Extract<
     FightAnimationState,
@@ -37,7 +38,7 @@ export const CombatFloatingValue = ({
                         ].icon,
 
                     colorClass: COMBAT_VISUAL_ICON_CONFIG[animation.damageType].color,
-                    
+
                     critical: animation.critical,
 
                     animationClass:
@@ -91,7 +92,7 @@ export const CombatFloatingValue = ({
                     critical: animation.critical,
 
                     animationClass:
-                       'animate-[fight-resource-number_var(--fight-resource-duration)_linear_forwards]'
+                        'animate-[fight-resource-number_var(--fight-resource-duration)_linear_forwards]'
                 };
             }
 
@@ -151,17 +152,9 @@ export const CombatFloatingValue = ({
             `}
         >
             {/* Icono del tipo de daño/recurso */}
-            <img
+            <CombatColoredIcon
                 src={config.icon}
-                alt=""
-                className={`
-                    object-contain
-
-                    ${config.critical
-                        ? 'h-6 w-6'
-                        : 'h-5 w-5'
-                    }
-                `}
+                critical={config.critical}
             />
 
             {/* Valor */}

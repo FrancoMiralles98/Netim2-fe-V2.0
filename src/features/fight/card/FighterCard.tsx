@@ -212,22 +212,19 @@ export const FightFighterCard = ({
             {isDodging && (
                 <div
                     className="
-                        pointer-events-none
-                        absolute
-                        left-1/2
-                        top-1/2
-                        z-[60]
+              pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
 
-                        -translate-x-1/2
-                        -translate-y-1/2
-
-                        whitespace-nowrap
-
-                        text-sm
-                        font-black
-                        text-cyan-300
-                        drop-shadow-lg
-                    "
+            whitespace-nowrap
+            font-black
+            text-lg
+            drop-shadow-lg
+            text-slate-200
+            animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]
+        "
                 >
                     ESQUIVADO
                 </div>
@@ -236,22 +233,19 @@ export const FightFighterCard = ({
             {isBlocking && (
                 <div
                     className="
-                        pointer-events-none
-                        absolute
-                        left-1/2
-                        top-1/2
-                        z-[60]
+              pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
 
-                        -translate-x-1/2
-                        -translate-y-1/2
-
-                        whitespace-nowrap
-
-                        text-sm
-                        font-black
-                        text-slate-200
-                        drop-shadow-lg
-                    "
+            whitespace-nowrap
+            font-black
+            text-lg
+            drop-shadow-lg
+            text-slate-200
+            animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]
+        "
                 >
                     BLOQUEADO
                 </div>
@@ -260,22 +254,19 @@ export const FightFighterCard = ({
             {isMissed && (
                 <div
                     className="
-                        pointer-events-none
-                        absolute
-                        left-1/2
-                        top-1/2
-                        z-[60]
+              pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            z-[70]
 
-                        -translate-x-1/2
-                        -translate-y-1/2
-
-                        whitespace-nowrap
-
-                        text-sm
-                        font-black
-                        text-slate-400
-                        drop-shadow-lg
-                    "
+            whitespace-nowrap
+            font-black
+            text-lg
+            drop-shadow-lg
+            text-slate-200
+            animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]
+        "
                 >
                     MISS
                 </div>

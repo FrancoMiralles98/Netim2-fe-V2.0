@@ -7,10 +7,14 @@ import { FightResultModal } from "./animations/components/FightResultModal"
 import type { FighterInitiativeResult, FightPlaybackPayload } from "netim2-shared"
 import { fightLabRequest } from "./api/fight.services"
 import { mapInitialFightersToState } from "./utils/mapper-initial-fighters"
+import { FightPlaybackControls } from "./card/components/FightPlayBackControls"
+import { useModal } from "../../shared/modal/hooks/useModal"
 
 export const FightTest = () => {
     const [openInitiative, setOpenInitiative] =
         useState(false);
+
+    const modal = useModal();
 
     const [fightEvents, setFightEvents] =
         useState<FightPlaybackPayload | undefined>(
@@ -57,9 +61,8 @@ export const FightTest = () => {
             return;
         }
 
-        /*
-         * Cerramos cualquier pelea anterior.
-         */
+        closeFightResult();
+
         setOpenInitiative(false);
 
         setFightEvents(undefined);
@@ -69,39 +72,20 @@ export const FightTest = () => {
         setLoadingFight(true);
 
         try {
-            const response =
-                await fightLabRequest();
+            const response = await fightLabRequest();
 
-            /*
-             * Transformamos el DTO inicial del backend
-             * al estado que utiliza el reproductor.
-             */
-            const fighters =
-                mapInitialFightersToState(
-                    response.initialFighters
-                );
+            const fighters = mapInitialFightersToState(response.initialFighters);
 
             setInitialFighters(fighters);
 
-            setFightEvents(
-                response.fightPlaybackPayload
-            );
+            setFightEvents(response.fightPlaybackPayload);
 
-            setInitiativeResults(
-                response.initiativeResults
-            );
+            setInitiativeResults(response.initiativeResults);
 
-            /*
-             * Ahora sí tenemos toda la información
-             * necesaria para mostrar la iniciativa.
-             */
             setOpenInitiative(true);
 
         } catch (error) {
-            console.error(
-                'Error cargando pelea:',
-                error
-            );
+            modal.showErrorModal(error)
         } finally {
             setLoadingFight(false);
         }
@@ -146,193 +130,22 @@ export const FightTest = () => {
                 onClose={closeFightResult}
             />
 
-            {/* CONTROLES */}
-            <div
-                className="
-                    flex
-                    items-center
-                    gap-2
-                "
-            >
-                {/* Cargar pelea */}
-                <button
-                    type="button"
-                    onClick={loadFight}
-                    disabled={
-                        loadingFight ||
-                        isPlaying
-                    }
-                    className="
-                        rounded
-                        bg-slate-700
-                        px-3
-                        py-1
-                        text-white
+            <FightPlaybackControls
+                loadingFight={loadingFight}
+                fightReady={fightReady}
 
-                        disabled:
-                        cursor-not-allowed
+                isPlaying={isPlaying}
+                isPaused={isPaused}
 
-                        disabled:
-                        opacity-40
-                    "
-                >
-                    {loadingFight
-                        ? 'Cargando pelea...'
-                        : 'Abrir'
-                    }
-                </button>
+                speed={speed}
 
-                {/* PLAY */}
-                <button
-                    type="button"
-                    onClick={play}
-                    disabled={
-                        !fightEvents ||
-                        loadingFight ||
-                        (isPlaying && !isPaused)
-                    }
-                    className="
-                        rounded
-                        bg-green-700
-                        px-3
-                        py-1
-                        text-white
+                onLoadFight={loadFight}
+                onPlay={play}
+                onPause={pause}
+                onReset={reset}
 
-                        disabled:
-                        cursor-not-allowed
-
-                        disabled:
-                        opacity-40
-                    "
-                >
-                    {isPaused
-                        ? 'Continuar'
-                        : 'Play'
-                    }
-                </button>
-
-                {/* PAUSE */}
-                <button
-                    type="button"
-                    onClick={pause}
-                    disabled={
-                        !isPlaying ||
-                        isPaused
-                    }
-                    className="
-                        rounded
-                        bg-yellow-700
-                        px-3
-                        py-1
-                        text-white
-
-                        disabled:
-                        cursor-not-allowed
-
-                        disabled:
-                        opacity-40
-                    "
-                >
-                    Pause
-                </button>
-
-                {/* x1 */}
-                <button
-                    type="button"
-                    onClick={() =>
-                        changeSpeed(1)
-                    }
-                    disabled={!fightReady}
-                    className={`
-                        rounded
-                        px-2
-                        py-1
-                        text-white
-
-                        disabled:opacity-40
-
-                        ${speed === 1
-                            ? 'bg-blue-600'
-                            : 'bg-slate-700'
-                        }
-                    `}
-                >
-                    x1
-                </button>
-
-                {/* x2 */}
-                <button
-                    type="button"
-                    onClick={() =>
-                        changeSpeed(2)
-                    }
-                    disabled={!fightReady}
-                    className={`
-                        rounded
-                        px-2
-                        py-1
-                        text-white
-
-                        disabled:opacity-40
-
-                        ${speed === 2
-                            ? 'bg-blue-600'
-                            : 'bg-slate-700'
-                        }
-                    `}
-                >
-                    x2
-                </button>
-
-                {/* x4 */}
-                <button
-                    type="button"
-                    onClick={() =>
-                        changeSpeed(4)
-                    }
-                    disabled={!fightReady}
-                    className={`
-                        rounded
-                        px-2
-                        py-1
-                        text-white
-
-                        disabled:opacity-40
-
-                        ${speed === 4
-                            ? 'bg-blue-600'
-                            : 'bg-slate-700'
-                        }
-                    `}
-                >
-                    x4
-                </button>
-
-                {/* RESET */}
-                <button
-                    type="button"
-                    onClick={reset}
-                    disabled={
-                        !fightEvents ||
-                        loadingFight
-                    }
-                    className="
-                        rounded
-                        bg-red-700
-                        px-3
-                        py-1
-                        text-white
-
-                        disabled:
-                        cursor-not-allowed
-
-                        disabled:
-                        opacity-40
-                    "
-                >
-                    Reset
-                </button>
-            </div>
+                onChangeSpeed={changeSpeed}
+            />
 
             {/* LOADING */}
             {loadingFight && (

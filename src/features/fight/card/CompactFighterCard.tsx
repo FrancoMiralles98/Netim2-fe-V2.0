@@ -1,5 +1,5 @@
-import { getIconRace } from "../../characterSelection/utils/character-selecition-utils";
 import { CompactResourceBar } from "./components/bars/CompactResourceBar";
+import { FightFighterIcon } from "./components/icons/FightFighterIcon";
 import type { FightFighterState } from "./fighter-state";
 
 export interface FighterCardContentProps {
@@ -18,25 +18,8 @@ export const CompactFighterCard = ({
         <div className="flex items-center gap-2">
 
             {/* Icono */}
-            <img
-                src={getIconRace(
-                    'guerrero',
-                    'masculino'
-                )}
-                className="
-                    h-[40px]
-                    min-w-[41px]
-                    max-w-[41px]
-                    overflow-hidden
-                    bg-[url('/characterSelection/icons_perfil.png')]
-                    bg-cover
-                    bg-no-repeat
-                "
-                alt={fighter.name}
-                title={fighter.name}
-                style={{
-                    backgroundPosition: '0px 0px'
-                }}
+            <FightFighterIcon
+                fighterName={fighter.name}
             />
 
             {/* Barras */}

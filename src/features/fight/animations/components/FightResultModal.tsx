@@ -5,13 +5,13 @@ export interface FightResultModalProps {
     result: FightResult | null;
     fighters: FightFighterState[];
 
-    onClose: () => void;
+    onFinishFight: () => void;
 }
 
 export const FightResultModal = ({
     result,
     fighters,
-    onClose
+    onFinishFight
 }: FightResultModalProps) => {
 
     if (!result) {
@@ -188,7 +188,7 @@ export const FightResultModal = ({
 
                 <button
                     type="button"
-                    onClick={onClose}
+                    onClick={onFinishFight}
                     className="
                         mt-6
                         w-full
@@ -207,7 +207,7 @@ export const FightResultModal = ({
                         hover:bg-slate-700
                     "
                 >
-                    Cerrar
+                    Terminar pelea
                 </button>
             </div>
         </div>

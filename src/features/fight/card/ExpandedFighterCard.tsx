@@ -1,6 +1,6 @@
-import { getIconRace } from "../../characterSelection/utils/character-selecition-utils";
 import type { FighterCardContentProps } from "./fighter-state";
 import { FightResourceBar } from "./components/bars/ResourceBar";
+import { FightFighterIcon } from "./components/icons/FightFighterIcon";
 import { FightSkillIcon } from "./components/icons/SkillIcon";
 
 export const ExpandedFighterCard = ({
@@ -13,24 +13,8 @@ export const ExpandedFighterCard = ({
         <>
             {/* Icono */}
             <div className="flex justify-center">
-                <img
-                    src={getIconRace(
-                        'guerrero',
-                        'masculino'
-                    )}
-                    className="
-                        h-[40px]
-                        min-w-[41px]
-                        max-w-[41px]
-                        overflow-hidden
-                        bg-[url('/characterSelection/icons_perfil.png')]
-                        bg-cover
-                        bg-no-repeat
-                    "
-                    alt={fighter.name}
-                    style={{
-                        backgroundPosition: '0px 0px'
-                    }}
+                <FightFighterIcon
+                    fighterName={fighter.name}
                 />
             </div>
 

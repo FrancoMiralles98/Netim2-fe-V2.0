@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FightAuraState, FightBuffState, FightFighterState, FightStatusEffectState } from "../../card/fighter-state";
 import type { FightPlaybackState, PlaybackEventEntry } from "../animations.types";
-import type { ActionSelectedEvent, AuraActivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightEvent, FightFinishedEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
+import type { ActionSelectedEvent, AuraActivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
 import type { FightPlaybackSpeed, UseFightPlayBackProps } from "../use-fight-play-back.type";
 
-export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackProps) => {
+export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPlayBackProps) => {
     const [fightersState, setFightersState] = useState<FightFighterState[]>(() => structuredClone(initialFighters));
 
     const [playback, setPlayback] = useState<FightPlaybackState>({ currentTurn: 0 });
@@ -19,6 +19,16 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
     const isPausedRef = useRef(false);
     const speedRef = useRef<FightPlaybackSpeed>(1);
     const playbackSessionRef = useRef(0);
+    const floatingAnimationSequenceRef = useRef(0);
+
+    const getNextFloatingAnimationId = (): string => {
+        floatingAnimationSequenceRef.current += 1;
+
+        return [
+            playbackSessionRef.current,
+            floatingAnimationSequenceRef.current
+        ].join(':');
+    };
 
     const [fightResult, setFightResult] = useState<FightResult | null>(null);
 
@@ -191,12 +201,12 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
 
             if (
                 playbackFinished &&
-                events?.result &&
+                result &&
                 sessionId ===
                 playbackSessionRef.current
             ) {
                 showFightResult(
-                    events.result
+                    result
                 );
             }
 
@@ -221,6 +231,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
          * que todavía esté ejecutándose.
          */
         playbackSessionRef.current += 1;
+        floatingAnimationSequenceRef.current = 0;
 
         eventIndexRef.current = 0;
 
@@ -699,11 +710,14 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
          * realmente recuperó HP.
          */
         if (appliedHealing > 0) {
+            const animationId = getNextFloatingAnimationId();
+
             setPlayback(prev => ({
                 ...prev,
 
                 animation: {
                     type: 'healing',
+                    id: animationId,
                     targetId: targetId,
                     critical: event.resolution.critical,
                     amount:
@@ -1063,6 +1077,8 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         targetId: string
     ): Promise<void> => {
 
+        const animationId = getNextFloatingAnimationId();
+
         setFightersState(prev =>
             prev.map(fighter => {
 
@@ -1128,7 +1144,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 type:
                     'status_effect_damage',
 
-                eventId: `proc${event.effectId}`,
+                id: animationId,
 
                 targetId:
                     targetId,
@@ -1150,6 +1166,8 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
     };
 
     const playResourceChanged = async (event: ResourceChangedEvent, fighterId: string) => {
+        const animationId = getNextFloatingAnimationId();
+
         setFightersState(prev =>
             prev.map(fighter => {
                 if (fighter.fighterId !== fighterId) {
@@ -1190,12 +1208,12 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
 
             animation: {
                 type: 'resource_changed',
+                id: animationId,
                 fighterId: fighterId,
                 critical: false,
                 resource: event.resource,
                 reason: 'aura_upkeep',
                 amount: event.amount,
-                eventId: `change${event.type}`,
                 increased
             }
         }));
@@ -1268,6 +1286,8 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         targetId: string
     ): Promise<void> => {
 
+        const animationId = getNextFloatingAnimationId();
+
         setFightersState(prev =>
             prev.map(fighter => {
 
@@ -1326,8 +1346,7 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
                 type:
                     'status_effect_damage',
 
-                eventId:
-                    `${event.effectId}${targetId}`,
+                id: animationId,
 
                 targetId:
                     targetId,
@@ -1493,11 +1512,14 @@ export const useFightPlayBack = ({ initialFighters, events }: UseFightPlayBackPr
         targetId: string
     ) => {
 
+        const animationId = getNextFloatingAnimationId();
+
         setPlayback(prev => ({
             ...prev,
 
             animation: {
                 type: 'damage',
+                id: animationId,
                 targetId: targetId,
                 penetrating: event.penetrating,
                 amount: event.resolution.appliedDamage,

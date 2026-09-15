@@ -1,5 +1,6 @@
 import type { ActiveStatusEffectId, CombatAction } from "netim2-shared";
 import type { FightFighterState } from "../../card/fighter-state";
+import { COMBAT_VISUAL_ICON_CONFIG } from "../../utils/status-effect-display-config";
 
 export interface FightActionDisplay {
     name: string;
@@ -47,16 +48,16 @@ export const getStatusEffectDamageColor = (
 ) => {
     switch (effectId) {
         case 'veneno':
-            return 'text-green-500';
+            return COMBAT_VISUAL_ICON_CONFIG.veneno.color;
 
         case 'incendio':
-            return 'text-orange-500';
+            return COMBAT_VISUAL_ICON_CONFIG.incendio.color;
 
         case 'sangrado':
-            return 'text-red-500';
+            return COMBAT_VISUAL_ICON_CONFIG.sangrado.color;
 
         case 'electrico':
-            return 'text-cyan-400';
+            return COMBAT_VISUAL_ICON_CONFIG.electrico.color;
 
         default:
             return 'text-white';

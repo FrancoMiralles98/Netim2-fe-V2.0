@@ -63,8 +63,8 @@ export type FightAnimationState =
     }
     | {
         type: 'resource_changed';
+        id: string;
         fighterId: string;
-        eventId: string;
         resource: FighterResourceType;
         reason: ResourceChangeReason;
         amount: number;
@@ -75,7 +75,7 @@ export type FightAnimationState =
     {
         type: 'status_effect_damage';
 
-        eventId: string;
+        id: string;
 
         targetId: string;
 
@@ -85,6 +85,7 @@ export type FightAnimationState =
     }
     | {
         type: 'damage';
+        id: string;
         targetId: string;
         amount: number;
         damageType: DamageType;
@@ -99,6 +100,7 @@ export type FightAnimationState =
     }
     | {
         type: 'healing';
+        id: string;
         targetId: string;
         amount: number;
         critical: boolean;

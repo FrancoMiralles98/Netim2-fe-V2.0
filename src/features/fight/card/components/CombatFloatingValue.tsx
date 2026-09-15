@@ -56,7 +56,9 @@ export const CombatFloatingValue = ({
                     icon:
                         COMBAT_VISUAL_ICON_CONFIG.heal.icon,
 
-                    colorClass: 'text-green-400',
+                    colorClass:
+                        COMBAT_VISUAL_ICON_CONFIG
+                            .heal.color,
 
                     critical: false,
 
@@ -86,8 +88,8 @@ export const CombatFloatingValue = ({
                         : COMBAT_VISUAL_ICON_CONFIG.mana.icon,
 
                     colorClass: isHp
-                        ? 'text-green-500'
-                        : 'text-blue-400',
+                        ? COMBAT_VISUAL_ICON_CONFIG.heal.color
+                        : COMBAT_VISUAL_ICON_CONFIG.mana.color,
 
                     critical: animation.critical,
 

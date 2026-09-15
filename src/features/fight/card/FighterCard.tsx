@@ -135,6 +135,7 @@ export const FightFighterCard = ({
 
             {floatingAnimation && (
                 <CombatFloatingValue
+                    key={floatingAnimation.id}
                     animation={floatingAnimation}
                 />
             )}

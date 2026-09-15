@@ -4,13 +4,22 @@ import { FightFighterCard } from "./card/FighterCard"
 import type { FightFighterState } from "./card/fighter-state"
 import { useFightPlayBack } from "./animations/hook/useFightPlayBack"
 import { FightResultModal } from "./animations/components/FightResultModal"
-import type { FighterInitiativeResult, FightPlaybackPayload } from "netim2-shared"
+import type { FighterInitiativeResult, FightPlaybackPayload, FightResult } from "netim2-shared"
 import { fightLabRequest } from "./api/fight.services"
 import { mapInitialFightersToState } from "./utils/mapper-initial-fighters"
 import { FightPlaybackControls } from "./card/components/FightPlayBackControls"
 import { useModal } from "../../shared/modal/hooks/useModal"
+import type { FighterFightSummary } from "../fightResult/types/fighter-fight-summary.types"
 
-export const FightTest = () => {
+export interface FightTestProps {
+    onFinishFight: (
+        summary: FighterFightSummary[]
+    ) => void;
+}
+
+export const FightTest = ({
+    onFinishFight
+}: FightTestProps) => {
     const [openInitiative, setOpenInitiative] =
         useState(false);
 
@@ -18,6 +27,16 @@ export const FightTest = () => {
 
     const [fightEvents, setFightEvents] =
         useState<FightPlaybackPayload | undefined>(
+            undefined
+        );
+
+    const [fightResponseResult, setFightResponseResult] =
+        useState<FightResult | undefined>(
+            undefined
+        );
+
+    const [fightSummary, setFightSummary] =
+        useState<FighterFightSummary[] | undefined>(
             undefined
         );
 
@@ -48,12 +67,15 @@ export const FightTest = () => {
         changeSpeed
     } = useFightPlayBack({
         initialFighters,
-        events: fightEvents
+        events: fightEvents,
+        result: fightResponseResult
     });
 
     const fightReady =
         !loadingFight &&
         fightEvents !== undefined &&
+        fightResponseResult !== undefined &&
+        fightSummary !== undefined &&
         initialFighters.length > 0;
 
     const loadFight = async (): Promise<void> => {
@@ -66,6 +88,8 @@ export const FightTest = () => {
         setOpenInitiative(false);
 
         setFightEvents(undefined);
+        setFightResponseResult(undefined);
+        setFightSummary(undefined);
         setInitialFighters([]);
         setInitiativeResults([]);
 
@@ -79,6 +103,10 @@ export const FightTest = () => {
             setInitialFighters(fighters);
 
             setFightEvents(response.fightPlaybackPayload);
+
+            setFightResponseResult(response.result);
+
+            setFightSummary(response.fighterFightSummary);
 
             setInitiativeResults(response.initiativeResults);
 
@@ -104,6 +132,15 @@ export const FightTest = () => {
         play();
     };
 
+    const finishFight = (): void => {
+        if (!fightSummary) {
+            return;
+        }
+
+        closeFightResult();
+        onFinishFight(fightSummary);
+    };
+
     const allies =
         fightersState.filter(
             fighter =>
@@ -127,7 +164,7 @@ export const FightTest = () => {
             <FightResultModal
                 result={fightResult}
                 fighters={fightersState}
-                onClose={closeFightResult}
+                onFinishFight={finishFight}
             />
 
             <FightPlaybackControls

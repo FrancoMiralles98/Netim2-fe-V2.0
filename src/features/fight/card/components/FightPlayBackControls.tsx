@@ -144,7 +144,7 @@ export const FightPlaybackControls = ({
             />
 
             <SpeedButton
-                value={4}
+                value={3}
                 currentSpeed={speed}
                 disabled={!fightReady}
                 onChange={onChangeSpeed}

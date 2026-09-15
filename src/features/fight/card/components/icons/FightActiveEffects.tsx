@@ -23,9 +23,9 @@ export const FightActiveEffects = ({
     };
 
     const hasEffects =
-        fighter.activeEffects.length > 0 ||
-        fighter.activeAuras.length > 0 ||
-        fighter.activeBuffs.length > 0;
+        fighter.activeEffects.size > 0 ||
+        fighter.activeAuras.size > 0 ||
+        fighter.activeBuffs.size > 0;
 
     if (!hasEffects) {
         return null;
@@ -34,53 +34,59 @@ export const FightActiveEffects = ({
     return (
         <div
             className="
-            
-                 absolute
-        bottom-full
-        left-0
-        right-0
-        z-20
-        mb-1.5
-        flex
-        flex-wrap
-        gap-1
+                absolute
+                bottom-full
+                left-0
+                right-0
+                z-20
+                mb-1.5
+
+                flex
+                flex-wrap
+                gap-1
             "
         >
-            {fighter.activeEffects.map(effect => (
-                <FightStatusEffectIcon
-                    key={effect.instanceId}
-                    effect={effect}
-                    sourceName={
-                        getSourceName(
-                            effect.sourceFighterId
-                        )
-                    }
-                />
-            ))}
+            {[...fighter.activeEffects.values()].map(
+                effect => (
+                    <FightStatusEffectIcon
+                        key={effect.effectId}
+                        effect={effect}
+                        sourceName={
+                            getSourceName(
+                                effect.sourceFighterId
+                            )
+                        }
+                    />
+                )
+            )}
 
-            {fighter.activeAuras.map(aura => (
-                <FightAuraIcon
-                    key={aura.instanceId}
-                    aura={aura}
-                    sourceName={
-                        getSourceName(
-                            aura.sourceFighterId
-                        )
-                    }
-                />
-            ))}
+            {[...fighter.activeAuras.values()].map(
+                aura => (
+                    <FightAuraIcon
+                        key={aura.auraId}
+                        aura={aura}
+                        sourceName={
+                            getSourceName(
+                                aura.sourceFighterId
+                            )
+                        }
+                    />
+                )
+            )}
 
-            {fighter.activeBuffs.map(buff => (
-                <FightBuffIcon
-                    key={buff.instanceId}
-                    buff={buff}
-                    sourceName={
-                        getSourceName(
-                            buff.sourceFighterId
-                        )
-                    }
-                />
-            ))}
+            {[...fighter.activeBuffs.values()].map(
+                buff => (
+                    <FightBuffIcon
+                        key={buff.buffId}
+                        buff={buff}
+                        sourceName={
+                            getSourceName(
+                                buff.sourceFighterId
+                            )
+                        }
+                    />
+                )
+            )}
         </div>
     );
 };

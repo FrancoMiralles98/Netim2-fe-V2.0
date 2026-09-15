@@ -10,4 +10,4 @@ export type FightPlaybackSpeed =
     | 0.5
     | 1
     | 2
-    | 4;
+    | 3;

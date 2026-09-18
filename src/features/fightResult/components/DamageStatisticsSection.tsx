@@ -1,6 +1,5 @@
 import type { DamageDealStatistics } from "netim2-shared";
 import {
-    getDamageDeliverySegments,
     getDamageSourceSegments,
     getDamageTypeSegments,
     getSkillDamageSegments,
@@ -18,10 +17,8 @@ export const DamageStatisticsSection = ({
 }: DamageStatisticsSectionProps) => {
     const damageTypeSegments = getDamageTypeSegments(
         dealt.byDamageType,
-        dealt.total
-    );
-    const deliverySegments = getDamageDeliverySegments(
-        dealt.byDelivery
+        dealt.total,
+        dealt.byDelivery.periodic
     );
     const sourceSegments = getDamageSourceSegments(
         dealt.bySource
@@ -36,35 +33,28 @@ export const DamageStatisticsSection = ({
     return (
         <div className="space-y-5">
             <StatisticBlock
-                title="Total infligido"
+                title=""
                 label="Daño total"
                 value={dealt.total}
                 segments={damageTypeSegments}
             />
 
             <StatisticBlock
-                title="Delivery"
-                label="Forma de entrega"
-                value={getSegmentsTotal(deliverySegments)}
-                segments={deliverySegments}
-            />
-
-            <StatisticBlock
-                title="Sources"
+                title=""
                 label="Fuentes de daño"
                 value={getSegmentsTotal(sourceSegments)}
                 segments={sourceSegments}
             />
 
             <StatisticBlock
-                title="Skills"
+                title=""
                 label="Daño de habilidades"
                 value={getSegmentsTotal(skillSegments)}
                 segments={skillSegments}
             />
 
             <StatisticBlock
-                title="Status effects"
+                title=""
                 label="Daño de estados"
                 value={getSegmentsTotal(statusEffectSegments)}
                 segments={statusEffectSegments}

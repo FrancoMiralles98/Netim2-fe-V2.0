@@ -1,5 +1,6 @@
 import type {
     ActiveStatusEffectId,
+    ActionStatistics,
     DamageDelivery,
     DamageType,
     HitStatistics
@@ -225,4 +226,40 @@ export const HEALING_PREVENTED_STATISTIC_CONFIG = {
     colorClass: 'bg-pink-500',
     textColorClass: 'text-pink-300',
     icon: STATUS_EFFECT_DISPLAY_CONFIG.corta_curacion.icon
+} satisfies FightStatisticVisualConfig;
+
+export const ACTION_STATISTIC_CONFIG = {
+    turnsPlayed: {
+        label: 'Turnos jugados',
+        colorClass: 'bg-sky-500',
+        textColorClass: 'text-sky-300'
+    },
+    basicAttacksUsed: {
+        label: 'Ataques básicos',
+        colorClass: 'bg-orange-500',
+        textColorClass: 'text-orange-300',
+        icon: '/fight/basic-attack.png'
+    },
+    skillsUsed: {
+        label: 'Habilidades',
+        colorClass: 'bg-blue-500',
+        textColorClass: 'text-blue-300'
+    },
+    skippedTurns: {
+        label: 'Turnos omitidos',
+        colorClass: 'bg-slate-500',
+        textColorClass: 'text-slate-300'
+    },
+    skippedByStun: {
+        label: 'Por desmayo',
+        colorClass: 'bg-violet-500',
+        textColorClass: 'text-violet-300',
+        icon: STATUS_EFFECT_DISPLAY_CONFIG.desmayo.icon
+    }
+} satisfies Record<keyof ActionStatistics, FightStatisticVisualConfig>;
+
+export const OTHER_SKIPPED_ACTION_CONFIG = {
+    label: 'Otros motivos',
+    colorClass: 'bg-slate-500',
+    textColorClass: 'text-slate-300'
 } satisfies FightStatisticVisualConfig;

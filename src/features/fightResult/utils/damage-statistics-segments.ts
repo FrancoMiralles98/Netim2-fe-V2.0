@@ -25,7 +25,8 @@ const DAMAGE_DELIVERIES: DamageDelivery[] = [
 
 export const getDamageTypeSegments = (
     values: Record<DamageType, number>,
-    total?: number
+    total?: number,
+    statusEffectDamage = 0
 ): StatisticsBarSegment[] => {
     const segments = DAMAGE_TYPES.map(type => ({
         key: type,
@@ -37,7 +38,15 @@ export const getDamageTypeSegments = (
             current + Math.max(0, segment.value),
         0
     );
-    const unclassified = (total ?? classifiedTotal) - classifiedTotal;
+    const unclassified = Math.max(
+        0,
+        (total ?? classifiedTotal) - classifiedTotal
+    );
+    const statusEffectTotal = Math.min(
+        unclassified,
+        Math.max(0, statusEffectDamage)
+    );
+    const remainingUnclassified = unclassified - statusEffectTotal;
 
     if (unclassified <= 0) {
         return segments;
@@ -45,11 +54,16 @@ export const getDamageTypeSegments = (
 
     return [
         ...segments,
-        {
+        ...(statusEffectTotal > 0 ? [{
+            key: 'statusEffects',
+            value: statusEffectTotal,
+            ...DAMAGE_SOURCE_STATISTIC_CONFIG.statusEffects
+        }] : []),
+        ...(remainingUnclassified > 0 ? [{
             key: 'unclassified',
-            value: unclassified,
+            value: remainingUnclassified,
             ...UNCLASSIFIED_STATISTIC_CONFIG
-        }
+        }] : [])
     ];
 };
 

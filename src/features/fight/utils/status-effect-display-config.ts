@@ -13,14 +13,13 @@ export const STATUS_EFFECT_DISPLAY_CONFIG = {
 
     incendio: {
         name: 'Incendio',
-        icon: '/fight/icon-fire.png'
+        icon: '/characterSelection/fire-icon.png'
     },
 
     electrico: {
         name: 'Eléctrico',
         icon: '/fight/electric-icon.png'
     },
-
     desmayo: {
         name: 'Desmayo',
         icon: '/characterSelection/desmayo-icon.png'

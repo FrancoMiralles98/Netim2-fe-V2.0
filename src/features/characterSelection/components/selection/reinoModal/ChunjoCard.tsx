@@ -65,10 +65,10 @@ export const ChunjoCard = ({ character, getImageClass, handleConnectClick, handl
                     </div>
                     <p className="text-center mr-5 font-medium">Stats</p>
                     <section className="w-[88%] ml-5 mx-auto">
-                        <StatBar maxValue={maxAttributeValue} name="VIT" value={character.stats.atributos.VIT.bonusPoints + character.stats.atributos.VIT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
-                        <StatBar maxValue={maxAttributeValue} name="STR" value={character.stats.atributos.STR.bonusPoints + character.stats.atributos.STR.lvPoints} isActive={isActive} animationKey={character.especialidad} />
-                        <StatBar maxValue={maxAttributeValue} name="INT" value={character.stats.atributos.INT.bonusPoints + character.stats.atributos.VIT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
-                        <StatBar maxValue={maxAttributeValue} name="DEX" value={character.stats.atributos.DEX.bonusPoints + character.stats.atributos.DEX.lvPoints} isActive={isActive} animationKey={character.especialidad} />
+                        <StatBar maxValue={maxAttributeValue} name="VIT" value={character.stats.VIT.bonusPoints + character.stats.VIT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
+                        <StatBar maxValue={maxAttributeValue} name="STR" value={character.stats.STR.bonusPoints + character.stats.STR.lvPoints} isActive={isActive} animationKey={character.especialidad} />
+                        <StatBar maxValue={maxAttributeValue} name="INT" value={character.stats.INT.bonusPoints + character.stats.VIT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
+                        <StatBar maxValue={maxAttributeValue} name="DEX" value={character.stats.DEX.bonusPoints + character.stats.DEX.lvPoints} isActive={isActive} animationKey={character.especialidad} />
                     </section>
                     <div className="flex justify-center mt-5 mr-5 ">
                         <NetimButton onClickButtom={handleConnectClick} text="Jugar" />

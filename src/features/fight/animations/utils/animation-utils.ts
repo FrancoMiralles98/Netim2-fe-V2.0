@@ -14,7 +14,7 @@ export const getFightActionDisplay = (fighter: FightFighterState, action: Combat
         case 'basic_attack':
             return {
                 name: 'Ataque básico',
-                icon: '/fight/icons/basic-attack.png'
+                icon: '/fight/basic-attack.png'
             };
 
         case 'use_damage_skill':

@@ -1513,6 +1513,9 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
     ) => {
 
         const animationId = getNextFloatingAnimationId();
+        const damageTargetId = event.source.type === 'reflected'
+            ? event.source.originalAttackerId
+            : targetId;
 
         setPlayback(prev => ({
             ...prev,
@@ -1520,7 +1523,7 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
             animation: {
                 type: 'damage',
                 id: animationId,
-                targetId: targetId,
+                targetId: damageTargetId,
                 penetrating: event.penetrating,
                 amount: event.resolution.appliedDamage,
                 critical: event.critical,
@@ -1533,7 +1536,7 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
 
                 if (
                     fighter.fighterId !==
-                    targetId
+                    damageTargetId
                 ) {
                     return fighter;
                 }
@@ -1541,7 +1544,9 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 return {
                     ...fighter,
 
-                    alive: !event.targetDefeated,
+                    alive: event.source.type === 'reflected'
+                        ? event.targetCurrentHp > 0
+                        : !event.targetDefeated,
 
                     resources: {
                         ...fighter.resources,

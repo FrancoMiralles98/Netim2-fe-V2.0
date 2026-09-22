@@ -6,6 +6,7 @@ import { PublicLayout } from "../layouts/PublicLayout";
 import { AuthUserSessionLayout } from "../layouts/AuthUserSessionLayout";
 import { RouterPaths } from "./router-paths.types";
 import { Game } from "../../pages/game/Game";
+import { FightView } from "../../features/fight/FightView";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <LandingPage />
+          },
+          {
+            path: '/fight-test',
+            element: <FightView/>
           }
         ]
       },

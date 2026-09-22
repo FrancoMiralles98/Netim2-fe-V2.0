@@ -51,6 +51,8 @@ export const useCharacterSelection = () => {
             try {
                 modal.showLoadingModal('Cargando...')
                 const request = await characterSelectionDataRequest()
+                console.log('request de seleccion',request);
+                
                 setCharacterCreationCOnfig(request)
                 modal.closeLoadingModal()
             } catch (error) {

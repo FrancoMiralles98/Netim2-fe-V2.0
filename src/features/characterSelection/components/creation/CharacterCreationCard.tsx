@@ -7,6 +7,7 @@ import { SpecialityEffectIcons } from "./SpecialityEffectIcons";
 import { useCharacterCreationCard } from "../../hooks/useCharacterCreationCard";
 import { SpecialityAuraEffectIcons } from "./SpecialityAuraEffectIcon";
 import type { CharacterCreationCardProps } from "../../types/props/character-creation-card-props";
+import { getCharacterSpecialityIconPath } from "../../../../shared/utils/get-character-speciality-icon-path";
 
 export const CharacterCreationCard = (
     { isActive,
@@ -74,7 +75,7 @@ export const CharacterCreationCard = (
                                             <img
                                                 id="especialidad-1"
                                                 onClick={() => setSelectedSpeciality(speciality1)}
-                                                src={`/characterSelection/${speciality1}.png`}
+                                                src={getCharacterSpecialityIconPath(speciality1)}
                                                 className={getImageClass(speciality1)}
                                                 alt={speciality1}
                                             />
@@ -108,7 +109,7 @@ export const CharacterCreationCard = (
                                             <img
                                                 id="especialidad-2"
                                                 onClick={() => setSelectedSpeciality(speciality2)}
-                                                src={`/characterSelection/${speciality2}.png`}
+                                                src={getCharacterSpecialityIconPath(speciality2)}
                                                 className={getImageClass(speciality2)}
                                                 alt={speciality2}
                                             />

@@ -1,0 +1,69 @@
+import type { ActiveStatusEffectId, CombatAction } from "netim2-shared";
+import type { FightFighterState } from "../../card/fighter-state";
+import { getSkillIconPath } from "../../../../shared/utils/get-skill-icon-path";
+import { COMBAT_VISUAL_ICON_CONFIG } from "../../utils/status-effect-display-config";
+
+export interface FightActionDisplay {
+    name: string;
+    icon: string;
+}
+
+export const getFightActionDisplay = (fighter: FightFighterState, action: CombatAction): FightActionDisplay | undefined => {
+
+    switch (action.type) {
+
+        case 'basic_attack':
+            return {
+                name: 'Ataque básico',
+                icon: '/fight/basic-attack.png'
+            };
+
+        case 'use_damage_skill':
+        case 'use_healing_skill':
+        case 'cast_aura':
+        case 'cast_buff': {
+
+            const skill = fighter.skills.find(
+                skill =>
+                    skill.skillId ===
+                    action.skillId
+            );
+
+            if (!skill) {
+                return undefined;
+            }
+
+            return {
+                name: skill.name,
+                icon: getSkillIconPath(
+                    skill.skillId,
+                    skill.mastery
+                )
+            };
+        }
+
+        case 'skip_turn':
+            return undefined;
+    }
+};
+
+export const getStatusEffectDamageColor = (
+    effectId: ActiveStatusEffectId
+) => {
+    switch (effectId) {
+        case 'veneno':
+            return COMBAT_VISUAL_ICON_CONFIG.veneno.color;
+
+        case 'incendio':
+            return COMBAT_VISUAL_ICON_CONFIG.incendio.color;
+
+        case 'sangrado':
+            return COMBAT_VISUAL_ICON_CONFIG.sangrado.color;
+
+        case 'electrico':
+            return COMBAT_VISUAL_ICON_CONFIG.electrico.color;
+
+        default:
+            return 'text-white';
+    }
+};

@@ -7,13 +7,16 @@ import {
 } from "../utils/damage-statistics-segments";
 import { getSegmentsTotal } from "../utils/statistics-bar.utils";
 import { StatisticBlock } from "./StatisticBlock";
+import type { FighterFightSummarySkill } from "../types/fighter-fight-summary.types";
 
 export interface DamageStatisticsSectionProps {
     dealt: DamageDealStatistics;
+    skills: FighterFightSummarySkill[];
 }
 
 export const DamageStatisticsSection = ({
-    dealt
+    dealt,
+    skills
 }: DamageStatisticsSectionProps) => {
     const damageTypeSegments = getDamageTypeSegments(
         dealt.byDamageType,
@@ -24,7 +27,8 @@ export const DamageStatisticsSection = ({
         dealt.bySource
     );
     const skillSegments = getSkillDamageSegments(
-        dealt.bySkill
+        dealt.bySkill,
+        skills
     );
     const statusEffectSegments = getStatusEffectDamageSegments(
         dealt.byStatusEffect

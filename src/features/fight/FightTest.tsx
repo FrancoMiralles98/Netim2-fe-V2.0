@@ -106,7 +106,20 @@ export const FightTest = ({
 
             setFightResponseResult(response.result);
 
-            setFightSummary(response.fighterFightSummary);
+            const skillsByFighterId = new Map(
+                response.initialFighters.map(fighter => [
+                    fighter.fighterId,
+                    fighter.skills
+                ])
+            );
+
+            setFightSummary(
+                response.fighterFightSummary.map(fighter => ({
+                    ...fighter,
+                    skills:
+                        skillsByFighterId.get(fighter.fighterId) ?? []
+                }))
+            );
 
             setInitiativeResults(response.initiativeResults);
 

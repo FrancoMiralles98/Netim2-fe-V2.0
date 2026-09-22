@@ -1,5 +1,6 @@
 import { FightEffectTooltip } from "../modals/FightEffectToolTip";
 import type { FightAuraState } from "../../fighter-state";
+import { getSkillIconPath } from "../../../../../shared/utils/get-skill-icon-path";
 
 export const FightAuraIcon = ({
     aura,
@@ -27,7 +28,10 @@ export const FightAuraIcon = ({
                 "
             >
                 <img
-                    src={''}
+                    src={getSkillIconPath(
+                        aura.auraId,
+                        aura.mastery
+                    )}
                     alt={aura.name}
                     className="h-5 w-5 object-contain"
                 />
@@ -60,6 +64,12 @@ export const FightAuraIcon = ({
                 <p className="font-semibold text-purple-300">
                     {aura.name}
                 </p>
+
+                {aura.description && (
+                    <p className="mt-1 text-slate-300">
+                        {aura.description}
+                    </p>
+                )}
 
                 <div className="mt-2 space-y-1">
                     <p>

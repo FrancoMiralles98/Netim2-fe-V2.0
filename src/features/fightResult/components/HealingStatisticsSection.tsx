@@ -9,19 +9,22 @@ import {
     getSegmentsTotal
 } from "../utils/statistics-bar.utils";
 import { StatisticBlock } from "./StatisticBlock";
+import type { FighterFightSummarySkill } from "../types/fighter-fight-summary.types";
 
 export interface HealingStatisticsSectionProps {
     healing: HealingStatistics;
+    skills: FighterFightSummarySkill[];
 }
 
 export const HealingStatisticsSection = ({
-    healing
+    healing,
+    skills
 }: HealingStatisticsSectionProps) => {
     const sourceSegments = getPositiveSegments(
         getHealingSourceSegments(healing)
     );
     const skillSegments = getPositiveSegments(
-        getSkillHealingSegments(healing)
+        getSkillHealingSegments(healing, skills)
     );
     const preventedSegments = getPositiveSegments(
         getPreventedHealingSegments(healing)

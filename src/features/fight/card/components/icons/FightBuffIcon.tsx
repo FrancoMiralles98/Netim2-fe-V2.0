@@ -1,5 +1,6 @@
 import { FightEffectTooltip } from "../modals/FightEffectToolTip";
-import type {  FightBuffState } from "../../fighter-state";
+import type { FightBuffState } from "../../fighter-state";
+import { getSkillIconPath } from "../../../../../shared/utils/get-skill-icon-path";
 
 export const FightBuffIcon = ({
     buff,
@@ -27,7 +28,10 @@ export const FightBuffIcon = ({
                 "
             >
                 <img
-                    src={''}
+                    src={getSkillIconPath(
+                        buff.buffId,
+                        buff.mastery
+                    )}
                     alt={buff.name}
                     className="h-5 w-5 object-contain"
                 />
@@ -60,6 +64,12 @@ export const FightBuffIcon = ({
                 <p className="font-semibold text-purple-300">
                     {buff.name}
                 </p>
+
+                {buff.description && (
+                    <p className="mt-1 text-slate-300">
+                        {buff.description}
+                    </p>
+                )}
 
                 <div className="mt-2 space-y-1">
                     <p>

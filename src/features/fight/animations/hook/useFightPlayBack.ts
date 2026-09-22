@@ -471,6 +471,13 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                         skill?.name ??
                         'Buff',
 
+                    mastery:
+                        skill?.mastery ??
+                        'N',
+
+                    description:
+                        skill?.description,
+
                     sourceFighterId:
                         sourceId,
 
@@ -527,6 +534,13 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                     name:
                         skill?.name ??
                         'Aura',
+
+                    mastery:
+                        skill?.mastery ??
+                        'N',
+
+                    description:
+                        skill?.description,
 
                     sourceFighterId:
                         fighterId,

@@ -15,6 +15,8 @@ import {
     UNCLASSIFIED_STATISTIC_CONFIG
 } from "../config/fight-statistics-visual-config";
 import type { StatisticsBarSegment } from "../types/statistics-bar.types";
+import type { FighterFightSummarySkill } from "../types/fighter-fight-summary.types";
+import { getSkillStatisticVisual } from "./skill-statistics-visual";
 
 const DAMAGE_TYPES: DamageType[] = ['ad', 'ap', 'true'];
 const DAMAGE_DELIVERIES: DamageDelivery[] = [
@@ -90,17 +92,22 @@ export const getDamageSourceSegments = (
 export const getSkillDamageSegments = (
     values: Partial<
         Record<UNIQUE_ID_SKILLS, SkillDamageStatistics>
-    >
+    >,
+    skills: FighterFightSummarySkill[]
 ): StatisticsBarSegment[] => Object.entries(values).map(
-    ([skillId, statistics], index) => ({
-        key: skillId,
-        value: statistics.total,
-        label: `Habilidad #${skillId}`,
-        colorClass:
-            SKILL_STATISTIC_COLOR_CLASSES[
-                index % SKILL_STATISTIC_COLOR_CLASSES.length
-            ]
-    })
+    ([rawSkillId, statistics], index) => {
+        const skillId = Number(rawSkillId) as UNIQUE_ID_SKILLS;
+
+        return {
+            key: rawSkillId,
+            value: statistics.total,
+            ...getSkillStatisticVisual(skillId, skills),
+            colorClass:
+                SKILL_STATISTIC_COLOR_CLASSES[
+                    index % SKILL_STATISTIC_COLOR_CLASSES.length
+                ]
+        };
+    }
 );
 
 export const getStatusEffectDamageSegments = (

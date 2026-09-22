@@ -1,5 +1,6 @@
 import type { CharacterRace, CharacterSpeciality, ReinosNames } from "netim2-shared";
 import type { AuraEffectConfig, AuraEffectType, MainDamageInfo, ReinosInfo, SkillEffectConfig, SkillEffectsType } from "../types/character-creation-card.types";
+export { getCharacterIconPath as getIconRace } from "../../../shared/utils/get-character-icon-path";
 
 
 
@@ -21,29 +22,6 @@ export const getBackGroundColor = (speciality: CharacterSpeciality | 'base') => 
     return BACKGROUND_COLORES_BY_SPECIALITY[speciality] ?? BACKGROUND_COLORES_BY_SPECIALITY.base
 }
 
-
-export const getIconRace = (race: CharacterRace, genero: 'masculino' | 'femenino') => {
-    const URLS_RACE_ICONS: Record<CharacterRace, Record<'masculino' | 'femenino', string>> = {
-        chaman: {
-            femenino: '/characterSelection/chaman-f-icon.png',
-            masculino: '/characterSelection/chaman-h-icon.png'
-        },
-        guerrero: {
-            femenino: '/characterSelection/guerrero-f-icon.png',
-            masculino: '/characterSelection/guerrero-h-icon.png'
-        },
-        ninja: {
-            femenino: '/characterSelection/ninja-f-icon.png',
-            masculino: '/characterSelection/ninja-h-icon.png'
-        },
-        sura: {
-            femenino: '/characterSelection/sura-f-icon.png',
-            masculino: '/characterSelection/sura-h-icon.png'
-        }
-    }
-
-    return URLS_RACE_ICONS[race][genero]
-}
 
 export const getNameRace = (race: CharacterRace) => {
     const URLS_RACE_NAMES: Record<CharacterRace, string> = {

@@ -21,7 +21,8 @@ export const mapInitialFighterToState = (
     skills: fighter.skills.map(skill => ({
         skillId: skill.skillId,
         name: skill.name,
-        icon: skill.icon
+        mastery: skill.mastery,
+        description: skill.description
     })),
 
     resources: {

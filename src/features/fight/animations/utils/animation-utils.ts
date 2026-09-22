@@ -1,5 +1,6 @@
 import type { ActiveStatusEffectId, CombatAction } from "netim2-shared";
 import type { FightFighterState } from "../../card/fighter-state";
+import { getSkillIconPath } from "../../../../shared/utils/get-skill-icon-path";
 import { COMBAT_VISUAL_ICON_CONFIG } from "../../utils/status-effect-display-config";
 
 export interface FightActionDisplay {
@@ -34,7 +35,10 @@ export const getFightActionDisplay = (fighter: FightFighterState, action: Combat
 
             return {
                 name: skill.name,
-                icon: skill.icon
+                icon: getSkillIconPath(
+                    skill.skillId,
+                    skill.mastery
+                )
             };
         }
 

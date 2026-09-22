@@ -3,34 +3,34 @@ import type { ActiveStatusEffectId } from "netim2-shared";
 export const STATUS_EFFECT_DISPLAY_CONFIG = {
     veneno: {
         name: 'Veneno',
-        icon: '/characterSelection/posion-icon.png'
+        icon: '/icons/statusEffect/posion-icon.png'
     },
 
     sangrado: {
         name: 'Sangrado',
-        icon: '/characterSelection/bleed-icon.png'
+        icon: '/icons/statusEffect/bleed-icon.png'
     },
 
     incendio: {
         name: 'Incendio',
-        icon: '/characterSelection/fire-icon.png'
+        icon: '/icons/statusEffect/fire-icon.png'
     },
 
     electrico: {
         name: 'Eléctrico',
-        icon: '/fight/electric-icon.png'
+        icon: '/icons/statusEffect/electrico.png'
     },
     desmayo: {
         name: 'Desmayo',
-        icon: '/characterSelection/desmayo-icon.png'
+        icon: '/icons/statusEffect/desmayo-icon.png'
     },
     retardo: {
         name: 'Retardo',
-        icon: '/characterSelection/retardo-icon.png'
+        icon: '/icons/statusEffect/retardo-icon.png'
     },
     corta_curacion: {
         name: 'Corta Cura',
-        icon: '/characterSelection/cdr-icon.png'
+        icon: '/icons/statusEffect/cdr-icon.png'
     },
 } as const;
 
@@ -82,6 +82,12 @@ export const COMBAT_VISUAL_ICON_CONFIG = {
         icon: '/fight/critico.png',
         color: 'text-yellow-300',
         backgroundColor: 'bg-yellow-400'
+    },
+
+    penetracion: {
+        icon: '/fight/penetracion.png',
+        color: 'text-orange-300',
+        backgroundColor: 'bg-orange-500'
     },
 
     heal: {

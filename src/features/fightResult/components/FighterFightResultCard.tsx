@@ -23,6 +23,9 @@ export const FighterFightResultCard = ({
         `}
     >
         <FighterResultHeader fighter={fighter} />
-        <FighterStatistics statistics={fighter.statistics} />
+        <FighterStatistics
+            statistics={fighter.statistics}
+            skills={fighter.skills}
+        />
     </article>
 );

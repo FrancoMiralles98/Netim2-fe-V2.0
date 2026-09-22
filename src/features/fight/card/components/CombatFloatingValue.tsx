@@ -40,6 +40,7 @@ export const CombatFloatingValue = ({
                     colorClass: COMBAT_VISUAL_ICON_CONFIG[animation.damageType].color,
 
                     critical: animation.critical,
+                    penetrating: animation.penetrating,
 
                     animationClass:
                         'animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]',
@@ -61,6 +62,7 @@ export const CombatFloatingValue = ({
                             .heal.color,
 
                     critical: false,
+                    penetrating: false,
 
                     animationClass:
                         'animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]',
@@ -92,6 +94,7 @@ export const CombatFloatingValue = ({
                         : COMBAT_VISUAL_ICON_CONFIG.mana.color,
 
                     critical: animation.critical,
+                    penetrating: false,
 
                     animationClass:
                         'animate-[fight-resource-number_var(--fight-resource-duration)_linear_forwards]'
@@ -117,6 +120,7 @@ export const CombatFloatingValue = ({
                         ),
 
                     critical: false,
+                    penetrating: false,
 
                     animationClass:
                         'animate-[fight-damage-number_var(--fight-damage-duration)_linear_forwards]',
@@ -171,6 +175,22 @@ export const CombatFloatingValue = ({
                     src={
                         COMBAT_VISUAL_ICON_CONFIG
                             .critico.icon
+                    }
+                    alt=""
+                    className="
+                        h-5
+                        w-5
+                        object-contain
+                    "
+                />
+            )}
+
+            {/* Indicador de golpe penetrante */}
+            {config.penetrating && (
+                <img
+                    src={
+                        COMBAT_VISUAL_ICON_CONFIG
+                            .penetracion.icon
                     }
                     alt=""
                     className="

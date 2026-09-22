@@ -3,7 +3,8 @@ import type {
     ActionStatistics,
     DamageDelivery,
     DamageType,
-    HitStatistics
+    HitStatistics,
+    ResourceStatistics
 } from "netim2-shared";
 import {
     COMBAT_VISUAL_ICON_CONFIG,
@@ -64,8 +65,8 @@ export const DAMAGE_SOURCE_STATISTIC_CONFIG = {
     },
     skills: {
         label: 'Habilidades',
-        colorClass: 'bg-blue-500',
-        textColorClass: 'text-blue-300'
+        colorClass: 'bg-yellow-400',
+        textColorClass: 'text-yellow-300'
     },
     statusEffects: {
         label: 'Estados',
@@ -179,7 +180,7 @@ export const HIT_STATISTIC_CONFIG = {
         label: 'Penetrantes',
         colorClass: 'bg-orange-500',
         textColorClass: 'text-orange-300',
-        icon: '/characterSelection/perforation-icon.png'
+        icon: '/fight/penetracion.png'
     },
     doubleHitsTriggered: {
         label: 'Golpes dobles activados',
@@ -263,3 +264,30 @@ export const OTHER_SKIPPED_ACTION_CONFIG = {
     colorClass: 'bg-slate-500',
     textColorClass: 'text-slate-300'
 } satisfies FightStatisticVisualConfig;
+
+export const RESOURCE_STATISTIC_CONFIG = {
+    manaSpent: {
+        label: 'Maná gastado',
+        colorClass: 'bg-blue-500',
+        textColorClass: 'text-blue-300',
+        icon: COMBAT_VISUAL_ICON_CONFIG.mana.icon
+    },
+    manaDrained: {
+        label: 'Drenado por el enemigo',
+        colorClass: 'bg-violet-500',
+        textColorClass: 'text-violet-300',
+        icon: COMBAT_VISUAL_ICON_CONFIG.mana.icon
+    },
+    manaRegenerated: {
+        label: 'Maná regenerado',
+        colorClass: 'bg-cyan-500',
+        textColorClass: 'text-cyan-300',
+        icon: COMBAT_VISUAL_ICON_CONFIG.mana.icon
+    },
+    manaRestored: {
+        label: 'Maná restaurado',
+        colorClass: 'bg-indigo-500',
+        textColorClass: 'text-indigo-300',
+        icon: COMBAT_VISUAL_ICON_CONFIG.mana.icon
+    }
+} satisfies Record<keyof ResourceStatistics, FightStatisticVisualConfig>;

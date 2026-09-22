@@ -1,7 +1,7 @@
 import type { FighterCardContentProps } from "./fighter-state";
 import { FightResourceBar } from "./components/bars/ResourceBar";
+import { FightSkills } from "./components/FightSkills";
 import { FightFighterIcon } from "./components/icons/FightFighterIcon";
-import { FightSkillIcon } from "./components/icons/SkillIcon";
 
 export const ExpandedFighterCard = ({
     fighter,
@@ -74,45 +74,10 @@ export const ExpandedFighterCard = ({
                 />
             </div>
 
-            {/* Habilidades */}
-            {fighter.skills.length > 0 && (
-                <section className="mt-3 text-white">
-
-                    <h1 className="text-sm">
-                        Habilidades
-                    </h1>
-
-                    <div
-                        className="
-                            flex
-                            flex-wrap
-                            justify-center
-                            gap-2
-                            border-t
-                            border-white
-                            pt-3
-                        "
-                    >
-                        {fighter.skills.map(skill => {
-
-                            const cooldown =
-                                fighter.cooldowns.find(
-                                    cooldown =>
-                                        cooldown.skillId ===
-                                        skill.skillId
-                                );
-
-                            return (
-                                <FightSkillIcon
-                                    key={skill.skillId}
-                                    skill={skill}
-                                    cooldown={cooldown}
-                                />
-                            );
-                        })}
-                    </div>
-                </section>
-            )}
+            <FightSkills
+                skills={fighter.skills}
+                cooldowns={fighter.cooldowns}
+            />
         </>
     );
 };

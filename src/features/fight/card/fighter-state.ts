@@ -1,6 +1,10 @@
-import type { UNIQUE_ID_SKILLS } from "netim2-shared/dist/skills/props/unique-id-skill.enum";
 import type { FighterSide } from "../initiative/InitiativeModal";
-import type { ActiveStatusEffectId, BonusRefKeys } from "netim2-shared";
+import type {
+    ActiveStatusEffectId,
+    BonusRefKeys,
+    LetterMasteryLv,
+    UNIQUE_ID_SKILLS
+} from "netim2-shared";
 
 export interface FightFighterState {
     fighterId: string;
@@ -55,6 +59,8 @@ export interface FightStatusEffectState {
 export interface FightAuraState {
     auraId: UNIQUE_ID_SKILLS;
     name: string;
+    mastery: LetterMasteryLv;
+    description?: string;
     sourceFighterId: string;
     remainingTurns?: number;
 }
@@ -62,6 +68,8 @@ export interface FightAuraState {
 export interface FightBuffState {
     buffId: UNIQUE_ID_SKILLS;
     name: string;
+    mastery: LetterMasteryLv;
+    description?: string;
     sourceFighterId: string;
     remainingTurns?: number;
 }
@@ -75,7 +83,8 @@ export interface FightStatModifierDisplay {
 export interface FightSkillDisplay {
     skillId: UNIQUE_ID_SKILLS;
     name: string;
-    icon: string;
+    mastery: LetterMasteryLv;
+    description?: string;
 }
 
 export interface FighterCardContentProps {

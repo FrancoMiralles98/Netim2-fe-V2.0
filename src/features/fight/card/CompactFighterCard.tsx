@@ -1,5 +1,6 @@
-import { CompactResourceBar } from "./components/bars/CompactResourceBar";
+import { FightSkills } from "./components/FightSkills";
 import { FightFighterIcon } from "./components/icons/FightFighterIcon";
+import { LiquidResourceIndicator } from "./components/LiquidResourceIndicator";
 import type { FightFighterState } from "./fighter-state";
 
 export interface FighterCardContentProps {
@@ -9,33 +10,34 @@ export interface FighterCardContentProps {
 }
 
 export const CompactFighterCard = ({
-    fighter,
-    hpPercent,
-    manaPercent
+    fighter
 }: FighterCardContentProps) => {
 
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2">
 
             {/* Icono */}
             <FightFighterIcon
                 fighterName={fighter.name}
             />
 
-            {/* Barras */}
-            <div className="flex-1 space-y-1.5">
+            <LiquidResourceIndicator
+                current={fighter.resources.hp.current}
+                max={fighter.resources.hp.max}
+                variant="hp"
+            />
 
-                <CompactResourceBar
-                    percent={hpPercent}
-                    type="hp"
-                />
+            <LiquidResourceIndicator
+                current={fighter.resources.mana.current}
+                max={fighter.resources.mana.max}
+                variant="mana"
+            />
 
-                <CompactResourceBar
-                    percent={manaPercent}
-                    type="mana"
-                />
-
-            </div>
+            <FightSkills
+                skills={fighter.skills}
+                cooldowns={fighter.cooldowns}
+                variant="compact"
+            />
         </div>
     );
 };

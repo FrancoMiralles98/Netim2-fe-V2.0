@@ -5,6 +5,8 @@ import {
     SKILL_STATISTIC_COLOR_CLASSES
 } from "../config/fight-statistics-visual-config";
 import type { StatisticsBarSegment } from "../types/statistics-bar.types";
+import type { FighterFightSummarySkill } from "../types/fighter-fight-summary.types";
+import { getSkillStatisticVisual } from "./skill-statistics-visual";
 
 const getSkillHealingTotal = (
     healing: HealingStatistics
@@ -34,12 +36,13 @@ export const getHealingSourceSegments = (
 ];
 
 export const getSkillHealingSegments = (
-    healing: HealingStatistics
+    healing: HealingStatistics,
+    skills: FighterFightSummarySkill[]
 ): StatisticsBarSegment[] => healing.bySkill.map(
     (skill, index) => ({
         key: String(skill.idSkill),
         value: skill.amount,
-        label: `Habilidad #${skill.idSkill}`,
+        ...getSkillStatisticVisual(skill.idSkill, skills),
         colorClass:
             SKILL_STATISTIC_COLOR_CLASSES[
                 index % SKILL_STATISTIC_COLOR_CLASSES.length

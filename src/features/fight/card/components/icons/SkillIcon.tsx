@@ -1,13 +1,16 @@
 import type { FightSkillCooldown, FightSkillDisplay } from "../../fighter-state";
+import { getSkillIconPath } from "../../../../../shared/utils/get-skill-icon-path";
 
 export interface FightSkillIconProps {
     skill: FightSkillDisplay;
     cooldown?: FightSkillCooldown;
+    compact?: boolean;
 }
 
 export const FightSkillIcon = ({
     skill,
-    cooldown
+    cooldown,
+    compact = false
 }: FightSkillIconProps) => {
 
     const isOnCooldown =
@@ -17,35 +20,33 @@ export const FightSkillIcon = ({
     return (
         <div
             title={skill.name}
-            className="
+            className={`
                 relative
                 flex
-                h-8
-                w-8
                 items-center
                 justify-center
                 overflow-hidden
-                rounded-md
                 border
                 border-slate-700
                 bg-slate-800
-            "
+                ${compact
+                    ? 'h-5 w-5 rounded'
+                    : 'h-8 w-8 rounded-md'
+                }
+            `}
         >
-            {skill.icon ? (
-                <img
-                    src={skill.icon}
-                    alt={skill.name}
-                    className="
-                        h-full
-                        w-full
-                        object-cover
-                    "
-                />
-            ) : (
-                <span className="text-xs text-slate-500">
-                    ?
-                </span>
-            )}
+            <img
+                src={getSkillIconPath(
+                    skill.skillId,
+                    skill.mastery
+                )}
+                alt={skill.name}
+                className="
+                    h-full
+                    w-full
+                    object-cover
+                "
+            />
 
             {isOnCooldown && (
                 <>
@@ -58,11 +59,14 @@ export const FightSkillIcon = ({
                     />
 
                     <span
-                        className="
+                        className={`
                             absolute
-                            text-sm
                             text-white
-                        "
+                            ${compact
+                                ? 'text-[10px]'
+                                : 'text-sm'
+                            }
+                        `}
                     >
                         {cooldown.remainingTurns}
                     </span>

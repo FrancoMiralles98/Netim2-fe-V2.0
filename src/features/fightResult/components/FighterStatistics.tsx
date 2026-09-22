@@ -5,19 +5,24 @@ import { DefenseStatisticsSection } from "./DefenseStatisticsSection";
 import { EffectStatisticsSection } from "./EffectStatisticsSection";
 import { HealingStatisticsSection } from "./HealingStatisticsSection";
 import { HitStatisticsSection } from "./HitStatisticsSection";
+import { ResourceStatisticsSection } from "./ResourceStatisticsSection";
 import { StatisticsAccordion } from "./StatisticsAccordion";
+import type { FighterFightSummarySkill } from "../types/fighter-fight-summary.types";
 
 export interface FighterStatisticsProps {
     statistics: FighterCombatStatisticsState;
+    skills: FighterFightSummarySkill[];
 }
 
 export const FighterStatistics = ({
-    statistics
+    statistics,
+    skills
 }: FighterStatisticsProps) => (
     <div className="mt-4 space-y-2">
         <StatisticsAccordion title="Daño" defaultOpen>
             <DamageStatisticsSection
                 dealt={statistics.damage.dealt}
+                skills={skills}
             />
         </StatisticsAccordion>
 
@@ -36,6 +41,13 @@ export const FighterStatistics = ({
         <StatisticsAccordion title="Curaciones">
             <HealingStatisticsSection
                 healing={statistics.healing}
+                skills={skills}
+            />
+        </StatisticsAccordion>
+
+        <StatisticsAccordion title="Recursos">
+            <ResourceStatisticsSection
+                resources={statistics.resources}
             />
         </StatisticsAccordion>
 

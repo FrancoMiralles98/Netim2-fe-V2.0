@@ -1,6 +1,6 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import { ModalContext } from "./context/modal.context";
-import type { ModalState } from "./types/modal.types";
+import type { ModalContextValue, ModalState } from "./types/modal.types";
 import type { ActionModalProps } from "./types/modals/actionModalProps";
 import { ActionModal } from "./components/ActionModal";
 import type { NotificationModalProps } from "./types/modals/notificationModalProps";
@@ -19,12 +19,12 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
     const navigate = useNavigate()
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setModalState({ type: 'none' });
         actionRef.current = null;
-    };
+    }, []);
 
-    const showActionModal = (props: ActionModalProps) => {
+    const showActionModal = useCallback((props: ActionModalProps) => {
         actionRef.current = props.onAccept
         setModalState({
             type: 'action',
@@ -33,27 +33,27 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             title: props.title,
             sub_title: props.subTitle,
         })
-    }
+    }, []);
 
-    const showNotificationModal = (props: NotificationModalProps) => {
+    const showNotificationModal = useCallback((props: NotificationModalProps) => {
         actionRef.current = props.onClickButton ?? null
         setModalState({
             type: 'notification',
             title: props.title,
             confirmText: props.acceptMessage ?? 'Ok'
         })
-    }
+    }, []);
 
-    const showFeedBackModal = (props: FeedBackModalProps) => {
+    const showFeedBackModal = useCallback((props: FeedBackModalProps) => {
         actionRef.current = props.onAccept ?? null
         setModalState({
             type: 'feedback',
             messages: props.messages,
             title: props.title
         })
-    }
+    }, []);
 
-    const showErrorModal = (error: ApiError | unknown,forceRedirect?: boolean) => {
+    const showErrorModal = useCallback((error: ApiError | unknown,forceRedirect?: boolean) => {
         if (error instanceof ApiError) {
       
             const shouldRedirect = error.status === 0 || error.status >= 500 || forceRedirect
@@ -77,13 +77,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 messages: ['Intente nuevamente más tarde.'],
             })
         }
-    }
+    }, [closeModal, navigate]);
 
     const handleAcceptAction = async () => {
         try {
             await actionRef.current?.()
             closeModal()
-        } catch (error) {
+        } catch {
             closeModal();
             showNotificationModal({
                 title: 'Hubo un error',
@@ -92,26 +92,42 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const showLoadingModal = (message?: string) => {
-        setModalState({ type: 'loading', title: message ?? 'Cargando...' })
-    }
+    const showLoadingModal = useCallback((message?: string) => {
+        const title = message ?? 'Cargando...';
+        setModalState(current =>
+            current.type === 'loading' && current.title === title
+                ? current
+                : { type: 'loading', title }
+        );
+    }, []);
 
-    const closeLoadingModal = () => {
-        setModalState({ type: 'none' })
-        actionRef.current = null
-    }
+    const closeLoadingModal = useCallback(() => {
+        setModalState(current =>
+            current.type === 'loading' ? { type: 'none' } : current
+        );
+    }, []);
+
+    const modalContextValue = useMemo<ModalContextValue>(() => ({
+        closeModal,
+        showNotificationModal,
+        showActionModal,
+        showLoadingModal,
+        closeLoadingModal,
+        showFeedBackModal,
+        showErrorModal
+    }), [
+        closeModal,
+        showNotificationModal,
+        showActionModal,
+        showLoadingModal,
+        closeLoadingModal,
+        showFeedBackModal,
+        showErrorModal
+    ]);
 
 
     return (
-        <ModalContext value={{
-            closeModal,
-            showNotificationModal,
-            showActionModal,
-            showLoadingModal,
-            closeLoadingModal,
-            showFeedBackModal,
-            showErrorModal
-        }}>
+        <ModalContext value={modalContextValue}>
             {children}
 
             {modalState.type === 'action' && (

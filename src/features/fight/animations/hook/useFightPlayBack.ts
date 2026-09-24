@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FightAuraState, FightBuffState, FightFighterState, FightStatusEffectState } from "../../card/fighter-state";
 import type { FightPlaybackState, PlaybackEventEntry } from "../animations.types";
-import type { ActionSelectedEvent, AuraActivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
+import type { ActionSelectedEvent, AuraActivatedEvent, AuraDeactivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDeactivatedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
 import type { FightPlaybackSpeed, UseFightPlayBackProps } from "../use-fight-play-back.type";
 
 export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPlayBackProps) => {
@@ -396,12 +396,20 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 playAuraDurationUpdated(event, fighterId);
                 break;
 
+            case 'aura_deactivated':
+                playAuraDeactivated(event, fighterId);
+                break;
+
             case 'status_effect_applied':
                 playStatusEffectApplied(event, fighterId, targetId);
                 break;
 
             case 'buff_duration_updated':
                 playBuffDurationUpdated(event, fighterId);
+                break;
+
+            case 'buff_deactivated':
+                playBuffDeactivated(event, fighterId);
                 break;
 
             case 'healing_resolved':
@@ -827,6 +835,30 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
         );
     };
 
+    const playBuffDeactivated = (
+        event: BuffDeactivatedEvent,
+        fighterId: string
+    ): void => {
+        setFightersState(current =>
+            current.map(fighter => {
+                if (
+                    fighter.fighterId !== fighterId ||
+                    !fighter.activeBuffs.has(event.skillId)
+                ) {
+                    return fighter;
+                }
+
+                const activeBuffs = new Map(fighter.activeBuffs);
+                activeBuffs.delete(event.skillId);
+
+                return {
+                    ...fighter,
+                    activeBuffs
+                };
+            })
+        );
+    };
+
     const playAuraDurationUpdated = (
         event: AuraDurationUpdatedEvent,
         fighterId: string
@@ -878,6 +910,30 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                             event.remainingTurns
                     }
                 );
+
+                return {
+                    ...fighter,
+                    activeAuras
+                };
+            })
+        );
+    };
+
+    const playAuraDeactivated = (
+        event: AuraDeactivatedEvent,
+        fighterId: string
+    ): void => {
+        setFightersState(current =>
+            current.map(fighter => {
+                if (
+                    fighter.fighterId !== fighterId ||
+                    !fighter.activeAuras.has(event.skillId)
+                ) {
+                    return fighter;
+                }
+
+                const activeAuras = new Map(fighter.activeAuras);
+                activeAuras.delete(event.skillId);
 
                 return {
                     ...fighter,

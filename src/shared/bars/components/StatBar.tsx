@@ -13,7 +13,7 @@ export const StatBar = ({name,value,maxValue = 200,isActive = true,animationKey,
           {name}
         </p>
 
-        <p className="text-xs text-yellow-100">
+        <p className="text-xs text-white">
           {value}/{maxValue}
         </p>
       </div>

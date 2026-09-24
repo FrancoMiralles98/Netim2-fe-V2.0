@@ -1,4 +1,4 @@
-import type { CharacterSession } from "netim2-shared";
+import type { CharacterSession, CharacterSummary } from "netim2-shared";
 import type { SessionEndReason } from "./session-end-reason.type";
 
 
@@ -8,7 +8,7 @@ export interface CharacterSessionContextValue {
     sessionEndReason: SessionEndReason
     isConnected: boolean;
     worldSessionId: string | null
-    enterGame: (character: CharacterSession) => void
+    enterGame: (character: CharacterSummary) => Promise<void>
     leaveGame: () => void
     leaveGameToCharacterSelection: () => void
 

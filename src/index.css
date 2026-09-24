@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&display=swap');
 @import "tailwindcss";
+
+.font-metin {
+  font-family: 'Cinzel', serif;
+}
 
 .custom-scrollbar {
   scrollbar-width: thin;

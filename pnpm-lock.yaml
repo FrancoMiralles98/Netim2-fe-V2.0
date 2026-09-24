@@ -12,8 +12,8 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1(debug@4.4.3)
       netim2-shared:
-        specifier: github:FrancoMiralles98/netim2-shared#v0.2.11
-        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/666c40c63139f827fe60e195acab5155c89541d1
+        specifier: github:FrancoMiralles98/netim2-shared#v0.2.12
+        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/7a3793928290b326f088bef8f95c6516ab75295b
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -975,9 +975,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/666c40c63139f827fe60e195acab5155c89541d1:
-    resolution: {gitHosted: true, integrity: sha512-y5U+IFUxOzpwnARXzMmlbw+3B8+A1N9laptaTawN010F87CHKkT9XHDDlQSInNGzxnZzQ099zXj2i+HjOnkvRg==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/666c40c63139f827fe60e195acab5155c89541d1}
-    version: 0.2.11
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/7a3793928290b326f088bef8f95c6516ab75295b:
+    resolution: {gitHosted: true, integrity: sha512-XFXAi+lEBWFDYB5osSDbGNXI6xyGl3frC5Y8z1EO58DR/97ekIrmt+UrSjIq2HqQMWxq0ca+5SLs38HctbP38Q==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/7a3793928290b326f088bef8f95c6516ab75295b}
+    version: 0.2.12
 
   node-releases@2.0.50:
     resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
@@ -2069,7 +2069,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/666c40c63139f827fe60e195acab5155c89541d1: {}
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/7a3793928290b326f088bef8f95c6516ab75295b: {}
 
   node-releases@2.0.50: {}
 

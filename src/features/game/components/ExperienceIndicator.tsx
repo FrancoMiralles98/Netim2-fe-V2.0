@@ -33,7 +33,7 @@ export const ExperienceIndicator = ({ exp, expNextLv }: ExperienceIndicatorProps
         ?? EXP_FRAMES[EXP_FRAMES.length - 1];
 
     return (
-        <div id="exp" className="flex items-center">
+        <div id="exp" className="flex justify-center items-center">
             <MiniTooltip text={`Experiencia: ${Math.floor(percentage)}%`}>
                 <div
                     className="h-[27px] w-[100px] overflow-hidden bg-[url('/game/exp.png')] bg-no-repeat"

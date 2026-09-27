@@ -30,7 +30,7 @@ export const ButtonReino = ({ reino, texto }: ButtonReinoProps) => {
                 (
                     <span className={`
                 pointer-events-none 
-                text-[14px] 
+                text-[13px] 
                 absolute 
                 inset-0 
                 flex 

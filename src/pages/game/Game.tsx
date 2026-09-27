@@ -86,19 +86,19 @@ export const Game = () => {
                                     {character.lv}
                                 </span>
                             </div>
-                            <div id='yang-md' className=" flex flex-col items-start justify-center gap-1 px-2">
-                                <div className="flex justify-start gap-1 text-gray-100">
-                                    <MiniTooltip text="Yang">
-                                        <img className="w-[20px]" src="/game/Yang.png" alt="" />
-                                    </MiniTooltip>
-                                    <p className="font-normal text-yellow-300">{currencyFormatter.format(character.yang)}</p>
-                                </div>
-                                <div className="flex justify-start gap-1 text-gray-100">
-                                    <MiniTooltip text="Md">
-                                        <img className="w-[20px]" src="/game/md.png" alt="" />
-                                    </MiniTooltip>
-                                    <p className="font-normal text-orange-300">{currencyFormatter.format(user?.md ?? 0)}</p>
-                                </div>
+                            <div id='yang-md' className="flex flex-col justify-center gap-1 px-2">
+                                <MiniTooltip text="Yang">
+                                    <div className="flex h-[26px] w-full min-w-0 items-center justify-between gap-2 bg-[url('/utils/fondo-eco.png')] bg-[length:100%_100%] bg-no-repeat px-2">
+                                        <img className="h-[13px] w-[13px]" src="/utils/yang-icon.png" alt="" />
+                                        <p className="min-w-0 truncate text-right text-sm font-normal text-yellow-300">{currencyFormatter.format(character.yang)}</p>
+                                    </div>
+                                </MiniTooltip>
+                                <MiniTooltip text="Md">
+                                    <div className="flex h-[26px] w-full min-w-0 items-center justify-between gap-2 bg-[url('/utils/fondo-eco.png')] bg-[length:100%_100%] bg-no-repeat px-2">
+                                        <img className="h-[16px] w-[15px]" src="/utils/md-icon.png" alt="" />
+                                        <p className="min-w-0 truncate text-right text-sm font-normal text-orange-300">{currencyFormatter.format(user?.md ?? 0)}</p>
+                                    </div>
+                                </MiniTooltip>
                             </div>
 
                             <ExperienceIndicator
@@ -162,10 +162,10 @@ export const Game = () => {
                                     alt=""
                                 />
                                 <div className="absolute inset-0 z-10 flex flex-col items-start justify-start gap-1 px-4 pt-4">
-                                    <ButtonReino reino={reino} texto="Clasificación"/>
-                                    <ButtonReino reino={reino} texto="Gremio"/>
-                                    <ButtonReino reino={reino} texto="Item Shop"/>
-                                    <ButtonReino reino={reino} texto="Wiki"/>
+                                    <ButtonReino reino={reino} texto="Clasificación" />
+                                    <ButtonReino reino={reino} texto="Gremio" />
+                                    <ButtonReino reino={reino} texto="Item Shop" />
+                                    <ButtonReino reino={reino} texto="Wiki" />
                                 </div>
                             </div>
                             <div className="relative mt-[2rem]" id='fondo-grande'>
@@ -191,6 +191,9 @@ export const Game = () => {
                         </>
                     )}
                 </section>
+                <div className="w-[100px] h-[100px] bg-red-400">
+
+                </div>
             </div>
         </section>
     )

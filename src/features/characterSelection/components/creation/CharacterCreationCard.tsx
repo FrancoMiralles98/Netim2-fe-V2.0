@@ -141,7 +141,7 @@ Aunque una raza o especialidad tenga un cap determinado, ese límite puede super
 
 
                     {selectedStats && (
-                        <section>
+                        <section >
                             <StatBar maxValue={attributeLimit} name="VIT" value={selectedStats.VIT} isActive={isActive} animationKey={selectedSpeciality} />
                             <StatBar maxValue={attributeLimit} name="STR" value={selectedStats.STR} isActive={isActive} animationKey={selectedSpeciality} />
                             <StatBar maxValue={attributeLimit} name="INT" value={selectedStats.INT} isActive={isActive} animationKey={selectedSpeciality} />

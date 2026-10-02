@@ -1,6 +1,6 @@
 import { bonusFullNameByRef, type BonusRefKeys } from "netim2-shared";
 import { InfoTooltip } from "./InfoToolTip";
-import { BONUS_INFO } from "../utils/bonus-info-tool-tip";
+import { getBonusDescription } from "../utils/bonus-info-tool-tip";
 
 export const BonusInfoToolTip = ({
     bonusRef,
@@ -13,7 +13,7 @@ export const BonusInfoToolTip = ({
     return (
         <InfoTooltip
             title={bonusFullNameByRef(bonusRef)}
-            message={BONUS_INFO[bonusRef] ?? ''}
+            message={getBonusDescription(bonusRef)}
             position={position}
             size="small"
         />

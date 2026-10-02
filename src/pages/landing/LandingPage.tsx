@@ -42,7 +42,7 @@ export const LandingPage = () => {
                     <div className="absolute w-[100%] top-[8rem]   text-red-500 text-center">
                     </div>
                 </div>
-                <div className=" inset-0 bg-gradient-to-r from-black via-transparent to-black/90">                </div>
+                <div className=" inset-0 bg-gradient-to-r from-black via-transparent to-black/90"></div>
                 <footer className="bg-center w-[100%] bottom-0 mx-auto z-20 absolute ">
                     <img src='/landing/footer-bg.png' className="relative z-10 w-[1200px] mx-auto " alt="" />
                     <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30 pointer-events-none"></div>

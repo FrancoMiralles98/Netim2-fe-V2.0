@@ -5,6 +5,44 @@
   font-family: 'Cinzel', serif;
 }
 
+.text-metin-gold {
+    pointer-events: none;
+
+    font-family: 'Cinzel', serif; /* o la fuente que uses en .font-metin */
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+
+    background: linear-gradient(
+        to bottom,
+        #fff1c7,
+        #e9d19a,
+        #b58a4d
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    filter:
+        drop-shadow(0 2px 1px #000)
+        drop-shadow(0 0 2px rgba(255, 220, 150, 0.45));
+}
+
+.text-metin-label {
+    color: #c7ced8;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+
+    text-shadow:
+        0 1px 1px #000,
+        0 0 2px #000,
+        0 0 3px rgba(0, 0, 0, 0.8);
+}
+
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #555 #333;

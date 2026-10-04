@@ -64,7 +64,10 @@ export const CharacterPanel = ({ character }: CharacterPanelProps) => {
         : 0;
 
     return (
-        <div className="relative grid grid-rows-[26%_36%_38%] grid-cols-1 mt-[2rem] aspect-[4/3] w-[1100px] justify-self-center bg-[url('/game/modal-jinno-rectangular.png')] bg-[length:100%_100%] bg-no-repeat">
+        <div
+            className="relative grid grid-rows-[26%_36%_38%] grid-cols-1 mt-[2rem] aspect-[4/3] w-[1100px] justify-self-center bg-[length:100%_100%] bg-no-repeat"
+            style={{ backgroundImage: character.reino ? `url('/game/modal-${character.reino}-rectangular.png')` : undefined }}
+        >
             <div
                 id='info-character-stats'
                 className="mx-[3.9%] mt-[3%] min-h-0 grid grid-cols-[44%_auto] "

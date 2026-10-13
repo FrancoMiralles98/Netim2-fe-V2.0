@@ -3,6 +3,8 @@ import type { StatBarProps } from "../types/stat-bar.types";
 
 export const StatBar = ({ name, value, maxValue = 200, isActive = true, animationKey, }: StatBarProps) => {
   const colors = STAT_COLORS[name];
+  console.log('name', value);
+
 
   const percentage = Math.min(Math.max((value / maxValue) * 100, 0), 100);
 

@@ -67,7 +67,7 @@ export const JinnoCard = ({ character, getImageClass, handleConnectClick, handle
                     <section className="w-[88%] ml-5 mx-auto">
                         <StatBar maxValue={maxAttributeValue} name="VIT" value={character.stats.VIT.bonusPoints + character.stats.VIT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
                         <StatBar maxValue={maxAttributeValue} name="STR" value={character.stats.STR.bonusPoints + character.stats.STR.lvPoints} isActive={isActive} animationKey={character.especialidad} />
-                        <StatBar maxValue={maxAttributeValue} name="INT" value={character.stats.INT.bonusPoints + character.stats.VIT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
+                        <StatBar maxValue={maxAttributeValue} name="INT" value={character.stats.INT.bonusPoints + character.stats.INT.lvPoints} isActive={isActive} animationKey={character.especialidad} />
                         <StatBar maxValue={maxAttributeValue} name="DEX" value={character.stats.DEX.bonusPoints + character.stats.DEX.lvPoints} isActive={isActive} animationKey={character.especialidad} />
                     </section>
                     <div className="flex w-[92%] ml-2 justify-center mt-5">

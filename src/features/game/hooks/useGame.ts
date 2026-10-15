@@ -42,7 +42,7 @@ export const useGameGuard = () => {
         leaveGame();
       },
     });
-  }, [sessionEndReason, modal, leaveGameToCharacterSelection]);
+  }, [sessionEndReason, modal, leaveGame]);
 
   useEffect(() => {
     if (!character) return;

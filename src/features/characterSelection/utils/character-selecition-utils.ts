@@ -130,46 +130,46 @@ export const getInfoAuraEffect = (effect: AuraEffectType) => {
 
 export const SPECIALITY_EFFECTS: Partial<Record<CharacterSpeciality, SkillEffectConfig[]>> = {
     Corporal: [
-        { effect: 'sangrado', icon: '/characterSelection/bleed-icon.png' },
-        { effect: 'desmayo', icon: '/characterSelection/desmayo-icon.png' },
+        { effect: 'sangrado', icon: '/icons/statusEffect/bleed-icon.png' },
+        { effect: 'desmayo', icon: '/icons/statusEffect/desmayo-icon.png' },
     ],
 
     Mental: [
-        { effect: 'desmayo', icon: '/characterSelection/desmayo-icon.png' },
-        { effect: 'retardo', icon: '/characterSelection/retardo-icon.png' },
-        { effect: 'penetracion', icon: '/characterSelection/perforation-icon.png' },
+        { effect: 'desmayo', icon: '/icons/statusEffect/desmayo-icon.png' },
+        { effect: 'retardo', icon: '/icons/statusEffect/retardo-icon.png' },
+        { effect: 'penetracion', icon: '/icons/statusEffect/perforation-icon.png' },
     ],
 
     Daga: [
-        { effect: 'veneno', icon: '/characterSelection/posion-icon.png' },
-        { effect: 'sangrado', icon: '/characterSelection/bleed-icon.png' },
-        { effect: 'potenciador', icon: '/characterSelection/potenciator-icon.png' },
+        { effect: 'veneno', icon: '/icons/statusEffect/posion-icon.png' },
+        { effect: 'sangrado', icon: '/icons/statusEffect/bleed-icon.png' },
+        { effect: 'potenciador', icon: '/icons/statusEffect/potenciator-icon.png' },
     ],
 
     Flecha: [
-        { effect: 'veneno', icon: '/characterSelection/posion-icon.png' },
-        { effect: 'incendio', icon: '/characterSelection/fire-icon.png' },
-        { effect: 'potenciador', icon: '/characterSelection/potenciator-icon.png' },
+        { effect: 'veneno', icon: '/icons/statusEffect/posion-icon.png' },
+        { effect: 'incendio', icon: '/icons/statusEffect/fire-icon.png' },
+        { effect: 'potenciador', icon: '/icons/statusEffect/potenciator-icon.png' },
     ],
 
     Dragon: [
-        { effect: 'incendio', icon: '/characterSelection/fire-icon.png' },
-        { effect: 'potenciador', icon: '/characterSelection/potenciator-icon.png' },
+        { effect: 'incendio', icon: '/icons/statusEffect/fire-icon.png' },
+        { effect: 'potenciador', icon: '/icons/statusEffect/potenciator-icon.png' },
     ],
 
     Luz: [
-        { effect: 'desmayo', icon: '/characterSelection/desmayo-icon.png' },
-        { effect: 'curacion', icon: '/characterSelection/life-icon.png' },
+        { effect: 'desmayo', icon: '/icons/statusEffect/desmayo-icon.png' },
+        { effect: 'curacion', icon: '/icons/statusEffect/life-icon.png' },
     ],
 
     Espejo: [
-        { effect: 'penetracion', icon: '/characterSelection/perforation-icon.png' },
-        { effect: 'vampirismo', icon: '/characterSelection/vampirismo-icon.png' },
+        { effect: 'penetracion', icon: '/icons/statusEffect/perforation-icon.png' },
+        { effect: 'vampirismo', icon: '/icons/statusEffect/vampirismo-icon.png' },
     ],
 
     MagiaNegra: [
-        { effect: 'incendio', icon: '/characterSelection/fire-icon.png' },
-        { effect: 'retardo', icon: '/characterSelection/retardo-icon.png' },
+        { effect: 'incendio', icon: '/icons/statusEffect/fire-icon.png' },
+        { effect: 'retardo', icon: '/icons/statusEffect/retardo-icon.png' },
     ],
 };
 
@@ -197,7 +197,7 @@ export const SPECIALITY_AURA_EFFECTS: Partial<Record<CharacterSpeciality, AuraEf
     ],
 
     Luz: [
-        { effect: 'cdr', icon: '/characterSelection/cdr-icon.png' },
+        { effect: 'cdr', icon: '/icons/statusEffect/cdr-icon.png' },
         { effect: 'vm', icon: '/characterSelection/mv-icon.png' },
         { effect: 'media', icon: '/characterSelection/media-icon.png' },
     ],

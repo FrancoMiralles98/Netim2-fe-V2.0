@@ -1,7 +1,7 @@
 import type { CharacterSession } from "netim2-shared";
 import { StatCircle } from "./StatCircle";
 import { BonusPanel } from "./BonusPanel";
-import { Inventory } from "./Inventory";
+import { CharacterInventoryPanel } from "./CharacterInventoryPanel";
 
 interface CharacterPanelProps {
     character: CharacterSession;
@@ -138,7 +138,7 @@ export const CharacterPanel = ({ character }: CharacterPanelProps) => {
                 <BonusPanel character={character} />
             </div>
             <div id='inventario' className="mx-[3.9%] mb-[4.5%] min-h-0">
-                <Inventory character={character} />
+                <CharacterInventoryPanel character={character} />
             </div>
         </div>
     );

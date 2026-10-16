@@ -1,13 +1,7 @@
 import type { CharacterSession } from "netim2-shared";
+import { Inventory } from "../../inventory/Inventory";
 
-const INVENTORY_COLUMNS = 16;
-const INVENTORY_ROWS = 6;
-const INVENTORY_SLOTS = Array.from(
-    { length: INVENTORY_COLUMNS * INVENTORY_ROWS },
-    (_, index) => index,
-);
-
-export const Inventory = ({ character }: { character: CharacterSession }) => (
+export const CharacterInventoryPanel = ({ character }: { character: CharacterSession }) => (
     <div className="h-full w-full bg-[url('/game/marco-inventario-horizontal.png')] bg-[length:100%_100%] bg-no-repeat font-sans">
         <div className="flex h-[17%] w-full items-center px-[3%]">
             <h2 className="text-[17px] mt-3 font-semibold text-[#e9cf99] [text-shadow:0_1px_2px_#000]">
@@ -15,20 +9,7 @@ export const Inventory = ({ character }: { character: CharacterSession }) => (
             </h2>
         </div>
         <div className="ml-[3%] mt-2 flex h-[192px] w-[94%] min-w-0">
-            <div
-                className="grid h-[192px] w-[512px] shrink-0"
-                style={{
-                    gridTemplateColumns: `repeat(${INVENTORY_COLUMNS}, 32px)`,
-                    gridTemplateRows: `repeat(${INVENTORY_ROWS}, 32px)`,
-                }}
-            >
-                {INVENTORY_SLOTS.map((slot) => (
-                    <div
-                        key={slot}
-                        className="h-[32px] w-[32px] bg-[url('/game/inventory/bg_item.png')] bg-no-repeat"
-                    />
-                ))}
-            </div>
+            <Inventory items={character.inventario} character={character} />
             <hr aria-hidden="true" className="mx-5 h-full w-px shrink-0 border-0 bg-[#a97735]/75" />
             <div className="flex min-w-0 flex-1 flex-col text-[#e9cf99]">
                 <section className="flex h-[58%] flex-col border-b border-[#a97735]/75">

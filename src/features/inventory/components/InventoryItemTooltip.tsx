@@ -1,6 +1,6 @@
 import { useCallback, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import type { CharacterSession, InventoryItem } from "netim2-shared";
+import type { CharacterSession, EquipType, InventoryItem } from "netim2-shared";
 import { InventoryItemActionMenu } from "./InventoryItemActionMenu";
 import { EquipItemDetails } from "./EquipItemDetails";
 
@@ -14,14 +14,15 @@ const CORNERS = [
 ] as const;
 
 interface InventoryItemTooltipProps {
-    item: InventoryItem;
-    character: CharacterRequirements;
+    item: InventoryItem | EquipType;
+    character?: CharacterRequirements;
     children: ReactNode;
-    menuOpen: boolean;
-    suppressTooltip: boolean;
-    onToggleMenu: () => void;
-    onCloseMenu: () => void;
-    onMove: () => void;
+    menuOpen?: boolean;
+    suppressTooltip?: boolean;
+    onToggleMenu?: () => void;
+    onCloseMenu?: () => void;
+    onMove?: () => void;
+    onEquip?: () => void;
 }
 
 interface TooltipPosition {
@@ -33,17 +34,19 @@ export const InventoryItemTooltip = ({
     item,
     character,
     children,
-    menuOpen,
-    suppressTooltip,
+    menuOpen = false,
+    suppressTooltip = false,
     onToggleMenu,
     onCloseMenu,
     onMove,
+    onEquip,
 }: InventoryItemTooltipProps) => {
     const triggerRef = useRef<HTMLDivElement>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
     const tooltipId = useId();
     const [isOpen, setIsOpen] = useState(false);
     const [position, setPosition] = useState<TooltipPosition | null>(null);
+    const hasActions = Boolean(onToggleMenu && onCloseMenu && onMove);
 
     const updatePosition = useCallback(() => {
         const trigger = triggerRef.current;
@@ -92,30 +95,32 @@ export const InventoryItemTooltip = ({
             <div
                 ref={triggerRef}
                 className="h-full w-full cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#e9cf99]"
-                role="button"
+                role={hasActions ? "button" : "group"}
                 tabIndex={0}
-                aria-label={`Acciones de ${item.name}`}
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
+                aria-label={hasActions ? `Acciones de ${item.name}` : item.name}
+                aria-haspopup={hasActions ? "menu" : undefined}
+                aria-expanded={hasActions ? menuOpen : undefined}
                 aria-describedby={isOpen && !suppressTooltip && item.type === "equip" ? tooltipId : undefined}
                 onMouseEnter={openTooltip}
                 onMouseLeave={() => setIsOpen(false)}
                 onFocus={openTooltip}
                 onBlur={() => setIsOpen(false)}
                 onClick={() => {
+                    if (!hasActions) return;
                     setIsOpen(false);
-                    onToggleMenu();
+                    onToggleMenu?.();
                 }}
                 onKeyDown={(event) => {
+                    if (!hasActions) return;
                     if (event.key !== "Enter" && event.key !== " ") return;
                     event.preventDefault();
                     setIsOpen(false);
-                    onToggleMenu();
+                    onToggleMenu?.();
                 }}
             >
                 {children}
             </div>
-            {menuOpen && <InventoryItemActionMenu anchorRef={triggerRef} onClose={onCloseMenu} onMove={onMove} />}
+            {menuOpen && hasActions && onCloseMenu && onMove && <InventoryItemActionMenu anchorRef={triggerRef} onClose={onCloseMenu} onMove={onMove} onEquip={onEquip} />}
             {isOpen && !suppressTooltip && item.type === "equip" && createPortal(
                 <div
                     ref={tooltipRef}

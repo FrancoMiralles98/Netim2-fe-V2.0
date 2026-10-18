@@ -18,6 +18,8 @@ export const canPlaceItemAt = (
     }
 
     return !items.some((other) => {
+        if (other.id === item.id) return false;
+
         return row < other.position.row + other.size.rows
             && row + rows > other.position.row
             && col < other.position.col + other.size.cols

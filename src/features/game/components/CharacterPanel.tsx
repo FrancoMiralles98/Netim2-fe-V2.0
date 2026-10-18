@@ -2,6 +2,7 @@ import type { CharacterSession } from "netim2-shared";
 import { StatCircle } from "./StatCircle";
 import { BonusPanel } from "./BonusPanel";
 import { CharacterInventoryPanel } from "./CharacterInventoryPanel";
+import { CharacterEquipmentPanel } from "./CharacterEquipmentPanel";
 
 interface CharacterPanelProps {
     character: CharacterSession;
@@ -107,17 +108,7 @@ export const CharacterPanel = ({ character }: CharacterPanelProps) => {
                 </div>
             </div>
             <div id='equipo-stats' className="mx-[3.9%] flex items-center font-sans">
-                <div id="equipo" className="flex aspect-[9/14] w-[19%] shrink-0 flex-col bg-[url('/game/marco-equipo.png')] bg-[length:100%_100%] bg-no-repeat px-2">
-                    <p className="flex h-[9%] pt-1 shrink-0 items-center b justify-center text-[12px] font-semibold text-[#e9cf99]">Equipo</p>
-                    <div className="min-h-0 flex-1 overflow-hidden">
-                        <img src="/game/equipo.png" className="mx-auto w-[90%]" alt="" />
-                    </div>
-                    <div className="flex h-[12%] pt-1 shrink-0 items-start justify-center gap-1 border-t border-[#8e683b]/70">
-                        <img src="/game/bottom_equipo1.png" className="w-[30%]" alt="" />
-                        <img src="/game/bottom_equipo2.png" className="w-[30%]" alt="" />
-                        <img src="/game/bottom_equipo3.png" className="w-[30%]" alt="" />
-                    </div>
-                </div>
+                <CharacterEquipmentPanel equipo={character[`equipo_${character.equipo_selected}`]} />
                 <div id="stats-generales" className="h-full px-1 w-[30%] shrink-0 bg-[url('/game/marco-stats.png')] bg-[length:100%_100%] bg-no-repeat">
                     <div className="flex h-[13%] items-center justify-center px-4 text-[12px] font-semibold text-[#e9cf99]">
                         Estadísticas generales

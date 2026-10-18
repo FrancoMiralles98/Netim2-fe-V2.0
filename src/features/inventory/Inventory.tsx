@@ -3,6 +3,7 @@ import type { CharacterSession, InventoryItem } from "netim2-shared";
 import { InventoryItemSlot } from "./components/InventoryItemSlot";
 import { INVENTORY_COLUMNS, INVENTORY_ROWS, INVENTORY_SLOT_SIZE } from "./inventory.constants";
 import { canPlaceItemAt } from "./inventory-placement";
+import { useInventoryActions } from "./hooks/useInventoryActions";
 
 const INVENTORY_SLOTS = Array.from(
     { length: INVENTORY_COLUMNS * INVENTORY_ROWS },
@@ -11,7 +12,7 @@ const INVENTORY_SLOTS = Array.from(
 
 interface InventoryProps {
     items: InventoryItem[];
-    character: Pick<CharacterSession, "lv" | "raza">;
+    character: Pick<CharacterSession, "id" | "lv" | "raza">;
 }
 
 interface HoveredSlot {
@@ -40,6 +41,7 @@ const isItemWithinInventory = (item: InventoryItem) => {
 };
 
 export const Inventory = ({ items, character }: InventoryProps) => {
+    const { moveItem, equipItem, isPending } = useInventoryActions(character);
     const [activeMenuItemId, setActiveMenuItemId] = useState<string | null>(null);
     const [movingItemId, setMovingItemId] = useState<string | null>(null);
     const [hoveredSlot, setHoveredSlot] = useState<HoveredSlot | null>(null);
@@ -60,7 +62,8 @@ export const Inventory = ({ items, character }: InventoryProps) => {
 
     return (
         <div
-            className="relative h-[192px] w-[512px] shrink-0"
+            className={`relative h-[192px] w-[512px] shrink-0 ${isPending ? "cursor-wait" : ""}`}
+            aria-busy={isPending}
             onPointerMove={(event) => {
                 if (!movingItem) return;
 
@@ -69,13 +72,17 @@ export const Inventory = ({ items, character }: InventoryProps) => {
             }}
             onPointerLeave={() => setHoveredSlot(null)}
             onClick={(event) => {
-                if (!movingItem || !(event.target instanceof Node) || !event.currentTarget.contains(event.target)) return;
+                if (isPending || !movingItem || !(event.target instanceof Node) || !event.currentTarget.contains(event.target)) return;
 
                 const slot = getSlotAtPoint(event.currentTarget.getBoundingClientRect(), event.clientX, event.clientY);
-                if (slot && !canPlaceItemAt(movingItem, items, slot.row, slot.col)) {
-                    setMovingItemId(null);
-                    setHoveredSlot(null);
-                }
+                if (!slot) return;
+
+                setMovingItemId(null);
+                setHoveredSlot(null);
+                if (!canPlaceItemAt(movingItem, items, slot.row, slot.col)) return;
+                if (movingItem.position.row === slot.row && movingItem.position.col === slot.col) return;
+
+                void moveItem({ itemId: movingItem.id, position: slot });
             }}
         >
             <div
@@ -99,13 +106,19 @@ export const Inventory = ({ items, character }: InventoryProps) => {
                     item={item}
                     character={character}
                     menuOpen={activeMenuItemId === item.id}
-                    suppressTooltip={activeMenuItemId !== null || movingItem !== undefined}
+                    suppressTooltip={isPending || activeMenuItemId !== null || movingItem !== undefined}
                     onToggleMenu={() => {
-                        if (movingItem) return;
+                        if (isPending || movingItem) return;
                         setActiveMenuItemId((current) => current === item.id ? null : item.id);
                     }}
                     onCloseMenu={() => setActiveMenuItemId(null)}
+                    onEquip={item.type === "equip" ? () => {
+                        if (isPending) return;
+                        setActiveMenuItemId(null);
+                        void equipItem(item);
+                    } : undefined}
                     onMove={() => {
+                        if (isPending) return;
                         setActiveMenuItemId(null);
                         setHoveredSlot(null);
                         setMovingItemId(item.id);

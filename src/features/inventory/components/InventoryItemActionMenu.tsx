@@ -5,6 +5,7 @@ interface InventoryItemActionMenuProps {
     anchorRef: RefObject<HTMLDivElement | null>;
     onClose: () => void;
     onMove: () => void;
+    onEquip?: () => void;
 }
 
 interface MenuPosition {
@@ -12,7 +13,7 @@ interface MenuPosition {
     left: number;
 }
 
-export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove }: InventoryItemActionMenuProps) => {
+export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip }: InventoryItemActionMenuProps) => {
     const menuRef = useRef<HTMLDivElement>(null);
     const hasFocusedRef = useRef(false);
     const [position, setPosition] = useState<MenuPosition | null>(null);
@@ -91,6 +92,16 @@ export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove }: Inventor
             >
                 Mover
             </button>
+            {onEquip && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
+                    onClick={onEquip}
+                >
+                    Equipar
+                </button>
+            )}
         </div>,
         document.body,
     );

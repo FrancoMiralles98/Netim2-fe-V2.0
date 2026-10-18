@@ -1,4 +1,4 @@
-import type { CharacterSession, InventoryItem } from "netim2-shared";
+import type { CharacterSession, EquipType } from "netim2-shared";
 import {
     BonusSixSeven,
     CorruptExplicitBonuses,
@@ -9,7 +9,6 @@ import {
 } from "./EquipBonusGroups";
 import { EquipStoneSlots } from "./EquipStoneSlots";
 
-type EquipInventoryItem = Extract<InventoryItem, { type: "equip" }>;
 type CharacterRequirements = Pick<CharacterSession, "lv" | "raza">;
 
 const priceFormatter = new Intl.NumberFormat("es-AR");
@@ -20,9 +19,9 @@ const RACE_NAMES = {
     chaman: "Chamán",
 } as const;
 
-export const EquipItemDetails = ({ item, character }: { item: EquipInventoryItem; character: CharacterRequirements }) => {
-    const isCompatible = character.lv >= item.lvReq
-        && (item.restricted.length === 0 || item.restricted.includes(character.raza));
+export const EquipItemDetails = ({ item, character }: { item: EquipType; character?: CharacterRequirements }) => {
+    const isCompatible = !character || (character.lv >= item.lvReq
+        && (item.restricted.length === 0 || item.restricted.includes(character.raza)));
     const hasBonuses = item.implicitBonus.length > 0
         || item.randomImplicitBonus.length > 0
         || item.corruptImplicitBonus.length > 0

@@ -4,7 +4,8 @@ import { useGameSocket } from "../../api/hooks/use-game-socket";
 import { useNavigate } from "react-router";
 import { RouterPaths } from "../../app/router/router-paths.types";
 import { useModal } from "../../shared/modal/hooks/useModal";
-import type { CharacterSession, CharacterSummary } from "netim2-shared";
+import type { CharacterSession, CharacterSummary, EquipItemResponse, MoveInventoryItemResponse } from "netim2-shared";
+import { applyEquipmentToCharacter } from "./utils/apply-equipment-response";
 import { getCharacterSessionRequest } from "./api/character-session.services";
 import type { SessionEndReason } from "./types/session-end-reason.type";
 
@@ -15,6 +16,26 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
     const [sessionEndReason, setSessionEndReason] = useState<SessionEndReason>(null);
     const loading = useRef(false)
     const modal = useModal()
+
+    const updateInventoryItemPosition = useCallback((characterId: string, movedItem: MoveInventoryItemResponse) => {
+        setCharacter((current) => {
+            // Una respuesta pendiente no debe actualizar otro personaje ni reabrir una sesión cerrada.
+            if (!current || current.id !== characterId) return current;
+
+            return {
+                ...current,
+                inventario: current.inventario.map((item) => item.id === movedItem.id
+                    ? { ...item, position: { ...movedItem.position } }
+                    : item),
+            };
+        });
+    }, []);
+
+    const applyEquipmentResponse = useCallback((characterId: string, response: EquipItemResponse) => {
+        setCharacter((current) => current?.id === characterId
+            ? applyEquipmentToCharacter(current, response)
+            : current);
+    }, []);
 
     const enterGame = async (characterSummary: CharacterSummary) => {
         if (loading.current) return
@@ -68,6 +89,8 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
         <CharacterSessionContext.Provider value={{
             character,
             enterGame,
+            updateInventoryItemPosition,
+            applyEquipmentResponse,
             isConnected,
             sessionEndReason,
             isReady,

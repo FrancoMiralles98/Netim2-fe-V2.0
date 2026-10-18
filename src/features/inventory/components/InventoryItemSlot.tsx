@@ -10,9 +10,10 @@ interface InventoryItemSlotProps {
     onToggleMenu: () => void;
     onCloseMenu: () => void;
     onMove: () => void;
+    onEquip?: () => void;
 }
 
-export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove }: InventoryItemSlotProps) => (
+export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove, onEquip }: InventoryItemSlotProps) => (
     <div
         className="absolute z-10 flex items-center justify-center"
         style={{
@@ -30,6 +31,7 @@ export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, 
             onToggleMenu={onToggleMenu}
             onCloseMenu={onCloseMenu}
             onMove={onMove}
+            onEquip={onEquip}
         >
             <img src={item.img} alt={item.name} className="h-full w-full object-contain" />
         </InventoryItemTooltip>

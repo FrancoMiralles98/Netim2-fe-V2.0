@@ -4,8 +4,17 @@ import { createPortal } from "react-dom";
 interface InventoryItemActionMenuProps {
     anchorRef: RefObject<HTMLDivElement | null>;
     onClose: () => void;
-    onMove: () => void;
+    onMove?: () => void;
     onEquip?: () => void;
+    onUnequip?: () => void;
+    onUse?: () => void;
+    onOpen?: () => void;
+    onOpenBulk?: () => void;
+    onSplit?: () => void;
+    onMerge?: () => void;
+    onDiscard?: () => void;
+    splitDisabled?: boolean;
+    openBulkDisabled?: boolean;
 }
 
 interface MenuPosition {
@@ -13,7 +22,7 @@ interface MenuPosition {
     left: number;
 }
 
-export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip }: InventoryItemActionMenuProps) => {
+export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip, onUnequip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, splitDisabled = false, openBulkDisabled = false }: InventoryItemActionMenuProps) => {
     const menuRef = useRef<HTMLDivElement>(null);
     const hasFocusedRef = useRef(false);
     const [position, setPosition] = useState<MenuPosition | null>(null);
@@ -84,14 +93,16 @@ export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip }:
                 visibility: position ? "visible" : "hidden",
             }}
         >
-            <button
-                type="button"
-                role="menuitem"
-                className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
-                onClick={onMove}
-            >
-                Mover
-            </button>
+            {onMove && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
+                    onClick={onMove}
+                >
+                    Mover
+                </button>
+            )}
             {onEquip && (
                 <button
                     type="button"
@@ -100,6 +111,78 @@ export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip }:
                     onClick={onEquip}
                 >
                     Equipar
+                </button>
+            )}
+            {onUnequip && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
+                    onClick={onUnequip}
+                >
+                    Desequipar
+                </button>
+            )}
+            {onUse && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
+                    onClick={onUse}
+                >
+                    Usar
+                </button>
+            )}
+            {onOpen && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
+                    onClick={onOpen}
+                >
+                    Abrir
+                </button>
+            )}
+            {onOpenBulk && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    disabled={openBulkDisabled}
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+                    onClick={onOpenBulk}
+                >
+                    Abrir muchos
+                </button>
+            )}
+            {onSplit && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    disabled={splitDisabled}
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+                    onClick={onSplit}
+                >
+                    Dividir
+                </button>
+            )}
+            {onMerge && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none"
+                    onClick={onMerge}
+                >
+                    Agrupar
+                </button>
+            )}
+            {onDiscard && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left text-red-200 hover:bg-red-900/40 focus-visible:bg-red-900/40 focus-visible:outline-none"
+                    onClick={onDiscard}
+                >
+                    Deshacer
                 </button>
             )}
         </div>,

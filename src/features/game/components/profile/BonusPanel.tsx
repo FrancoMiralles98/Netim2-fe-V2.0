@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { bonusFullNameByRef, type BonusRefKeys, type CharacterSession } from "netim2-shared";
-import { getBonusDescription } from "../../../shared/tooltip/utils/bonus-info-tool-tip";
+import { getBonusDescription } from "../../../../shared/tooltip/utils/bonus-info-tool-tip";
 
 type BonusCategory = keyof CharacterSession["stats"]["bonus"];
 

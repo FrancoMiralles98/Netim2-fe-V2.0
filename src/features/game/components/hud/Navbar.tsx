@@ -1,8 +1,8 @@
-import { base_timers_pvm_multiplier, timer_pvp as PVP_DURATION_MS, type CharacterSession } from "netim2-shared";
-import { getIconRace } from "../../characterSelection/utils/character-selecition-utils";
-import { useUserSession } from "../../userSession/hook/useUserSession";
-import { ResourcePercentBar } from "../../../shared/bars/components/ResourcePercentBar";
-import { MiniTooltip } from "../../../shared/tooltip/components/MiniTooltip";
+import type { CharacterSession } from "netim2-shared";
+import { getIconRace } from "../../../characterSelection/utils/character-selecition-utils";
+import { useUserSession } from "../../../userSession/hook/useUserSession";
+import { ResourcePercentBar } from "../../../../shared/bars/components/ResourcePercentBar";
+import { MiniTooltip } from "../../../../shared/tooltip/components/MiniTooltip";
 import { CountdownTimerBar } from "./CountdownTimerBar";
 import { ExperienceIndicator } from "./ExperienceIndicator";
 
@@ -11,6 +11,9 @@ interface NavbarProps {
 }
 
 const currencyFormatter = new Intl.NumberFormat('es-AR');
+// Valores actuales del backend; GameConfigResponse todavía no incluye los timers.
+const PVM_DURATION_MULTIPLIERS = { mob: 1, netims: 2, boss: 4 } as const;
+const PVP_DURATION_MS = 5 * 60 * 1000;
 
 export const Navbar = ({ character }: NavbarProps) => {
     const { user } = useUserSession();
@@ -94,7 +97,7 @@ export const Navbar = ({ character }: NavbarProps) => {
                             </MiniTooltip>
                             <CountdownTimerBar
                                 endsAt={character.timer_mob}
-                                durationMs={basePvmDurationMs * base_timers_pvm_multiplier.mob}
+                                durationMs={basePvmDurationMs * PVM_DURATION_MULTIPLIERS.mob}
                                 label="PvM"
                             />
                         </div>
@@ -104,7 +107,7 @@ export const Navbar = ({ character }: NavbarProps) => {
                             </MiniTooltip>
                             <CountdownTimerBar
                                 endsAt={character.timer_metin}
-                                durationMs={basePvmDurationMs * base_timers_pvm_multiplier.netims}
+                                durationMs={basePvmDurationMs * PVM_DURATION_MULTIPLIERS.netims}
                                 label="Metin"
                             />
                         </div>
@@ -126,7 +129,7 @@ export const Navbar = ({ character }: NavbarProps) => {
                             </MiniTooltip>
                             <CountdownTimerBar
                                 endsAt={character.timer_boss}
-                                durationMs={basePvmDurationMs * base_timers_pvm_multiplier.boss}
+                                durationMs={basePvmDurationMs * PVM_DURATION_MULTIPLIERS.boss}
                                 label="Jefe"
                             />
                         </div>

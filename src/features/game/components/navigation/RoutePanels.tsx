@@ -1,5 +1,5 @@
 import type { ReinosNames } from "netim2-shared";
-import { ButtonReino } from "../../../shared/button/ButtonReino";
+import { ButtonReino } from "../../../../shared/button/ButtonReino";
 
 interface RoutePanelsProps {
     reino: ReinosNames | null;

@@ -80,9 +80,12 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     }, [closeModal, navigate]);
 
     const handleAcceptAction = async () => {
+        const currentType = modalState.type;
+        const action = actionRef.current;
+        actionRef.current = null;
         try {
-            await actionRef.current?.()
-            closeModal()
+            await action?.()
+            setModalState(current => current.type === currentType ? { type: 'none' } : current)
         } catch {
             closeModal();
             showNotificationModal({

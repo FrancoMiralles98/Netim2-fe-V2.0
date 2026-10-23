@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { ATTRIBUTE_EFFECTS_CONFIG, bonusFullNameByRef, type AttributesRefKeys, type BonusRefKeys } from "netim2-shared";
+import { bonusFullNameByRef, type AttributesRefKeys, type BonusRefKeys } from "netim2-shared";
+import { useCharacterSession } from "../../../characterSession/hooks/useCharacterSession";
 
 interface StatCircleProps {
     stat: AttributesRefKeys;
@@ -21,10 +22,11 @@ const formatEffect = (stat: AttributesRefKeys, bonus: BonusRefKeys, value: numbe
     `+${numberFormatter.format(value)}${stat === 'VIT' && bonus === 'hp' ? '%' : ''}`;
 
 export const StatCircle = ({ stat, byBonifications, byLevel }: StatCircleProps) => {
+    const { gameConfig } = useCharacterSession();
     const { image, textColor, titleColor, name } = STAT_CONFIG[stat];
     const total = byLevel + byBonifications;
     const tooltipId = useId();
-    const effects = Object.entries(ATTRIBUTE_EFFECTS_CONFIG[stat]).filter(
+    const effects = Object.entries(gameConfig?.attributes.effects[stat] ?? {}).filter(
         (entry): entry is [BonusRefKeys, number] => typeof entry[1] === 'number',
     );
 

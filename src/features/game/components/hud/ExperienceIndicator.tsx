@@ -1,4 +1,4 @@
-import { MiniTooltip } from "../../../shared/tooltip/components/MiniTooltip";
+import { MiniTooltip } from "../../../../shared/tooltip/components/MiniTooltip";
 
 interface ExperienceIndicatorProps {
     exp: number;

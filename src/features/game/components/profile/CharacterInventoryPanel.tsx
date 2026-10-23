@@ -1,7 +1,12 @@
 import type { CharacterSession } from "netim2-shared";
-import { Inventory } from "../../inventory/Inventory";
+import { Inventory } from "../../../inventory/Inventory";
+import { useCharacterSession } from "../../../characterSession/hooks/useCharacterSession";
+import { AppliedBuffTooltip } from "./AppliedBuffTooltip";
 
-export const CharacterInventoryPanel = ({ character }: { character: CharacterSession }) => (
+export const CharacterInventoryPanel = ({ character }: { character: CharacterSession }) => {
+    const { gameConfig } = useCharacterSession();
+
+    return (
     <div className="h-full w-full bg-[url('/game/marco-inventario-horizontal.png')] bg-[length:100%_100%] bg-no-repeat font-sans">
         <div className="flex h-[17%] w-full items-center px-[3%]">
             <h2 className="text-[17px] mt-3 font-semibold text-[#e9cf99] [text-shadow:0_1px_2px_#000]">
@@ -14,16 +19,13 @@ export const CharacterInventoryPanel = ({ character }: { character: CharacterSes
             <div className="flex min-w-0 flex-1 flex-col text-[#e9cf99]">
                 <section className="flex h-[58%] flex-col border-b border-[#a97735]/75">
                     <h3 className="text-center text-[16px] font-semibold">Buffos</h3>
+                    <p className="text-center text-[11px] text-[#c7ced8]">
+                        {character.buffos.length} / {gameConfig?.buff.max_active_buff ?? "—"}
+                    </p>
                     {character.buffos?.length ? (
                         <div className="flex min-h-0 flex-1 flex-wrap content-start justify-center gap-2 overflow-y-auto px-2 py-1">
                             {character.buffos.map((buff) => (
-                                <img
-                                    key={buff.id_buff}
-                                    src={buff.buff_icon}
-                                    alt={buff.buff_name}
-                                    title={buff.buff_description || buff.buff_name}
-                                    className="h-[32px] w-[32px] object-contain"
-                                />
+                                <AppliedBuffTooltip key={buff.id_buff} buff={buff} />
                             ))}
                         </div>
                     ) : (
@@ -46,4 +48,5 @@ export const CharacterInventoryPanel = ({ character }: { character: CharacterSes
             </div>
         </div>
     </div>
-);
+    );
+};

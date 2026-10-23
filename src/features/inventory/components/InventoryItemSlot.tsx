@@ -1,6 +1,7 @@
 import type { CharacterSession, InventoryItem } from "netim2-shared";
 import { INVENTORY_SLOT_SIZE } from "../inventory.constants";
 import { InventoryItemTooltip } from "./InventoryItemTooltip";
+import { getItemImagePath } from "../getItemImagePath";
 
 interface InventoryItemSlotProps {
     item: InventoryItem;
@@ -11,9 +12,21 @@ interface InventoryItemSlotProps {
     onCloseMenu: () => void;
     onMove: () => void;
     onEquip?: () => void;
+    onUse?: () => void;
+    onOpen?: () => void;
+    onOpenBulk?: () => void;
+    onSplit?: () => void;
+    onMerge?: () => void;
+    onDiscard?: () => void;
+    splitDisabled?: boolean;
+    openBulkDisabled?: boolean;
+    quantityOpen?: boolean;
+    quantityAction?: "use" | "split" | "openBulk";
+    onConfirmQuantity?: (quantity: number) => void;
+    onCloseQuantity?: () => void;
 }
 
-export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove, onEquip }: InventoryItemSlotProps) => (
+export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove, onEquip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, splitDisabled, openBulkDisabled, quantityOpen, quantityAction, onConfirmQuantity, onCloseQuantity }: InventoryItemSlotProps) => (
     <div
         className="absolute z-10 flex items-center justify-center"
         style={{
@@ -32,8 +45,27 @@ export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, 
             onCloseMenu={onCloseMenu}
             onMove={onMove}
             onEquip={onEquip}
+            onUse={onUse}
+            onOpen={onOpen}
+            onOpenBulk={onOpenBulk}
+            onSplit={onSplit}
+            onMerge={onMerge}
+            onDiscard={onDiscard}
+            splitDisabled={splitDisabled}
+            openBulkDisabled={openBulkDisabled}
+            quantityOpen={quantityOpen}
+            quantityAction={quantityAction}
+            onConfirmQuantity={onConfirmQuantity}
+            onCloseQuantity={onCloseQuantity}
         >
-            <img src={item.img} alt={item.name} className="h-full w-full object-contain" />
+            <div className="relative h-full w-full">
+                <img src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="h-full w-full object-contain" />
+                {item.acc && item.type === "utility" && (
+                    <span className="pointer-events-none absolute right-[2px] bottom-[1px] text-[11px] leading-none font-semibold text-white drop-shadow-[0_1px_2px_#000]">
+                        {item.cantidad}
+                    </span>
+                )}
+            </div>
         </InventoryItemTooltip>
     </div>
 );

@@ -1,17 +1,14 @@
-import { useCallback, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { createPortal } from "react-dom";
+import { useId, useRef, useState, type ReactNode } from "react";
 import type { CharacterSession, EquipType, InventoryItem } from "netim2-shared";
 import { InventoryItemActionMenu } from "./InventoryItemActionMenu";
 import { EquipItemDetails } from "./EquipItemDetails";
+import { PotionItemDetails } from "./PotionItemDetails";
+import { UtilityItemDetails } from "./UtilityItemDetails";
+import { BuffItemDetails } from "./BuffItemDetails";
+import { ItemQuantityPopover } from "./ItemQuantityPopover";
+import { InventoryTooltipPortal } from "./InventoryTooltipPortal";
 
 type CharacterRequirements = Pick<CharacterSession, "lv" | "raza">;
-
-const CORNERS = [
-    { src: "/utils/AI_vistanativa.png", className: "top-0 left-0" },
-    { src: "/utils/AD_vistanativa.png", className: "top-0 right-0" },
-    { src: "/utils/BI_border.png", className: "bottom-0 left-0" },
-    { src: "/utils/BD_border.png", className: "bottom-0 right-0" },
-] as const;
 
 interface InventoryItemTooltipProps {
     item: InventoryItem | EquipType;
@@ -23,11 +20,19 @@ interface InventoryItemTooltipProps {
     onCloseMenu?: () => void;
     onMove?: () => void;
     onEquip?: () => void;
-}
-
-interface TooltipPosition {
-    top: number;
-    left: number;
+    onUnequip?: () => void;
+    onUse?: () => void;
+    onOpen?: () => void;
+    onOpenBulk?: () => void;
+    onSplit?: () => void;
+    onMerge?: () => void;
+    onDiscard?: () => void;
+    splitDisabled?: boolean;
+    openBulkDisabled?: boolean;
+    quantityOpen?: boolean;
+    quantityAction?: "use" | "split" | "openBulk";
+    onConfirmQuantity?: (quantity: number) => void;
+    onCloseQuantity?: () => void;
 }
 
 export const InventoryItemTooltip = ({
@@ -40,53 +45,28 @@ export const InventoryItemTooltip = ({
     onCloseMenu,
     onMove,
     onEquip,
+    onUnequip,
+    onUse,
+    onOpen,
+    onOpenBulk,
+    onSplit,
+    onMerge,
+    onDiscard,
+    splitDisabled,
+    openBulkDisabled,
+    quantityOpen = false,
+    quantityAction,
+    onConfirmQuantity,
+    onCloseQuantity,
 }: InventoryItemTooltipProps) => {
     const triggerRef = useRef<HTMLDivElement>(null);
-    const tooltipRef = useRef<HTMLDivElement>(null);
     const tooltipId = useId();
     const [isOpen, setIsOpen] = useState(false);
-    const [position, setPosition] = useState<TooltipPosition | null>(null);
-    const hasActions = Boolean(onToggleMenu && onCloseMenu && onMove);
-
-    const updatePosition = useCallback(() => {
-        const trigger = triggerRef.current;
-        const tooltip = tooltipRef.current;
-        if (!trigger || !tooltip) return;
-
-        const triggerRect = trigger.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
-        const margin = 8;
-        const gap = 8;
-        const maxLeft = Math.max(margin, window.innerWidth - tooltipRect.width - margin);
-        const left = Math.min(
-            Math.max(triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2, margin),
-            maxLeft,
-        );
-        const above = triggerRect.top - tooltipRect.height - gap;
-        const below = triggerRect.bottom + gap;
-        const preferredTop = above >= margin ? above : below;
-        const maxTop = Math.max(margin, window.innerHeight - tooltipRect.height - margin);
-        const top = Math.min(Math.max(preferredTop, margin), maxTop);
-
-        setPosition({ top, left });
-    }, []);
-
-    useLayoutEffect(() => {
-        if (!isOpen || item.type !== "equip") return;
-
-        updatePosition();
-        window.addEventListener("scroll", updatePosition, true);
-        window.addEventListener("resize", updatePosition);
-
-        return () => {
-            window.removeEventListener("scroll", updatePosition, true);
-            window.removeEventListener("resize", updatePosition);
-        };
-    }, [isOpen, item.type, updatePosition]);
+    const hasActions = Boolean(onToggleMenu && onCloseMenu && (onMove || onEquip || onUnequip || onUse || onOpen || onOpenBulk || onSplit || onMerge || onDiscard));
+    const hasDetails = item.type === "equip" || item.type === "utility";
 
     const openTooltip = () => {
-        if (item.type !== "equip" || suppressTooltip) return;
-        setPosition(null);
+        if (!hasDetails || suppressTooltip) return;
         setIsOpen(true);
     };
 
@@ -100,7 +80,7 @@ export const InventoryItemTooltip = ({
                 aria-label={hasActions ? `Acciones de ${item.name}` : item.name}
                 aria-haspopup={hasActions ? "menu" : undefined}
                 aria-expanded={hasActions ? menuOpen : undefined}
-                aria-describedby={isOpen && !suppressTooltip && item.type === "equip" ? tooltipId : undefined}
+                aria-describedby={isOpen && !suppressTooltip && hasDetails ? tooltipId : undefined}
                 onMouseEnter={openTooltip}
                 onMouseLeave={() => setIsOpen(false)}
                 onFocus={openTooltip}
@@ -120,25 +100,23 @@ export const InventoryItemTooltip = ({
             >
                 {children}
             </div>
-            {menuOpen && hasActions && onCloseMenu && onMove && <InventoryItemActionMenu anchorRef={triggerRef} onClose={onCloseMenu} onMove={onMove} onEquip={onEquip} />}
-            {isOpen && !suppressTooltip && item.type === "equip" && createPortal(
-                <div
-                    ref={tooltipRef}
-                    id={tooltipId}
-                    role="tooltip"
-                    className="pointer-events-none fixed z-[99999] max-h-[calc(100vh-16px)] min-w-[200px]  max-w-[calc(100vw-16px)] overflow-y-auto border border-white/10 bg-black/95 px-3 py-2 text-center font-sans text-white shadow-[0_8px_24px_rgba(0,0,0,0.85)]"
-                    style={{
-                        top: position?.top ?? 0,
-                        left: position?.left ?? 0,
-                        visibility: position ? "visible" : "hidden",
-                    }}
-                >
-                    {CORNERS.map(({ src, className }) => (
-                        <img key={src} src={src} alt="" aria-hidden="true" className={`absolute h-[10px] w-[10px] ${className}`} />
-                    ))}
-                    <EquipItemDetails item={item} character={character} />
-                </div>,
-                document.body,
+            {menuOpen && hasActions && onCloseMenu && <InventoryItemActionMenu anchorRef={triggerRef} onClose={onCloseMenu} onMove={onMove} onEquip={onEquip} onUnequip={onUnequip} onUse={onUse} onOpen={onOpen} onOpenBulk={onOpenBulk} onSplit={onSplit} onMerge={onMerge} onDiscard={onDiscard} splitDisabled={splitDisabled} openBulkDisabled={openBulkDisabled} />}
+            {quantityOpen && quantityAction && item.type === "utility" && onConfirmQuantity && onCloseQuantity && (
+                <ItemQuantityPopover
+                    anchorRef={triggerRef}
+                    maxQuantity={quantityAction === "split" ? item.cantidad - 1 : item.cantidad}
+                    action={quantityAction}
+                    onConfirm={onConfirmQuantity}
+                    onClose={onCloseQuantity}
+                />
+            )}
+            {isOpen && !suppressTooltip && hasDetails && (
+                <InventoryTooltipPortal anchorRef={triggerRef} id={tooltipId}>
+                    {item.type === "equip" && <EquipItemDetails item={item} character={character} />}
+                    {item.type === "utility" && item.type_utility === "poción" && <PotionItemDetails item={item} />}
+                    {item.type === "utility" && item.type_utility === "buff" && <BuffItemDetails item={item} />}
+                    {item.type === "utility" && item.type_utility !== "poción" && item.type_utility !== "buff" && <UtilityItemDetails item={item} />}
+                </InventoryTooltipPortal>
             )}
         </>
     );

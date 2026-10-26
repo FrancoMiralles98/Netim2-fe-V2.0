@@ -5,6 +5,9 @@ import { EquipItemDetails } from "./EquipItemDetails";
 import { PotionItemDetails } from "./PotionItemDetails";
 import { UtilityItemDetails } from "./UtilityItemDetails";
 import { BuffItemDetails } from "./BuffItemDetails";
+import { StoneItemDetails } from "./StoneItemDetails";
+import { FishingRodItemDetails } from "./FishingRodItemDetails";
+import { BaitItemDetails } from "./BaitItemDetails";
 import { ItemQuantityPopover } from "./ItemQuantityPopover";
 import { InventoryTooltipPortal } from "./InventoryTooltipPortal";
 
@@ -115,7 +118,10 @@ export const InventoryItemTooltip = ({
                     {item.type === "equip" && <EquipItemDetails item={item} character={character} />}
                     {item.type === "utility" && item.type_utility === "poción" && <PotionItemDetails item={item} />}
                     {item.type === "utility" && item.type_utility === "buff" && <BuffItemDetails item={item} />}
-                    {item.type === "utility" && item.type_utility !== "poción" && item.type_utility !== "buff" && <UtilityItemDetails item={item} />}
+                    {item.type === "utility" && item.type_utility === "piedra" && <StoneItemDetails item={item} />}
+                    {item.type === "utility" && item.type_utility === "caña" && <FishingRodItemDetails item={item} />}
+                    {item.type === "utility" && item.type_utility === "cebo" && <BaitItemDetails item={item} />}
+                    {item.type === "utility" && item.type_utility !== "poción" && item.type_utility !== "buff" && item.type_utility !== "piedra" && item.type_utility !== "caña" && item.type_utility !== "cebo" && <UtilityItemDetails item={item} />}
                 </InventoryTooltipPortal>
             )}
         </>

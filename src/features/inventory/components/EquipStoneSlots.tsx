@@ -1,5 +1,6 @@
 import type { PiedrasInItem } from "netim2-shared";
 import { CorruptExplicitBonuses, ImplicitBonuses } from "./EquipBonusGroups";
+import { getItemImagePath } from "../getItemImagePath";
 
 interface EquipStoneSlotsProps {
     piedras: PiedrasInItem[];
@@ -16,11 +17,11 @@ export const EquipStoneSlots = ({ piedras, slot }: EquipStoneSlotsProps) => {
 
                 return (
                     <div key={index} className="flex min-h-[34px] items-center gap-1">
-                        <div className="relative h-[34px] w-[34px] shrink-0 bg-[url('/items/Slot_Piedra.png')] bg-center bg-no-repeat">
+                        <div className="relative h-[34px] w-[34px] shrink-0 bg-[url('/game/Slot_Piedra.png')] bg-center bg-no-repeat">
                             {piedra && (
                                 <img
-                                    src="/items/Piedra_Rapidez.png"
-                                    alt=""
+                                    src={getItemImagePath(piedra.idItem) ?? undefined}
+                                    alt={piedra.name}
                                     className="absolute top-1/2 left-1/2 h-[32px] w-[32px] -translate-x-1/2 -translate-y-1/2 object-contain"
                                 />
                             )}

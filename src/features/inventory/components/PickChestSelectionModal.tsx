@@ -8,6 +8,7 @@ import { EquipItemDetails } from "./EquipItemDetails";
 import { PotionItemDetails } from "./PotionItemDetails";
 import { BuffItemDetails } from "./BuffItemDetails";
 import { UtilityItemDetails } from "./UtilityItemDetails";
+import { StoneItemDetails } from "./StoneItemDetails";
 
 const PickChestItemOption = ({ item, rewardOptions, character, selected, disabled, onToggle }: {
     item: ItemDTO;
@@ -54,6 +55,7 @@ const PickChestItemOption = ({ item, rewardOptions, character, selected, disable
                     {item.type === "equip" ? <EquipItemDetails item={item} character={character} />
                         : item.type_utility === "poción" ? <PotionItemDetails item={item} />
                             : item.type_utility === "buff" ? <BuffItemDetails item={item} />
+                                : item.type_utility === "piedra" ? <StoneItemDetails item={item} />
                                 : <UtilityItemDetails item={item} />}
                     {(upgradeLabel || quantityLabel) && (
                         <div className="mt-2 border-t border-[#8e683b]/60 pt-2 text-xs text-[#e9cf99]">

@@ -47,6 +47,7 @@ export const BONUS_INFO: Record<BonusRefKeys, string> = {
     doble_golpe: 'La probabilidad de realizar un ataque básico adicional en el turno.',
     duracion_estado: 'Aumenta la duración de los efectos de estados.',
     esquivar_ataques: 'Determina las chances de esquivar ataques básicos, anulando su daño.',
+    esquivar_hechizos: 'Determina las chances de esquivar habilidades, anulando su daño.',
     guerrero: 'Aumenta el daño de todas las fuentes a las razas de tipo Guerrero',
     habilidad: 'Aumenta el daño de todas las habilidades.',
     hp: 'Determina la vida máxima del personaje.',
@@ -78,7 +79,7 @@ export const BONUS_INFO: Record<BonusRefKeys, string> = {
     veneno: 'Determina las chances de que los ataques básicos ocasionen este efecto.',
     vh: 'Determina el porcentaje de reduccion de tiempo de espera para volver a usar las habilidades.',
     VIT: 'Aumenta la vida máxima del personaje.',
-    vm: 'Determina la velocidad de moviemiento del personaje, aumentando las chances de esquivar ataques.'
+    vm: 'Determina la velocidad de moviemiento del personaje, aumentando las chances de esquivar ataques.',
 }
 
 export const getBonusDescription = (bonusRefKey: BonusRefKeys): string =>

@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 export const useGameGuard = () => {
   const {
     character,
+    gameConfig,
     isConnected,
     isReady,
     worldSessionId,
@@ -18,6 +19,7 @@ export const useGameGuard = () => {
 
   const gameReady = Boolean(
     character &&
+    gameConfig &&
     isConnected &&
     isReady &&
     worldSessionId &&

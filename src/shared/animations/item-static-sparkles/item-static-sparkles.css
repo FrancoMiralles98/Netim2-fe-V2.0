@@ -1,0 +1,85 @@
+.item-static-sparkles {
+    --static-sparkle-core: #87e4df;
+    --static-sparkle-mid: #269ca8e6;
+    --static-sparkle-edge: #12616e00;
+    --static-sparkle-glow: #49c5cddd;
+    --static-sparkle-halo: #16818bcc;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    user-select: none;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.item-static-sparkles[data-variant="bronze"] {
+    --static-sparkle-core: #efbd88;
+    --static-sparkle-mid: #cd7f32e6;
+    --static-sparkle-edge: #8c512400;
+    --static-sparkle-glow: #d49a60dd;
+    --static-sparkle-halo: #a66b35cc;
+}
+
+.item-static-sparkles[data-layer="below"] {
+    z-index: 0;
+}
+
+.item-static-sparkles__field {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(30px, 40%);
+    height: min(130px, 100%);
+    transform: translate(-50%, -50%);
+}
+
+.item-static-sparkles__particle {
+    position: absolute;
+    left: var(--static-sparkle-x);
+    top: var(--static-sparkle-y);
+    width: var(--static-sparkle-size);
+    height: var(--static-sparkle-size);
+}
+
+.item-static-sparkles__flash {
+    display: block;
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, var(--static-sparkle-core) 0 18%, var(--static-sparkle-mid) 35%, var(--static-sparkle-edge) 75%);
+    filter: drop-shadow(0 0 3px var(--static-sparkle-glow)) drop-shadow(0 0 6px var(--static-sparkle-halo));
+    animation: item-static-sparkles-twinkle var(--static-sparkle-blink) linear var(--static-sparkle-delay) infinite;
+}
+
+.item-static-sparkles__particle[data-cross="true"] .item-static-sparkles__flash::before,
+.item-static-sparkles__particle[data-cross="true"] .item-static-sparkles__flash::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(transparent, var(--static-sparkle-core), transparent);
+    width: 1px;
+    height: 170%;
+}
+
+.item-static-sparkles__particle[data-cross="true"] .item-static-sparkles__flash::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    height: 130%;
+}
+
+.item-static-sparkles[data-paused="true"] .item-static-sparkles__flash {
+    animation-play-state: paused;
+}
+
+@keyframes item-static-sparkles-twinkle {
+    0%, 18%, 64%, 100% { opacity: 0; transform: scale(0.25); }
+    34%, 46% { opacity: 1; transform: scale(1); }
+    54% { opacity: 0.35; transform: scale(0.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .item-static-sparkles {
+        display: none;
+    }
+}

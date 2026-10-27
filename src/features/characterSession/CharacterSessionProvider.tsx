@@ -4,7 +4,7 @@ import { useGameSocket } from "../../api/hooks/use-game-socket";
 import { useNavigate } from "react-router";
 import { RouterPaths } from "../../app/router/router-paths.types";
 import { useModal } from "../../shared/modal/hooks/useModal";
-import type { ApplyBuffResponse, BuyEquipmentSlotResponse, CharacterSession, CharacterSummary, DiscardInventoryItemResponse, EquipItemResponse, GameConfigResponse, MergeInventoryItemsResponse, MoveInventoryItemResponse, OpenChestResponse, RefreshBuffsResponse, SelectEquipmentResponse, SplitInventoryItemResponse, UnequipItemResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
+import type { ApplyBuffResponse, BuyEquipmentSlotResponse, CharacterSession, CharacterSummary, DiscardInventoryItemResponse, EquipItemResponse, GameConfigResponse, IncreaseCharacterAttributeResponse, MergeInventoryItemsResponse, MoveInventoryItemResponse, OpenChestResponse, RefreshBuffsResponse, SelectEquipmentResponse, SplitInventoryItemResponse, UnequipItemResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
 import { applyEquipmentToCharacter, applyUnequipmentToCharacter } from "./utils/apply-equipment-response";
 import { applyPotionUseResponseToCharacter } from "./utils/apply-potion-use-response";
 import { applySplitInventoryResponseToCharacter } from "./utils/apply-split-inventory-response";
@@ -143,6 +143,17 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             : current);
     }, []);
 
+    const applyAttributeIncreaseResponse = useCallback((characterId: string, response: IncreaseCharacterAttributeResponse) => {
+        setCharacter((current) => current?.id === characterId
+            ? {
+                ...current,
+                stats: response.stats,
+                atributos: response.attributes,
+                puntos_atributos: response.puntos_atributos,
+            }
+            : current);
+    }, []);
+
     const applyPotionUseResponse = useCallback((characterId: string, response: UsePotionResponse | UseReservePotionResponse) => {
         setCharacter((current) => current?.id === characterId
             ? applyPotionUseResponseToCharacter(current, response)
@@ -188,7 +199,7 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             modal.showLoadingModal('Cargando mundo...')
             const [data, config] = await Promise.all([
                 getCharacterSessionRequest(characterSummary.id),
-                getGameConfigRequest(),
+                getGameConfigRequest(characterSummary.raza, characterSummary.especialidad),
             ])
             setGameConfig(config)
             setCharacter(data)
@@ -245,6 +256,7 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyUnequipmentResponse,
             applyEquipmentSlotPurchaseResponse,
             applyEquipmentSelectionResponse,
+            applyAttributeIncreaseResponse,
             applyPotionUseResponse,
             applyBuffResponse,
             applyChestResponse,

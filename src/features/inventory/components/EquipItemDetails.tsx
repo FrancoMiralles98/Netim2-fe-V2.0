@@ -56,7 +56,10 @@ export const EquipItemDetails = ({ item, character }: { item: EquipType; charact
             )}
             <EquipStoneSlots piedras={item.piedras} slot={item.slot} />
 
-            <p className="mt-4 flex items-center justify-center gap-1 text-[12px] !text-gray-200/80">
+            {item.corrupt && (
+                <p className="mt-4 text-center text-[10px] font-bold tracking-wide text-red-600">CORRUPTO</p>
+            )}
+            <p className={`${item.corrupt ? "mt-2" : "mt-4"} flex items-center justify-center gap-1 text-[12px] !text-gray-200/80`}>
                 Precio: <span className="!text-yellow-300">{priceFormatter.format(item.price)}</span>
                 <img src="/utils/yang-icon.png" alt="Yang" className="h-[12px] w-[12px] object-contain" />
             </p>

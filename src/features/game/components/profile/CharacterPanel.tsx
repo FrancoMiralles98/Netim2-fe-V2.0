@@ -5,12 +5,15 @@ import { CharacterEquipmentPanel } from "../../../equip/components/CharacterEqui
 import { CharacterIdentity } from "./CharacterIdentity";
 import { GeneralStatsPanel } from "./GeneralStatsPanel";
 import { StatCircle } from "./StatCircle";
+import { useAttributeActions } from "../../hooks/useAttributeActions";
 
 interface CharacterPanelProps {
     character: CharacterSession;
 }
 
 export const CharacterPanel = ({ character }: CharacterPanelProps) => {
+    const { increaseAttribute, isPending: isAttributePending } = useAttributeActions(character);
+
     return (
         <div
             className="relative grid grid-rows-[26%_36%_38%] grid-cols-1 aspect-[4/3] w-[1100px] justify-self-center bg-[length:100%_100%] bg-no-repeat"
@@ -25,15 +28,17 @@ export const CharacterPanel = ({ character }: CharacterPanelProps) => {
                     <h1 className="text-metin-label text-[18px]! mt-[2rem] text-center">Atributos</h1>
                     <img src="/game/hr-custom.png" className="w-[95%] mx-auto" alt="" />
                     <div className="flex min-h-0 gap-10 flex-1 justify-center b items-center">
-                        <StatCircle stat="VIT" byLevel={character.atributos.VIT.lvPoints} byBonifications={character.atributos.VIT.bonusPoints} />
-                        <StatCircle stat="STR" byLevel={character.atributos.STR.lvPoints} byBonifications={character.atributos.STR.bonusPoints} />
-                        <StatCircle stat="INT" byLevel={character.atributos.INT.lvPoints} byBonifications={character.atributos.INT.bonusPoints} />
-                        <StatCircle stat="DEX" byLevel={character.atributos.DEX.lvPoints} byBonifications={character.atributos.DEX.bonusPoints} />
+                        <StatCircle stat="VIT" byLevel={character.atributos.VIT.lvPoints} byBonifications={character.atributos.VIT.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="STR" byLevel={character.atributos.STR.lvPoints} byBonifications={character.atributos.STR.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="INT" byLevel={character.atributos.INT.lvPoints} byBonifications={character.atributos.INT.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="DEX" byLevel={character.atributos.DEX.lvPoints} byBonifications={character.atributos.DEX.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
                     </div>
                     <div className="h-[30px]">
-                        <p className="text-metin-label text-center">
-                            Puntos de atributos disponibles: {character.puntos_atributos}
-                        </p>
+                        {character.puntos_atributos > 0 && (
+                            <p className="text-metin-label text-center">
+                                Puntos de atributos disponibles: <span className="text-yellow-300">{character.puntos_atributos}</span>
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

@@ -1,0 +1,16 @@
+.item-corruption-smoke {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+.item-corruption-smoke canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(0.5px);
+}

@@ -1,6 +1,14 @@
 import type { ReinosNames } from "netim2-shared";
 
-export const CharacterSectionNav = ({ reino }: { reino: ReinosNames | null }) => {
+export type CharacterSection = "perfil" | "habilidades";
+
+interface CharacterSectionNavProps {
+    reino: ReinosNames | null;
+    activeSection: CharacterSection;
+    onSelectSection: (section: CharacterSection) => void;
+}
+
+export const CharacterSectionNav = ({ reino, activeSection, onSelectSection }: CharacterSectionNavProps) => {
     if (!reino) return null;
 
     return (
@@ -14,8 +22,8 @@ export const CharacterSectionNav = ({ reino }: { reino: ReinosNames | null }) =>
                 style={{ backgroundImage: `url('/game/navbar-2-${reino}.png')` }}
             />
             <div className="absolute inset-y-[18%] right-[7%] left-[7%] z-10 grid grid-cols-4 items-center text-center font-metin text-[15px] font-semibold text-[#f5e1b5] [text-shadow:0_2px_3px_#000]">
-                <span>Perfil</span>
-                <span>Habilidades</span>
+                <button type="button" onClick={() => onSelectSection("perfil")} aria-pressed={activeSection === "perfil"} className="cursor-pointer hover:text-white">Perfil</button>
+                <button type="button" onClick={() => onSelectSection("habilidades")} aria-pressed={activeSection === "habilidades"} className="cursor-pointer hover:text-white">Habilidades</button>
                 <span>Misiones</span>
                 <span>Historial</span>
             </div>

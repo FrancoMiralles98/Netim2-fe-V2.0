@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { CharacterPanel } from "../../features/game/components/profile/CharacterPanel";
 import { Navbar } from "../../features/game/components/hud/Navbar";
 import { RoutePanels } from "../../features/game/components/navigation/RoutePanels";
-import { CharacterSectionNav } from "../../features/game/components/navigation/CharacterSectionNav";
+import { CharacterSectionNav, type CharacterSection } from "../../features/game/components/navigation/CharacterSectionNav";
+import { CharacterSkillsPanel } from "../../features/game/components/skills/CharacterSkillsPanel";
 import { useGameGuard } from "../../features/game/hooks/useGame";
 
 export const Game = () => {
+    const [activeSection, setActiveSection] = useState<CharacterSection>("perfil");
     const {
         character,
         worldSessionId,
@@ -29,9 +32,13 @@ export const Game = () => {
                 <Navbar character={character} />
                 <RoutePanels reino={reino} />
                 <div >
-                    <CharacterSectionNav reino={reino} />
+                    <CharacterSectionNav reino={reino} activeSection={activeSection} onSelectSection={setActiveSection} />
 
-                    <CharacterPanel character={character} />
+                    {activeSection === "perfil" ? (
+                        <CharacterPanel character={character} />
+                    ) : (
+                        <CharacterSkillsPanel reino={reino} raza={character.raza} />
+                    )}
                 </div>
             </div>
         </section>

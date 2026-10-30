@@ -37,7 +37,7 @@ export const Game = () => {
                     {activeSection === "perfil" ? (
                         <CharacterPanel character={character} />
                     ) : (
-                        <CharacterSkillsPanel reino={reino} raza={character.raza} />
+                        <CharacterSkillsPanel character={character} />
                     )}
                 </div>
             </div>

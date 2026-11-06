@@ -12,6 +12,8 @@ import { getCharacterSpecialitySkillsRequest } from "../../../api/character-skil
 import { SpecialitySkillsPreview } from "../SpecialitySkillsPreview/SpecialitySkillsPreview";
 import { resolveCriticalDamageMultiplier } from "../utils/resolve-critical-damage-multiplier";
 import { SPECIALITIES_BY_RACE } from "./specialities.config";
+import { useSpecialityActions } from "../../../hooks/useSpecialityActions";
+import { MIN_SPECIALITY_LEVEL } from "../../../skills.constants";
 
 interface SpecialitySelectionProps {
     character: CharacterSession;
@@ -24,6 +26,7 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
     const { gameConfig } = useCharacterSession();
     const modal = useModal();
+    const { selectSpeciality, isPending: isSelecting } = useSpecialityActions(character);
     const specializations = SPECIALITIES_BY_RACE[raza];
     const selected = specializations[selectedIndex];
     const skillIds = gameConfig?.character.idSkillsSpeciality.find(
@@ -31,7 +34,7 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
     )?.idSkills ?? [];
 
     const openPreview = async () => {
-        if (isPreviewLoading) return;
+        if (isPreviewLoading || isSelecting || character.lv < MIN_SPECIALITY_LEVEL || character.especialidad) return;
 
         setIsPreviewLoading(true);
         try {
@@ -86,6 +89,7 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
                                 key={specialization.name}
                                 type="button"
                                 aria-pressed={selectedIndex === index}
+                                disabled={isSelecting}
                                 onClick={() => setSelectedIndex(index)}
                                 className={`mx-auto flex min-h-[80px] w-[60%] cursor-pointer items-center gap-3 rounded-sm border bg-black/55 p-[10px] text-left transition-colors hover:bg-white/10 ${selectedIndex === index ? "border-amber-400" : "border-slate-500"}`}
                             >
@@ -148,6 +152,8 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
                         <div className="mt-7 flex justify-center gap-4">
                             <button
                                 type="button"
+                                onClick={() => { void selectSpeciality(selected.icon); }}
+                                disabled={isSelecting || isPreviewLoading}
                                 className="min-w-[130px] cursor-pointer border border-amber-200/70 bg-black/65 px-4 py-2 text-[16px] transition-colors hover:bg-amber-200/15"
                             >
                                 Elegir
@@ -155,7 +161,7 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
                             <button
                                 type="button"
                                 onClick={() => { void openPreview(); }}
-                                disabled={isPreviewLoading}
+                                disabled={isPreviewLoading || isSelecting}
                                 className="min-w-[130px] cursor-pointer border border-amber-200/70 bg-black/65 px-4 py-2 text-[16px] transition-colors hover:bg-amber-200/15"
                             >
                                 {isPreviewLoading ? "Cargando..." : "Vista previa"}

@@ -21,7 +21,7 @@ export function useGameSocket({ characterId, onSessionReplaced }: UseGameSocketP
             setIsConnected(true);
         });
 
-        socket.on('disconnect', (reason) => {
+        socket.on('disconnect', () => {
             setIsConnected(false);
             setIsReady(false);
             setWorldSessionId(null);

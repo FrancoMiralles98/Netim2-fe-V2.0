@@ -1,7 +1,7 @@
 import type { SkillDamage } from "netim2-shared";
 import { COMBAT_COLORS } from "../../../../../../../shared/colors/combat-colors";
 
-type DamageType = SkillDamage["components"][number]["damageType"];
+type DamageType = SkillDamage["components"]["damageType"];
 
 const DAMAGE_STYLES = {
     ad: { color: COMBAT_COLORS.ad.text, icon: "/fight/icono-ad.png", label: "Daño físico" },

@@ -1,6 +1,6 @@
 import type { BonusRefKeys } from "netim2-shared";
 
-export const BONUS_INFO: Record<BonusRefKeys, string> = {
+export const BONUS_INFO: Partial<Record<BonusRefKeys, string>> = {
     ad: 'Determina el daño de los ataques básicos y aumenta el daño de las habilidades de daño físico que escalan con este valor.',
     animales: 'Aumenta el daño de todas las fuentes a enemigos de tipo Animales.',
     ap: 'Aumenta el daño de las habilidades de daño mágico que escalan con este valor.',

@@ -3,6 +3,8 @@ import { useCharacterSession } from "../../../../../../characterSession/hooks/us
 import { COMBAT_COLORS } from "../../../../../../../shared/colors/combat-colors";
 import { getStatusEffectIcons } from "../../../../../../../shared/icons/status-effect-icons";
 import { getStatusEffectBaseDamage } from "../../../utils/get-status-effect-base-damage";
+import { SkillNextValue } from "../SkillNextValue";
+import { useNextSkill } from "../../skill-upgrade-preview.context";
 
 const STATUS_EFFECT_NAMES = {
     veneno: "Veneno", incendio: "Incendio", electrico: "Eléctrico",
@@ -19,6 +21,8 @@ const SLOW_STAT_NAMES: Partial<Record<BonusRefKeys, string>> = {
 
 export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
     const { gameConfig } = useCharacterSession();
+    const next = useNextSkill();
+    const effects = { ...(next?.type === "damage" ? next.statusEffects : {}), ...skill.statusEffects };
     const bleedingConfig = gameConfig?.combat.statusEffect?.sangrado;
     const stunConfig = gameConfig?.combat.statusEffect?.desmayo;
     const slowConfig = gameConfig?.combat.statusEffect?.retardo;
@@ -48,13 +52,19 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
 
     return (
         <div className="space-y-2">
-            {Object.entries(skill.escalado.statusEffectScaling ?? {}).map(([effect, scaling]) => (
+            {Object.keys(effects).length === 0 && (
+                <p className="text-sm text-slate-300">No hay efectos de estado disponibles para este nivel.</p>
+            )}
+            {Object.keys(effects).map(effect => {
+                const key = effect as keyof NonNullable<SkillDamage['statusEffects']>;
+                const chance = skill.statusEffects?.[key] ?? 0;
+                return (
                 <div key={effect} className="space-y-2 text-sm">
                     {effect === "sangrado" && (
                         <>
                             <h4 className="font-metin text-base text-amber-300">Sangrado</h4>
                             <p className="text-slate-300">
-                                Chances de ocasionar {STATUS_EFFECT_NAMES[effect as keyof typeof STATUS_EFFECT_NAMES]} por golpe: <span className="text-emerald-200">{skill.statusEffects?.[effect as keyof typeof STATUS_EFFECT_NAMES] ?? scaling.base}%</span>
+                                Chances de ocasionar {STATUS_EFFECT_NAMES[effect as keyof typeof STATUS_EFFECT_NAMES]} por golpe: <span className="text-emerald-200">{numberFormat.format(chance)}%</span><SkillNextValue select={value => value.type === "damage" ? `${numberFormat.format(value.statusEffects?.[key] ?? 0)}%` : null} />
                             </p>
                             <p className="text-slate-300">Duración: {bleedingConfig ? (
                                 <>
@@ -75,6 +85,11 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                                         maskRepeat: "no-repeat",
                                     }}
                                 />
+                                <SkillNextValue select={value => {
+                                    if (value.type !== "damage" || bleedingConfig?.type !== "periodic_damage") return null;
+                                    const damage = getStatusEffectBaseDamage(value, bleedingConfig.baseDamageRatio);
+                                    return `${numberFormat.format(damage.min)} – ${numberFormat.format(damage.max)}`;
+                                }} />
                             </span></p>
                             <p className="text-xs text-slate-400">Sin crítico, bonificaciones ni escalados del objetivo.</p>
                         </>
@@ -83,7 +98,7 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                         <>
                             <h4 className="font-metin text-base text-amber-300">Desmayo</h4>
                             <p className="text-slate-300">
-                                Chances de ocasionar Desmayo por golpe: <span className="text-emerald-200">{numberFormat.format(skill.statusEffects?.desmayo ?? scaling.base)}%</span>
+                                Chances de ocasionar Desmayo por golpe: <span className="text-emerald-200">{numberFormat.format(chance)}%</span><SkillNextValue select={value => value.type === "damage" ? `${numberFormat.format(value.statusEffects?.[key] ?? 0)}%` : null} />
                             </p>
                             <p className="text-slate-300">Duración del efecto: {stunConfig ? (
                                 <>
@@ -97,7 +112,7 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                         <>
                             <h4 className="font-metin text-base text-amber-300">Retardo</h4>
                             <p className="text-slate-300">
-                                Chances de ocasionar Retardo por golpe: <span className="text-emerald-200">{numberFormat.format(skill.statusEffects?.retardo ?? scaling.base)}%</span>
+                                Chances de ocasionar Retardo por golpe: <span className="text-emerald-200">{numberFormat.format(chance)}%</span><SkillNextValue select={value => value.type === "damage" ? `${numberFormat.format(value.statusEffects?.[key] ?? 0)}%` : null} />
                             </p>
                             <p className="text-slate-300">Duración del efecto: {slowConfig ? (
                                 <>
@@ -124,7 +139,7 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                         <>
                             <h4 className="font-metin text-base text-amber-300">Incendio</h4>
                             <p className="text-slate-300">
-                                Chances de ocasionar Incendio por golpe: <span className="text-emerald-200">{numberFormat.format(skill.statusEffects?.incendio ?? scaling.base)}%</span>
+                                Chances de ocasionar Incendio por golpe: <span className="text-emerald-200">{numberFormat.format(chance)}%</span><SkillNextValue select={value => value.type === "damage" ? `${numberFormat.format(value.statusEffects?.[key] ?? 0)}%` : null} />
                             </p>
                             <p className="text-slate-300">Duración del efecto: {fireConfig ? (
                                 <>
@@ -145,6 +160,11 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                                         maskRepeat: "no-repeat",
                                     }}
                                 />
+                                <SkillNextValue select={value => {
+                                    if (value.type !== "damage" || fireConfig?.type !== "periodic_damage") return null;
+                                    const damage = getStatusEffectBaseDamage(value, fireConfig.baseDamageRatio);
+                                    return `${numberFormat.format(damage.min)} – ${numberFormat.format(damage.max)}`;
+                                }} />
                             </span></p>
                             {fireRefreshBonus !== null && (
                                 <p className="text-slate-300">
@@ -157,7 +177,7 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                         <>
                             <h4 className="font-metin text-base text-amber-300">Eléctrico</h4>
                             <p className="text-slate-300">
-                                Chances de ocasionar Eléctrico por golpe: <span className="text-emerald-200">{numberFormat.format(skill.statusEffects?.electrico ?? scaling.base)}%</span>
+                                Chances de ocasionar Eléctrico por golpe: <span className="text-emerald-200">{numberFormat.format(chance)}%</span><SkillNextValue select={value => value.type === "damage" ? `${numberFormat.format(value.statusEffects?.[key] ?? 0)}%` : null} />
                             </p>
                             <p className="text-slate-300">Duración del efecto: {electricConfig ? (
                                 <>
@@ -178,6 +198,11 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                                         maskRepeat: "no-repeat",
                                     }}
                                 />
+                                <SkillNextValue select={value => {
+                                    if (value.type !== "damage" || electricConfig?.type !== "periodic_damage") return null;
+                                    const damage = getStatusEffectBaseDamage(value, electricConfig.baseDamageRatio);
+                                    return `${numberFormat.format(damage.min)} – ${numberFormat.format(damage.max)}`;
+                                }} />
                             </span></p>
                             {electricEffect?.stacks && (
                                 <>
@@ -201,7 +226,7 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                         <>
                             <h4 className="font-metin text-base text-amber-300">Veneno</h4>
                             <p className="text-slate-300">
-                                Chances de ocasionar Veneno por golpe: <span className="text-emerald-200">{numberFormat.format(skill.statusEffects?.veneno ?? scaling.base)}%</span>
+                                Chances de ocasionar Veneno por golpe: <span className="text-emerald-200">{numberFormat.format(chance)}%</span><SkillNextValue select={value => value.type === "damage" ? `${numberFormat.format(value.statusEffects?.[key] ?? 0)}%` : null} />
                             </p>
                             <p className="text-slate-300">Duración del efecto: {poisonConfig ? (
                                 <>
@@ -222,6 +247,11 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                                         maskRepeat: "no-repeat",
                                     }}
                                 />
+                                <SkillNextValue select={value => {
+                                    if (value.type !== "damage" || poisonConfig?.type !== "periodic_damage") return null;
+                                    const damage = getStatusEffectBaseDamage(value, poisonConfig.baseDamageRatio);
+                                    return `${numberFormat.format(damage.min)} – ${numberFormat.format(damage.max)}`;
+                                }} />
                             </span></p>
                             {poisonHealingReduction !== null && (
                                 <p className="text-slate-300">
@@ -231,7 +261,7 @@ export const StatusEffectsSection = ({ skill }: { skill: SkillDamage }) => {
                         </>
                     )}
                 </div>
-            ))}
+            ); })}
         </div>
     );
 };

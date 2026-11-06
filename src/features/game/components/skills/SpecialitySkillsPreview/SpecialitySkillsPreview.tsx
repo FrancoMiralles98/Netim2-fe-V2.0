@@ -1,11 +1,17 @@
 import { useState } from "react";
-import type { CharacterSpeciality, ReinosNames, SkillType } from "netim2-shared";
+import type { CharacterSession, CharacterSpeciality, ReinosNames, SkillType } from "netim2-shared";
 import { getSkillIconPath } from "../../../../../shared/utils/get-skill-icon-path";
 import { DamageSkillDetails } from "./componentes/damageSkill/DamageSkillDetails";
 import { AuraSkillDetails } from "./componentes/auraSkill/AuraSkillDetails";
-import { formatCooldown, formatManaCost, MASTERY_LEVELS } from "../utils/skill-preview-formatters";
+import { SkillResourceCosts } from "./componentes/SkillResourceCosts";
+import { SkillMasteryProgression } from "./componentes/SkillMasteryProgression";
+import { useSkillUpgradePreview } from "../../../hooks/useSkillUpgradePreview";
+import { SkillUpgradePreviewContext } from "./skill-upgrade-preview.context";
+import { SkillUpgradeProgress } from "./componentes/SkillUpgradeProgress";
+import { SkillNextValue } from "./componentes/SkillNextValue";
 
 interface SpecialitySkillsPreviewProps {
+    character?: CharacterSession;
     skills: SkillType[];
     criticalDamageMultiplier: number | null;
     speciality: CharacterSpeciality;
@@ -26,30 +32,37 @@ const SkillEffectDetails = ({ skill }: { skill: Exclude<SkillType, { type: "dama
     switch (skill.type) {
         case "heal":
             return (
-                <div className="space-y-1">
-                    {skill.components.map((component, index) => (
-                        <p key={index}>Curación {index + 1}: {component.range.min}–{component.range.max} de vida</p>
-                    ))}
-                </div>
+                <p>Curación: {skill.components.range.min} – {skill.components.range.max} de vida<SkillNextValue select={value => value.type === "heal" ? `${value.components.range.min.toLocaleString("es-AR", { maximumFractionDigits: 2 })} – ${value.components.range.max.toLocaleString("es-AR", { maximumFractionDigits: 2 })} de vida` : null} /></p>
             );
         case "buff":
-            return skill.stats.length > 0 ? (
+            return (
                 <div className="space-y-1">
                     {skill.stats.map((modifier, index) => (
-                        <p key={index}>{modifier.bonusRefKey}: {modifier.value > 0 ? "+" : ""}{modifier.value} {modifier.operation === "flat" ? "puntos" : "%"}</p>
+                        <p key={index}>{modifier.bonusRefKey}: {modifier.value > 0 ? "+" : ""}{modifier.value} {modifier.operation === "flat" ? "puntos" : "%"}<SkillNextValue select={value => value.type === "buff" ? value.stats.find(item => item.target === modifier.target && item.operation === modifier.operation)?.value : null} /></p>
                     ))}
+                    {skill.effects.map((effect, index) => (
+                        <div key={`effect-${index}`} className="space-y-2 text-sm">
+                            {effect.description && <p>{effect.description}</p>}
+                            <p>Multiplicador de daño: ×{effect.multiplier}<SkillNextValue select={value => value.type === "buff" ? value.effects[index]?.multiplier : null} /></p>
+                            <p>Usos: {effect.uses}<SkillNextValue select={value => value.type === "buff" ? value.effects[index]?.uses : null} /></p>
+                        </div>
+                    ))}
+                    {!skill.stats.length && !skill.effects.length && <p>Aplica un beneficio temporal.</p>}
                 </div>
-            ) : <p>{skill.effects[0]?.description ?? "Aplica un beneficio temporal."}</p>;
+            );
     }
 };
 
-export const SpecialitySkillsPreview = ({ skills, criticalDamageMultiplier, speciality, race, availablePoints, reino, onBack }: SpecialitySkillsPreviewProps) => {
+export const SpecialitySkillsPreview = ({ character, skills, criticalDamageMultiplier, speciality, race, availablePoints, reino, onBack }: SpecialitySkillsPreviewProps) => {
     const [selectedSkillId, setSelectedSkillId] = useState<SkillType["id"] | null>(skills[0]?.id ?? null);
-    const selectedSkill = skills.find((skill) => skill.id === selectedSkillId) ?? skills[0];
+    const selected = skills.find((skill) => skill.id === selectedSkillId) ?? skills[0];
+    const preview = useSkillUpgradePreview(onBack ? undefined : character, selected);
+    const selectedSkill = preview.data?.current ?? selected;
 
     return (
+        <SkillUpgradePreviewContext.Provider value={preview}>
         <section
-            aria-label={`Vista previa de habilidades de ${speciality}`}
+            aria-label={`${onBack ? "Vista previa de habilidades" : "Habilidades"} de ${speciality}`}
             className="relative aspect-[4/3] w-[1100px] justify-self-center overflow-hidden bg-[length:100%_100%] bg-no-repeat font-sans text-[#e8e0d4]"
             style={{ backgroundImage: reino ? `url('/game/modal-${reino}-rectangular.png')` : undefined }}
         >
@@ -86,7 +99,7 @@ export const SpecialitySkillsPreview = ({ skills, criticalDamageMultiplier, spec
                         >
                             <img src={getSkillIconPath(skill.id, skill.mastery)} alt="" className={`h-10 w-10 bg-black object-contain `} />
                             <span className="max-w-full truncate text-xs">{skill.nombre}</span>
-                            <span className="text-xs text-slate-400">Nv. {skill.lv}</span>
+                            <span className="text-xs text-slate-400">{skill.mastery === "P" ? "P" : `Nv. ${skill.mastery === "N" ? "" : skill.mastery}${skill.lv}`}</span>
                         </button>
                     ))}
                 </div>
@@ -110,10 +123,7 @@ export const SpecialitySkillsPreview = ({ skills, criticalDamageMultiplier, spec
                             <p className="text-xs text-sky-200">Efecto de la habilidad</p>
                             <div className="mt-2 font-metin text-lg text-amber-300"><SkillEffectDetails skill={selectedSkill} /></div>
                             <hr className="my-5 border-slate-500/40" />
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                <p>Coste de maná<br /><span className="text-sky-200">{formatManaCost(selectedSkill.mana)}</span></p>
-                                <p>Enfriamiento<br /><span className="text-sky-200">{formatCooldown(selectedSkill)}</span></p>
-                            </div>
+                            <SkillResourceCosts skill={selectedSkill} showDuration={selectedSkill.type === "buff"} />
                             <p className="mt-4 inline-block border border-slate-500/60 px-2 py-1 text-xs text-sky-200">{SKILL_TYPE_LABELS[selectedSkill.type]}</p>
                             {selectedSkill.type === "heal" && selectedSkill.weaponRestricted.length > 0 && (
                                 <div className="mt-5 border-t border-slate-500/40 pt-3 text-sm">
@@ -126,14 +136,9 @@ export const SpecialitySkillsPreview = ({ skills, criticalDamageMultiplier, spec
                         <aside className="self-start border border-slate-500/45 bg-[#1a1c1e]/95 p-5">
                             <p className="text-xs tracking-widest text-sky-200">PROGRESIÓN</p>
                             <h3 className="mt-1 font-metin text-lg text-amber-100">{selectedSkill.mastery === "N" ? "Normal" : selectedSkill.mastery} · Nivel {selectedSkill.lv}</h3>
-                            <div className="mt-4 grid grid-cols-4 gap-2">
-                                {MASTERY_LEVELS.map((mastery) => (
-                                    <span key={mastery} className={`border-b-2 pb-2 text-center text-sm ${selectedSkill.mastery === mastery ? "border-amber-300 text-amber-300" : "border-slate-500/60 text-slate-400"}`}>{mastery}</span>
-                                ))}
-                            </div>
+                            <SkillMasteryProgression mastery={selectedSkill.mastery} />
 
-                            <button type="button" disabled className="mt-6 w-full cursor-not-allowed border border-slate-500/60 bg-white/10 px-3 py-2 text-sm text-slate-400">Mejorar habilidad · 1 punto</button>
-                            <p className="mt-3 text-center text-xs text-slate-400">Disponible al elegir una especialidad</p>
+                            <SkillUpgradeProgress />
                         </aside>
                     </div>
                 ) : (
@@ -141,5 +146,6 @@ export const SpecialitySkillsPreview = ({ skills, criticalDamageMultiplier, spec
                 )}
             </div>
         </section>
+        </SkillUpgradePreviewContext.Provider>
     );
 };

@@ -14,10 +14,27 @@ import { getCharacterSessionRequest, getGameConfigRequest } from "./api/characte
 import type { SessionEndReason } from "./types/session-end-reason.type";
 import { refreshBuffsRequest } from "../inventory/api/buff.services";
 import { applyChestResponseToCharacter } from "./utils/apply-chest-response";
+import type { SelectCharacterSpecialityResponse } from "netim2-shared";
+import { applySpecialitySelectionToCharacter } from "./utils/apply-speciality-selection-response";
 
 export const CharacterSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const [character, setCharacter] = useState<CharacterSession | null>(null)
+    const applySkillUpgradeResponse = useCallback((characterId: string, response: import("netim2-shared").UpgradeCharacterSkillResponse) => {
+        setCharacter(current => {
+            if (!current || current.id !== characterId) return current;
+            const changes = new Map(response.updatedItems.map(item => [item.id, item]));
+            return { ...current, puntos_habilidad: response.puntos_habilidad,
+                hab: current.hab.map(skill => skill.id === response.skill.id ? response.skill : skill),
+                inventario: current.inventario.flatMap(item => {
+                    const change = changes.get(item.id);
+                    if (!change) return [item];
+                    if (change.cantidad === undefined || change.cantidad <= 0) return [];
+                    return [item.type === "utility" ? { ...item, cantidad: change.cantidad } : item];
+                }),
+            };
+        });
+    }, []);
     const [gameConfig, setGameConfig] = useState<GameConfigResponse | null>(null)
     const navigate = useNavigate()
     const [sessionEndReason, setSessionEndReason] = useState<SessionEndReason>(null);
@@ -154,6 +171,12 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             : current);
     }, []);
 
+    const applySpecialitySelectionResponse = useCallback((characterId: string, response: SelectCharacterSpecialityResponse) => {
+        setCharacter(current => current?.id === characterId
+            ? applySpecialitySelectionToCharacter(current, response)
+            : current);
+    }, []);
+
     const applyPotionUseResponse = useCallback((characterId: string, response: UsePotionResponse | UseReservePotionResponse) => {
         setCharacter((current) => current?.id === characterId
             ? applyPotionUseResponseToCharacter(current, response)
@@ -257,6 +280,8 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyEquipmentSlotPurchaseResponse,
             applyEquipmentSelectionResponse,
             applyAttributeIncreaseResponse,
+            applySpecialitySelectionResponse,
+            applySkillUpgradeResponse,
             applyPotionUseResponse,
             applyBuffResponse,
             applyChestResponse,

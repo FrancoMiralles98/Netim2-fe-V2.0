@@ -45,5 +45,5 @@ export const BONUS_FULL_NAME_BY_REF = {
     bloquear_ataques:  allFullNameBonusList.PROB_DE_BLOQUEAR_ATAQUES_BASICOS,
     bonus_estado: allFullNameBonusList.BONUS_ESTADO,
     chaman:  allFullNameBonusList.FUERZA_CONTRA_CHAMANES,
-    damage_taken:  allFullNameBonusList.REGENERACION_DE_HP,
-} satisfies Record<BonusRefKeys, allFullNameBonusList>
+    damage_taken:  allFullNameBonusList.DAMAGE_TAKEN,
+} satisfies Partial<Record<BonusRefKeys, allFullNameBonusList>>

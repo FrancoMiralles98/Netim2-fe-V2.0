@@ -1,9 +1,10 @@
 import { useState } from "react";
 import type { SkillAura } from "netim2-shared";
 import { getSkillIconPath } from "../../../../../../../shared/utils/get-skill-icon-path";
-import { MASTERY_LEVELS } from "../../../utils/skill-preview-formatters";
+import { SkillMasteryProgression } from "../SkillMasteryProgression";
 import { AuraGeneralSection } from "./AuraGeneralSection";
 import { AuraEffectSection } from "./AuraEffectSection";
+import { SkillUpgradeProgress } from "../SkillUpgradeProgress";
 
 const TABS = [{ id: "general", label: "General" }, { id: "effect", label: "Efecto" }] as const;
 
@@ -39,13 +40,8 @@ export const AuraSkillDetails = ({ skill }: { skill: SkillAura }) => {
             <aside className="self-start border border-slate-500/45 bg-[#1a1c1e]/95 p-5">
                 <p className="text-xs tracking-widest text-sky-200">PROGRESIÓN</p>
                 <h3 className="mt-1 font-metin text-lg text-amber-100">{skill.mastery === "N" ? "Normal" : skill.mastery} · Nivel {skill.lv}</h3>
-                <div className="mt-4 grid grid-cols-4 gap-2">
-                    {MASTERY_LEVELS.map((mastery) => (
-                        <span key={mastery} className={`border-b-2 pb-2 text-center text-sm ${skill.mastery === mastery ? "border-amber-300 text-amber-300" : "border-slate-500/60 text-slate-400"}`}>{mastery}</span>
-                    ))}
-                </div>
-                <button type="button" disabled className="mt-6 w-full cursor-not-allowed border border-slate-500/60 bg-white/10 px-3 py-2 text-sm text-slate-400">Mejorar habilidad · 1 punto</button>
-                <p className="mt-3 text-center text-xs text-slate-400">Disponible al elegir una especialidad</p>
+                <SkillMasteryProgression mastery={skill.mastery} />
+                <SkillUpgradeProgress />
             </aside>
         </div>
     );

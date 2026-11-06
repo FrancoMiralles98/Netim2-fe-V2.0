@@ -26,21 +26,16 @@ export const getSkillHitDamage = (skill: Pick<SkillDamage, "components" | "hitMo
     return outcomes.filter((outcome) => outcome.chance > 0).map((outcome) => {
         const hits = Math.max(1, Math.floor(outcome.hits));
         const multiplier = Math.max(0, outcome.damageMultiplierPerHit);
-        // El combate redondea cada componente por separado antes de sumarlo.
-        const components = skill.components.map((component) => ({
-            damageType: component.damageType,
+        // Cada golpe reutiliza el único componente de daño de la habilidad.
+        const component = skill.components;
+        const perHit = {
             min: Math.max(0, Math.floor(Math.max(0, Math.floor(component.range.min)) * multiplier * damageMultiplier)),
             max: Math.max(0, Math.floor(Math.max(0, Math.floor(component.range.max)) * multiplier * damageMultiplier)),
-        }));
-        const perHit = components.reduce((total, component) => ({
-            min: total.min + component.min,
-            max: total.max + component.max,
-        }), { min: 0, max: 0 });
+        };
 
         return {
             chance: outcome.chance,
             hits,
-            components,
             perHit,
             total: { min: perHit.min * hits, max: perHit.max * hits },
         };

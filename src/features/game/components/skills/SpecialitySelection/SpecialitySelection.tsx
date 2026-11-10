@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { CharacterSession, CharacterSpeciality, SkillType } from "netim2-shared";
-import { getCharacterSpecialityIconPath } from "../../../../../shared/utils/get-character-speciality-icon-path";
 import { getSkillIconPath } from "../../../../../shared/utils/get-skill-icon-path";
 import { useCharacterSession } from "../../../../characterSession/hooks/useCharacterSession";
 import { SpecialityArtwork } from "./componentes/SpecialityArtwork";
@@ -11,7 +10,7 @@ import { useModal } from "../../../../../shared/modal/hooks/useModal";
 import { getCharacterSpecialitySkillsRequest } from "../../../api/character-skills.services";
 import { SpecialitySkillsPreview } from "../SpecialitySkillsPreview/SpecialitySkillsPreview";
 import { resolveCriticalDamageMultiplier } from "../utils/resolve-critical-damage-multiplier";
-import { SPECIALITIES_BY_RACE } from "./specialities.config";
+import { SPECIALITIES_BY_RACE, SPECIALITY_BUTTON_IMAGES } from "./specialities.config";
 import { useSpecialityActions } from "../../../hooks/useSpecialityActions";
 import { MIN_SPECIALITY_LEVEL } from "../../../skills.constants";
 
@@ -86,21 +85,19 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
                     <div className="flex flex-col gap-3">
                         {specializations.map((specialization, index) => (
                             <button
-                                key={specialization.name}
+                                key={specialization.icon}
                                 type="button"
+                                aria-label={specialization.name}
                                 aria-pressed={selectedIndex === index}
                                 disabled={isSelecting}
                                 onClick={() => setSelectedIndex(index)}
-                                className={`mx-auto flex min-h-[80px] w-[60%] cursor-pointer items-center gap-3 rounded-sm border bg-black/55 p-[10px] text-left transition-colors hover:bg-white/10 ${selectedIndex === index ? "border-amber-400" : "border-slate-500"}`}
+                                className={`mx-auto grid h-[92px] w-[60%] cursor-pointer place-items-center rounded-sm transition-[filter,opacity] focus-visible:outline-2 focus-visible:outline-amber-300 disabled:cursor-wait motion-reduce:transition-none ${selectedIndex === index ? "brightness-110 drop-shadow-[0_0_6px_#e7ae5270]" : "opacity-80 hover:opacity-100"}`}
                             >
-                                <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center border border-amber-200/70 bg-black/60 text-center text-[10px] text-gray-300">
-                                    <img
-                                        src={getCharacterSpecialityIconPath(specialization.icon)}
-                                        alt={`Icono de ${specialization.name}`}
-                                        className="h-[44px] w-[44px] object-contain"
-                                    />
-                                </span>
-                                <span className="text-[18px] leading-tight font-semibold">{specialization.name}</span>
+                                <img
+                                    src={SPECIALITY_BUTTON_IMAGES[specialization.icon]}
+                                    alt=""
+                                    className="h-full min-h-0 w-full object-contain"
+                                />
                             </button>
                         ))}
                     </div>
@@ -113,7 +110,7 @@ export const SpecialitySelection = ({ character }: SpecialitySelectionProps) => 
 
                 </div>
 
-                <div className="flex min-h-0 flex-col pb-22">
+                <div className="flex min-h-0 flex-col pb-2">
                     <div className="mb-5 min-h-[230px] flex-1" />
 
                     <div>

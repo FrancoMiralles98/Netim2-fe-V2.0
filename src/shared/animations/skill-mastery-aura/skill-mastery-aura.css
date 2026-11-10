@@ -1,0 +1,122 @@
+.skill-mastery-icon {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    flex: none;
+}
+
+.skill-mastery-icon__image {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.skill-mastery-icon__effect {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+
+.skill-mastery-icon__effect[data-mastery="M"] {
+    --skill-aura-duration: 4.2s;
+    --skill-aura-glow: radial-gradient(closest-side, #f5c59c48 25%, #d4976733 49%, #ad653221 65%, transparent);
+    --skill-aura-shadow: drop-shadow(0 0 2px #d7976559);
+    --skill-aura-rim: #b98d6980;
+    --skill-aura-core: #e2ac7fc7;
+}
+
+.skill-mastery-icon__effect[data-mastery="G"] {
+    --skill-aura-duration: 3.4s;
+    --skill-aura-glow: radial-gradient(closest-side, #ffcbc37d 25%, #db777363 49%, #a7464c3d 65%, transparent);
+    --skill-aura-shadow: drop-shadow(0 0 2px #e58983ad) drop-shadow(0 0 4px #b44d537d);
+    --skill-aura-rim: #b76265;
+    --skill-aura-core: #efa29a;
+    --skill-aura-sweep: #ffe0d6;
+    --skill-aura-sweep-dashes: 12 88;
+}
+
+.skill-mastery-icon__halo,
+.skill-mastery-icon__outline {
+    position: absolute;
+}
+
+.skill-mastery-icon__halo {
+    width: 68px;
+    height: 68px;
+    background: var(--skill-aura-glow, radial-gradient(closest-side, #ffd990ad 25%, #ff511c81 49%, #d10e1752 65%, transparent));
+    animation: skill-mastery-aura-pulse var(--skill-aura-duration, 2.8s) ease-in-out infinite alternate;
+}
+
+.skill-mastery-icon__outline {
+    width: 46px;
+    height: 46px;
+    overflow: visible;
+    fill: none;
+    stroke-linejoin: round;
+    filter: var(--skill-aura-shadow, drop-shadow(0 0 2px #ff260c) drop-shadow(0 0 4px #ea120a));
+}
+
+.skill-mastery-icon__rim {
+    stroke: var(--skill-aura-rim, #d42211);
+    stroke-width: 3;
+    opacity: .85;
+}
+
+.skill-mastery-icon__core {
+    stroke: var(--skill-aura-core, #ff7543);
+}
+
+.skill-mastery-icon__sweep {
+    stroke: var(--skill-aura-sweep, #fff0ae);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-dasharray: var(--skill-aura-sweep-dashes, 15 85);
+    animation: skill-mastery-aura-sweep var(--skill-aura-duration, 2.8s) linear infinite;
+}
+
+.skill-mastery-icon__spark {
+    position: absolute;
+    top: calc(50% + var(--spark-y));
+    left: calc(50% + var(--spark-x));
+    width: 2px;
+    height: 2px;
+    opacity: 0;
+    border-radius: 50%;
+    background: #ffdc9a;
+    box-shadow: 0 0 4px 1px #ff4a1a;
+    animation: skill-mastery-aura-spark 2.8s ease-out var(--spark-delay) infinite;
+}
+
+@keyframes skill-mastery-aura-pulse {
+    from { opacity: .6; transform: scale(.91); }
+    to { opacity: .95; transform: scale(1.08); }
+}
+
+@keyframes skill-mastery-aura-sweep {
+    to { stroke-dashoffset: -100; }
+}
+
+@keyframes skill-mastery-aura-spark {
+    0%, 36% { opacity: 0; transform: translate(0, 0); }
+    46% { opacity: .95; }
+    65%, 100% { opacity: 0; transform: translate(var(--spark-dx), var(--spark-dy)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skill-mastery-icon__halo,
+    .skill-mastery-icon__sweep {
+        animation: none;
+    }
+
+    .skill-mastery-icon__spark {
+        display: none;
+    }
+}

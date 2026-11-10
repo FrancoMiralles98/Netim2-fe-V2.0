@@ -1,0 +1,44 @@
+.item-legendary-image {
+    position: relative;
+    isolation: isolate;
+    display: inline-grid;
+}
+
+.item-legendary-image__base,
+.item-legendary-image__sweep img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.item-legendary-image__base {
+    filter: drop-shadow(0 0 1px #efc65a) drop-shadow(0 0 3px #efc65a);
+}
+
+.item-legendary-image__defs,
+.item-legendary-image__sweep {
+    position: absolute;
+    pointer-events: none;
+}
+
+.item-legendary-image__sweep {
+    inset: -6px;
+    padding: 6px;
+    mask-image: linear-gradient(to bottom, transparent 44%, #0008 48%, #000 50%, #0008 52%, transparent 56%);
+    mask-size: 100% 260%;
+    mask-repeat: no-repeat;
+    animation: item-legendary-halo-rise 2.6s ease-in-out infinite;
+}
+
+@keyframes item-legendary-halo-rise {
+    0%, 8% { mask-position: 50% 0%; }
+    76%, 100% { mask-position: 50% 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .item-legendary-image__sweep {
+        display: none;
+    }
+}

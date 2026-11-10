@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { SkillAura } from "netim2-shared";
 import { getSkillIconPath } from "../../../../../../../shared/utils/get-skill-icon-path";
-import { SkillMasteryProgression } from "../SkillMasteryProgression";
+import { SkillProgressionPanel } from "../SkillProgressionPanel";
 import { AuraGeneralSection } from "./AuraGeneralSection";
 import { AuraEffectSection } from "./AuraEffectSection";
-import { SkillUpgradeProgress } from "../SkillUpgradeProgress";
+import { SkillDescriptionPanel } from "../SkillDescriptionPanel";
 
 const TABS = [{ id: "general", label: "General" }, { id: "effect", label: "Efecto" }] as const;
 
@@ -13,7 +13,7 @@ export const AuraSkillDetails = ({ skill }: { skill: SkillAura }) => {
 
     return (
         <div className="mt-4 grid min-h-0 flex-1 grid-cols-[1.45fr_1fr] gap-4">
-            <article className="min-h-0 overflow-y-auto border border-slate-500/45 bg-[#1a1c1e]/95 p-5">
+            <SkillDescriptionPanel mastery={skill.mastery}>
                 <div className="mb-3 flex justify-end">
                     <span className="rounded-full border border-cyan-400 bg-transparent px-3 py-1 text-xs font-semibold text-slate-200">Aura</span>
                 </div>
@@ -36,13 +36,8 @@ export const AuraSkillDetails = ({ skill }: { skill: SkillAura }) => {
                 <div role="tabpanel" className="min-h-24 pt-4">
                     {activeTab === "general" ? <AuraGeneralSection skill={skill} /> : <AuraEffectSection skill={skill} />}
                 </div>
-            </article>
-            <aside className="self-start border border-slate-500/45 bg-[#1a1c1e]/95 p-5">
-                <p className="text-xs tracking-widest text-sky-200">PROGRESIÓN</p>
-                <h3 className="mt-1 font-metin text-lg text-amber-100">{skill.mastery === "N" ? "Normal" : skill.mastery} · Nivel {skill.lv}</h3>
-                <SkillMasteryProgression mastery={skill.mastery} />
-                <SkillUpgradeProgress />
-            </aside>
+            </SkillDescriptionPanel>
+            <SkillProgressionPanel mastery={skill.mastery} lv={skill.lv} />
         </div>
     );
 };

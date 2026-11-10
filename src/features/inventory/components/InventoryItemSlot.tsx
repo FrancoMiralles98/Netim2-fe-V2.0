@@ -2,7 +2,7 @@ import type { CharacterSession, InventoryItem } from "netim2-shared";
 import { INVENTORY_SLOT_SIZE } from "../inventory.constants";
 import { InventoryItemTooltip } from "./InventoryItemTooltip";
 import { getItemImagePath } from "../getItemImagePath";
-import { ItemCorruptionSmoke, ItemStaticSparkles, ItemUpgradeSparkles } from "../../../shared/animations";
+import { ItemCorruptionSmoke, ItemSpecialImage, ItemStaticSparkles, ItemUpgradeSparkles } from "../../../shared/animations";
 import { EquipSlotIndicators } from "./EquipSlotIndicators";
 
 interface InventoryItemSlotProps {
@@ -71,7 +71,7 @@ export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, 
             >
                 <div className="relative isolate h-full w-full">
                     {item.corrupt === true && <ItemCorruptionSmoke />}
-                    <img src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="relative z-1 h-full w-full object-contain" />
+                    <ItemSpecialImage item={item} src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="relative z-1 h-full w-full object-contain" />
                     {item.type === "equip" && item.upgradeLv === 9 && <ItemUpgradeSparkles />}
                     {item.type === "equip" && item.upgradeLv === 8 && <ItemStaticSparkles />}
                     {item.type === "equip" && item.upgradeLv === 7 && <ItemStaticSparkles variant="bronze" />}

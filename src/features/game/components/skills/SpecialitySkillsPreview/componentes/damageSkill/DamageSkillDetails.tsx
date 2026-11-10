@@ -2,13 +2,13 @@ import { useState } from "react";
 import type { SkillType } from "netim2-shared";
 import { COMBAT_COLORS } from "../../../../../../../shared/colors/combat-colors";
 import { getSkillIconPath } from "../../../../../../../shared/utils/get-skill-icon-path";
-import { SkillMasteryProgression } from "../SkillMasteryProgression";
+import { SkillProgressionPanel } from "../SkillProgressionPanel";
 import { BaseDamageSection } from "./BaseDamageSection";
 import { MultiHitSection } from "./MultiHitSection";
 import { StatusEffectsSection } from "./StatusEffectsSection";
 import { AdditionalBonusesSection } from "./AdditionalBonusesSection";
 import { AmplifiersSection } from "./AmplifiersSection";
-import { SkillUpgradeProgress } from "../SkillUpgradeProgress";
+import { SkillDescriptionPanel } from "../SkillDescriptionPanel";
 import { useNextSkill } from "../../skill-upgrade-preview.context";
 
 type DamageSkill = Extract<SkillType, { type: "damage" }>;
@@ -51,7 +51,7 @@ export const DamageSkillDetails = ({ skill, criticalDamageMultiplier }: DamageSk
     
     return (
         <div className="mt-4 grid min-h-0 flex-1 grid-cols-[1.45fr_1fr] gap-4">
-            <article className="min-h-0 overflow-y-auto border border-slate-500/45 bg-[#1a1c1e]/95 p-5">
+            <SkillDescriptionPanel mastery={skill.mastery}>
                 <div className="mb-3 flex flex-wrap justify-end gap-2" aria-label="Tipos de daño y efectos">
                     <span
                         className={`rounded-full border bg-transparent px-3 py-1 text-xs font-semibold text-slate-200 ${DAMAGE_TYPE_BADGES[damageType].className}`}
@@ -105,15 +105,9 @@ export const DamageSkillDetails = ({ skill, criticalDamageMultiplier }: DamageSk
                     {activeTab === "mechanics" && <AdditionalBonusesSection skill={skill} />}
                     {activeTab === "amplifiers" && <AmplifiersSection skill={skill} criticalDamageMultiplier={criticalDamageMultiplier} />}
                 </div>
-            </article>
+            </SkillDescriptionPanel>
 
-            <aside className="self-start border border-slate-500/45 bg-[#1a1c1e]/95 p-5">
-                <p className="text-xs tracking-widest text-sky-200">PROGRESIÓN</p>
-                <h3 className="mt-1 font-metin text-lg text-amber-100">{skill.mastery === "N" ? "Normal" : skill.mastery} · Nivel {skill.lv}</h3>
-                <SkillMasteryProgression mastery={skill.mastery} />
-
-                <SkillUpgradeProgress />
-            </aside>
+            <SkillProgressionPanel mastery={skill.mastery} lv={skill.lv} />
         </div>
     )
 }

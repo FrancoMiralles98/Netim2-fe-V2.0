@@ -22,3 +22,14 @@ export const SPECIALITY_IMAGES = {
     Dragon: "/game/specialitySelection/img-chaman-dragon.png",
     Luz: "/game/specialitySelection/img-chaman-luz.png",
 } as const satisfies Record<CharacterSpeciality, string>;
+
+export const SPECIALITY_BUTTON_IMAGES = {
+    Corporal: "/button/boton-corporal.png",
+    Mental: "/button/boton-mental.png",
+    Daga: "/button/boton-daga.png",
+    Flecha: "/button/boton-flecha.png",
+    MagiaNegra: "/button/boton-magia-negra.png",
+    Espejo: "/button/boton-espejo.png",
+    Dragon: "/button/boton-dragon.png",
+    Luz: "/button/boton-luz.png",
+} as const satisfies Record<CharacterSpeciality, string>;

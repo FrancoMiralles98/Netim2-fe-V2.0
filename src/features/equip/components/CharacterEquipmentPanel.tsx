@@ -7,7 +7,7 @@ import { useUserSession } from "../../userSession/hook/useUserSession";
 import { useModal } from "../../../shared/modal/hooks/useModal";
 import { useEquipmentActions } from "../hooks/useEquipmentActions";
 import { getItemImagePath } from "../../inventory/getItemImagePath";
-import { ItemCorruptionSmoke, ItemStaticSparkles, ItemUpgradeSparkles } from "../../../shared/animations";
+import { ItemCorruptionSmoke, ItemSpecialImage, ItemStaticSparkles, ItemUpgradeSparkles } from "../../../shared/animations";
 import { EquipSlotIndicators } from "../../inventory/components/EquipSlotIndicators";
 
 interface CharacterEquipmentPanelProps {
@@ -105,7 +105,7 @@ export const CharacterEquipmentPanel = ({ equipo, character }: CharacterEquipmen
                                 >
                                     <div className="relative isolate h-full w-full">
                                         {item.corrupt === true && <ItemCorruptionSmoke />}
-                                        <img src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="relative z-1 h-full w-full object-contain" />
+                                        <ItemSpecialImage item={item} src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="relative z-1 h-full w-full object-contain" />
                                         {item.type === "equip" && item.upgradeLv === 9 && <ItemUpgradeSparkles />}
                                         {item.type === "equip" && item.upgradeLv === 8 && <ItemStaticSparkles />}
                                         {item.type === "equip" && item.upgradeLv === 7 && <ItemStaticSparkles variant="bronze" />}

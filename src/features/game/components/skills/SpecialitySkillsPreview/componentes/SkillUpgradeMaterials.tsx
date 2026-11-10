@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { GetItemsResponse, SkillUpgradeCost } from "netim2-shared";
+import { ItemSpecialImage } from "../../../../../../shared/animations";
 import { getItemsRequest } from "../../../../../inventory/api/item-details.services";
 import { InventoryItemTooltip } from "../../../../../inventory/components/InventoryItemTooltip";
 import { getItemImagePath } from "../../../../../inventory/getItemImagePath";
@@ -29,7 +30,7 @@ export const SkillUpgradeMaterials = ({ items }: { items: Extract<SkillUpgradeCo
             return <div key={index} className="shrink-0" style={{ width: base.size.cols * INVENTORY_SLOT_SIZE, height: base.size.rows * INVENTORY_SLOT_SIZE }}>
                 <InventoryItemTooltip item={item} character={character ?? undefined}>
                 <div className="relative" style={{ width: base.size.cols * INVENTORY_SLOT_SIZE, height: base.size.rows * INVENTORY_SLOT_SIZE, backgroundImage: "url('/game/inventory/bg_item.png')", backgroundSize: `${INVENTORY_SLOT_SIZE}px ${INVENTORY_SLOT_SIZE}px` }}>
-                    <img src={getItemImagePath(base.idItem) ?? base.img} alt={base.name} className="h-full w-full object-contain" />
+                    <ItemSpecialImage item={base} src={getItemImagePath(base.idItem) ?? base.img} alt={base.name} className="h-full w-full object-contain" />
                     <span className="absolute right-[2px] bottom-[1px] text-[11px] font-semibold text-white drop-shadow-[0_1px_2px_#000]">{cost.amount}</span>
                 </div>
                 </InventoryItemTooltip>

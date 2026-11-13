@@ -12,8 +12,8 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1(debug@4.4.3)
       netim2-shared:
-        specifier: github:FrancoMiralles98/netim2-shared#v0.3.13
-        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/af54a32ca2f4795543f41ffface53742f4712415
+        specifier: github:FrancoMiralles98/netim2-shared#v0.4.6
+        version: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/ee58851ff71fd3c6fb09eebe6df46d28ff2b4b9e
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -975,9 +975,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/af54a32ca2f4795543f41ffface53742f4712415:
-    resolution: {gitHosted: true, integrity: sha512-PULeFn7tkM3jTmC+IuunGWq1+xSfVCxCJkakWG/CFqA+TbLfMgF5wQE79Q0QjjYY5YOquD3DxARoMS0jTe46GA==, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/af54a32ca2f4795543f41ffface53742f4712415}
-    version: 0.3.13
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/ee58851ff71fd3c6fb09eebe6df46d28ff2b4b9e:
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/ee58851ff71fd3c6fb09eebe6df46d28ff2b4b9e}
+    version: 0.4.6
 
   node-releases@2.0.50:
     resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
@@ -2069,7 +2069,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/af54a32ca2f4795543f41ffface53742f4712415: {}
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/ee58851ff71fd3c6fb09eebe6df46d28ff2b4b9e: {}
 
   node-releases@2.0.50: {}
 

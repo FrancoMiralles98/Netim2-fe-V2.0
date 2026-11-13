@@ -3,6 +3,8 @@ import type { ReinosNames } from "../types/backend/gameData/reinos.types";
 interface ButtonReinoProps {
     reino: ReinosNames;
     texto?: string;
+    onClick?: () => void;
+    pressed?: boolean;
 }
 
 const HOVER_CLASS_NAME_BY_REINO = {
@@ -11,7 +13,8 @@ const HOVER_CLASS_NAME_BY_REINO = {
     chunjo: "hover:brightness-105 hover:saturate-110 hover:contrast-105",
 } satisfies Record<ReinosNames, string>;
 
-export const ButtonReino = ({ reino, texto }: ButtonReinoProps) => {
+export const ButtonReino = ({ reino, texto, onClick, pressed }: ButtonReinoProps) => {
+    const Element = onClick ? "button" : "div";
 
     const CssForReino: Record<ReinosNames, string> = {
         chunjo: ' text-[#fff0c7] font-medium [text-shadow:0_1px_0_#5a2608,1px_0_0_#5a2608,-1px_0_0_#5a2608,0_-1px_0_#5a2608,0_2px_2px_rgba(0,0,0,0.7)]',
@@ -20,11 +23,16 @@ export const ButtonReino = ({ reino, texto }: ButtonReinoProps) => {
     }
 
     return (
-        <div className="relative inline-block">
+        <Element
+            type={onClick ? "button" : undefined}
+            onClick={onClick}
+            aria-pressed={onClick ? pressed : undefined}
+            className={`relative inline-block ${onClick ? "cursor-pointer" : ""}`}
+        >
             <img
                 className={`transition-all w-[20rem] h-[30px] duration-200 ${HOVER_CLASS_NAME_BY_REINO[reino]}`}
                 src={`/button/boton-${reino}.png`}
-                alt={`Botón del reino ${reino}`}
+                alt={texto ? "" : `Botón del reino ${reino}`}
             />
             {texto &&
                 (
@@ -50,6 +58,6 @@ export const ButtonReino = ({ reino, texto }: ButtonReinoProps) => {
                         {texto}
                     </span>
                 )}
-        </div>
+        </Element>
     );
 };

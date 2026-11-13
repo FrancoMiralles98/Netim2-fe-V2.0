@@ -14,12 +14,30 @@ import { getCharacterSessionRequest, getGameConfigRequest } from "./api/characte
 import type { SessionEndReason } from "./types/session-end-reason.type";
 import { refreshBuffsRequest } from "../inventory/api/buff.services";
 import { applyChestResponseToCharacter } from "./utils/apply-chest-response";
-import type { SelectCharacterSpecialityResponse } from "netim2-shared";
+import type { ClaimMissionResponse, SelectCharacterSpecialityResponse } from "netim2-shared";
 import { applySpecialitySelectionToCharacter } from "./utils/apply-speciality-selection-response";
 
 export const CharacterSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const [character, setCharacter] = useState<CharacterSession | null>(null)
+    const applyMissionClaimResponse = useCallback((characterId: string, response: ClaimMissionResponse) => {
+        const missionsInProgress = response.missionsInProgress.map(({ startedAt, expiresAt, completedAt, ...progress }) => ({
+            ...progress,
+            startedAt: new Date(startedAt),
+            ...(expiresAt ? { expiresAt: new Date(expiresAt) } : {}),
+            ...(completedAt ? { completedAt: new Date(completedAt) } : {}),
+        }));
+
+        setCharacter(current => current?.id === characterId ? {
+            ...current,
+            ...response.changes,
+            mission_option: {
+                ...current.mission_option,
+                idMissionsDone: response.idMissionsDone,
+                missionsInProgress,
+            },
+        } : current);
+    }, []);
     const applySkillUpgradeResponse = useCallback((characterId: string, response: import("netim2-shared").UpgradeCharacterSkillResponse) => {
         setCharacter(current => {
             if (!current || current.id !== characterId) return current;
@@ -285,6 +303,7 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyPotionUseResponse,
             applyBuffResponse,
             applyChestResponse,
+            applyMissionClaimResponse,
             runCharacterMutation,
             applySplitInventoryItemResponse,
             applyMergeInventoryItemsResponse,

@@ -1,6 +1,6 @@
 import type { ApplyBuffResponse, BuyEquipmentSlotResponse, CharacterSession, CharacterSummary, DiscardInventoryItemResponse, EquipItemResponse, GameConfigResponse, IncreaseCharacterAttributeResponse, MergeInventoryItemsResponse, MoveInventoryItemResponse, OpenChestResponse, SelectEquipmentResponse, SplitInventoryItemResponse, UnequipItemResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
 import type { SessionEndReason } from "./session-end-reason.type";
-import type { SelectCharacterSpecialityResponse } from "netim2-shared";
+import type { ClaimMissionResponse, SelectCharacterSpecialityResponse } from "netim2-shared";
 
 
 export interface CharacterSessionContextValue {
@@ -22,6 +22,7 @@ export interface CharacterSessionContextValue {
     applyPotionUseResponse: (characterId: string, response: UsePotionResponse | UseReservePotionResponse) => void
     applyBuffResponse: (characterId: string, response: ApplyBuffResponse) => void
     applyChestResponse: (characterId: string, response: OpenChestResponse) => void
+    applyMissionClaimResponse: (characterId: string, response: ClaimMissionResponse) => void
     runCharacterMutation: <T>(characterId: string, action: () => Promise<T>) => Promise<T>
     applySplitInventoryItemResponse: (characterId: string, response: SplitInventoryItemResponse) => void
     applyMergeInventoryItemsResponse: (characterId: string, response: MergeInventoryItemsResponse) => void

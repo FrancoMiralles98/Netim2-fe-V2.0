@@ -3,9 +3,11 @@ import { ButtonReino } from "../../../../shared/button/ButtonReino";
 
 interface RoutePanelsProps {
     reino: ReinosNames | null;
+    isExploreActive: boolean;
+    onExplore: () => void;
 }
 
-export const RoutePanels = ({ reino }: RoutePanelsProps) => (
+export const RoutePanels = ({ reino, isExploreActive, onExplore }: RoutePanelsProps) => (
     <section id='paneles de rutas'>
         {reino && (
             <>
@@ -29,6 +31,7 @@ export const RoutePanels = ({ reino }: RoutePanelsProps) => (
                         alt=""
                     />
                     <div className="absolute mt-[5rem] mb-[1rem] inset-0 z-10 flex flex-col items-start justify-start gap-[5px] px-4">
+                        <ButtonReino reino={reino} texto="Explorar" onClick={onExplore} pressed={isExploreActive} />
                         <ButtonReino reino={reino} texto="Tienda General" />
                         <ButtonReino reino={reino} texto="Tienda De Armas" />
                         <ButtonReino reino={reino} texto="Tienda De Armaduras" />

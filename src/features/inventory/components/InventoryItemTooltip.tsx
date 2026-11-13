@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type ReactNode } from "react";
-import type { CharacterSession, EquipType, InventoryItem } from "netim2-shared";
+import type { CharacterSession, ItemDTO } from "netim2-shared";
 import { InventoryItemActionMenu } from "./InventoryItemActionMenu";
 import { EquipItemDetails } from "./EquipItemDetails";
 import { PotionItemDetails } from "./PotionItemDetails";
@@ -14,7 +14,7 @@ import { InventoryTooltipPortal } from "./InventoryTooltipPortal";
 type CharacterRequirements = Pick<CharacterSession, "lv" | "raza">;
 
 interface InventoryItemTooltipProps {
-    item: InventoryItem | EquipType;
+    item: ItemDTO;
     character?: CharacterRequirements;
     children: ReactNode;
     menuOpen?: boolean;

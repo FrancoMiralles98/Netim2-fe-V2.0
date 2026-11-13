@@ -68,3 +68,21 @@ del ítem y se difumina únicamente cerca de los bordes, sin interceptar clics. 
 Todas las instancias comparten el cálculo de una textura de 128 × 184 a 22 FPS.
 Solo se animan los ítems visibles y el render se suspende cuando la pestaña
 está oculta o no quedan ítems visibles. No necesita dependencias adicionales.
+
+## PortalVortex
+
+Remolino rojo y violeta con puntas afiladas y destellos blancos que entran
+desde el borde y se apagan al acercarse al centro. El fondo del efecto es
+transparente.
+
+```tsx
+import { PortalVortex } from "./shared/animations";
+
+<PortalVortex className="max-w-80" />
+```
+
+Acepta `className`, `style` y `paused`. Cada instancia visible comparte el
+mismo fotograma de 340 × 340, con un máximo de 30 FPS. Si la pestaña está oculta
+o el componente queda fuera de pantalla, deja de animarse. Con movimiento
+reducido o `paused` muestra un fotograma estático. No intercepta clics ni
+requiere dependencias adicionales.

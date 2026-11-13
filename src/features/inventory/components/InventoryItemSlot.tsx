@@ -1,9 +1,7 @@
 import type { CharacterSession, InventoryItem } from "netim2-shared";
 import { INVENTORY_SLOT_SIZE } from "../inventory.constants";
 import { InventoryItemTooltip } from "./InventoryItemTooltip";
-import { getItemImagePath } from "../getItemImagePath";
-import { ItemCorruptionSmoke, ItemSpecialImage, ItemStaticSparkles, ItemUpgradeSparkles } from "../../../shared/animations";
-import { EquipSlotIndicators } from "./EquipSlotIndicators";
+import { InventoryItemVisual } from "./InventoryItemVisual";
 
 interface InventoryItemSlotProps {
     item: InventoryItem;
@@ -28,14 +26,7 @@ interface InventoryItemSlotProps {
     onCloseQuantity?: () => void;
 }
 
-const getItemCornerLabel = (item: InventoryItem): string | number | null => {
-    if (item.type === "equip") return `+${item.upgradeLv}`;
-    if (item.type_utility === "caña" || item.type_utility === "piedra") return `+${item.upgradeLv}`;
-    return item.acc ? item.cantidad : null;
-};
-
 export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove, onEquip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, splitDisabled, openBulkDisabled, quantityOpen, quantityAction, onConfirmQuantity, onCloseQuantity }: InventoryItemSlotProps) => {
-    const cornerLabel = getItemCornerLabel(item);
 
     return (
         <div
@@ -69,19 +60,7 @@ export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, 
                 onConfirmQuantity={onConfirmQuantity}
                 onCloseQuantity={onCloseQuantity}
             >
-                <div className="relative isolate h-full w-full">
-                    {item.corrupt === true && <ItemCorruptionSmoke />}
-                    <ItemSpecialImage item={item} src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="relative z-1 h-full w-full object-contain" />
-                    {item.type === "equip" && item.upgradeLv === 9 && <ItemUpgradeSparkles />}
-                    {item.type === "equip" && item.upgradeLv === 8 && <ItemStaticSparkles />}
-                    {item.type === "equip" && item.upgradeLv === 7 && <ItemStaticSparkles variant="bronze" />}
-                    {item.type === "equip" && <EquipSlotIndicators slots={item.slot} filledSlots={item.piedras.length} />}
-                    {cornerLabel !== null && (
-                        <span className="pointer-events-none absolute right-[2px] bottom-[1px] z-3 text-[11px] leading-none font-semibold text-white drop-shadow-[0_1px_2px_#000]">
-                            {cornerLabel}
-                        </span>
-                    )}
-                </div>
+                <InventoryItemVisual item={item} />
             </InventoryItemTooltip>
         </div>
     );

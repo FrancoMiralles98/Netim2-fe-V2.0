@@ -1,81 +1,83 @@
 import type { ActiveStatusEffectId } from "netim2-shared";
+import { COMBAT_COLORS } from "../../../shared/colors/combat-colors";
+import { getStatusEffectIcons } from "../../../shared/icons/status-effect-icons";
 
 export const STATUS_EFFECT_DISPLAY_CONFIG = {
     veneno: {
         name: 'Veneno',
-        icon: '/icons/statusEffect/posion-icon.png'
+        icon: getStatusEffectIcons('veneno').general
     },
 
     sangrado: {
         name: 'Sangrado',
-        icon: '/icons/statusEffect/bleed-icon.png'
+        icon: getStatusEffectIcons('sangrado').general
     },
 
     incendio: {
         name: 'Incendio',
-        icon: '/icons/statusEffect/fire-icon.png'
+        icon: getStatusEffectIcons('incendio').general
     },
 
     electrico: {
         name: 'Eléctrico',
-        icon: '/icons/statusEffect/electrico.png'
+        icon: getStatusEffectIcons('electrico').general
     },
     desmayo: {
         name: 'Desmayo',
-        icon: '/icons/statusEffect/desmayo-icon.png'
+        icon: getStatusEffectIcons('desmayo').general
     },
     retardo: {
         name: 'Retardo',
-        icon: '/icons/statusEffect/retardo-icon.png'
+        icon: getStatusEffectIcons('retardo').general
     },
     corta_curacion: {
         name: 'Corta Cura',
-        icon: '/icons/statusEffect/cdr-icon.png'
+        icon: getStatusEffectIcons('corta_curacion').general
     },
 } as const;
 
 
 export const COMBAT_VISUAL_ICON_CONFIG = {
     veneno: {
-        icon: '/fight/poison-icon.png',
-        color: 'text-green-500',
-        backgroundColor: 'bg-green-500'
+        icon: getStatusEffectIcons('veneno').fight,
+        color: COMBAT_COLORS.veneno.text,
+        backgroundColor: COMBAT_COLORS.veneno.bg
     },
 
     sangrado: {
-        icon: '/fight/icon-bleed-mana.png',
-        color: 'text-red-500',
-        backgroundColor: 'bg-red-500'
+        icon: getStatusEffectIcons('sangrado').fight,
+        color: COMBAT_COLORS.sangrado.text,
+        backgroundColor: COMBAT_COLORS.sangrado.bg
     },
 
     incendio: {
-        icon: '/fight/icon-fire.png',
-        color: 'text-orange-500',
-        backgroundColor: 'bg-orange-500'
+        icon: getStatusEffectIcons('incendio').fight,
+        color: COMBAT_COLORS.incendio.text,
+        backgroundColor: COMBAT_COLORS.incendio.bg
     },
 
     electrico: {
-        icon: '/fight/electric-icon.png',
-        color: 'text-cyan-400',
-        backgroundColor: 'bg-cyan-400'
+        icon: getStatusEffectIcons('electrico').fight,
+        color: COMBAT_COLORS.electrico.text,
+        backgroundColor: COMBAT_COLORS.electrico.bg
     },
 
     ad: {
         icon: '/fight/icono-ad.png',
-        color: 'text-orange-300',
-        backgroundColor: 'bg-orange-500'
+        color: COMBAT_COLORS.ad.text,
+        backgroundColor: COMBAT_COLORS.ad.bg
     },
 
     ap: {
         icon: '/fight/icono-ap.png',
-        color: 'text-blue-300',
-        backgroundColor: 'bg-blue-500'
+        color: COMBAT_COLORS.ap.text,
+        backgroundColor: COMBAT_COLORS.ap.bg
     },
 
     true: {
         icon: '/fight/true-icon.png',
-        color: 'text-slate-100',
-        backgroundColor: 'bg-slate-100'
+        color: COMBAT_COLORS.true.text,
+        backgroundColor: COMBAT_COLORS.true.bg
     },
 
     critico: {

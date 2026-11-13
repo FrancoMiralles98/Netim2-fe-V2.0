@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { CharacterSession, IdItemList, ItemDTO, RewardOptions } from "netim2-shared";
+import { ItemSpecialImage } from "../../../shared/animations";
 import type { PickChestSelection } from "../hooks/useChestActions";
 import { getItemImagePath } from "../getItemImagePath";
 import { InventoryTooltipPortal } from "./InventoryTooltipPortal";
@@ -44,7 +45,7 @@ const PickChestItemOption = ({ item, rewardOptions, character, selected, disable
                 className={`flex min-h-[180px] flex-col items-center justify-center gap-1 rounded border p-2 text-center text-xs text-[#e9cf99] ${selected ? "border-emerald-300 bg-emerald-900/30" : "border-[#695332] bg-[#15120e] hover:border-[#c69a55]"} disabled:cursor-not-allowed disabled:opacity-40`}
             >
                 <span className="flex h-24 items-center justify-center">
-                    <img src={getItemImagePath(item.idItem) ?? item.img} alt="" className="[image-rendering:pixelated]" />
+                    <ItemSpecialImage item={item} src={getItemImagePath(item.idItem) ?? item.img} alt="" className="[image-rendering:pixelated]" />
                 </span>
                 <span className="line-clamp-2">{item.name}{upgradeLabel && upgrade?.min === upgrade?.max ? ` ${upgradeLabel}` : ""}</span>
                 {upgradeLabel && upgrade?.min !== upgrade?.max && <span className="text-[11px] text-emerald-200">Mejora posible: {upgradeLabel}</span>}

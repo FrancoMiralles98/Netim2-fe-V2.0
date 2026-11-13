@@ -28,10 +28,10 @@ export const CharacterPanel = ({ character }: CharacterPanelProps) => {
                     <h1 className="text-metin-label text-[18px]! mt-[2rem] text-center">Atributos</h1>
                     <img src="/game/hr-custom.png" className="w-[95%] mx-auto" alt="" />
                     <div className="flex min-h-0 gap-10 flex-1 justify-center b items-center">
-                        <StatCircle stat="VIT" byLevel={character.atributos.VIT.lvPoints} byBonifications={character.atributos.VIT.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
-                        <StatCircle stat="STR" byLevel={character.atributos.STR.lvPoints} byBonifications={character.atributos.STR.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
-                        <StatCircle stat="INT" byLevel={character.atributos.INT.lvPoints} byBonifications={character.atributos.INT.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
-                        <StatCircle stat="DEX" byLevel={character.atributos.DEX.lvPoints} byBonifications={character.atributos.DEX.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="VIT" especialidad={character.especialidad} byLevel={character.atributos.VIT.lvPoints} byBonifications={character.atributos.VIT.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="STR" especialidad={character.especialidad} byLevel={character.atributos.STR.lvPoints} byBonifications={character.atributos.STR.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="INT" especialidad={character.especialidad} byLevel={character.atributos.INT.lvPoints} byBonifications={character.atributos.INT.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
+                        <StatCircle stat="DEX" especialidad={character.especialidad} byLevel={character.atributos.DEX.lvPoints} byBonifications={character.atributos.DEX.bonusPoints} showAvailablePointIcon={character.puntos_atributos > 0} onIncrease={increaseAttribute} isIncreasePending={isAttributePending} />
                     </div>
                     <div className="h-[30px]">
                         {character.puntos_atributos > 0 && (

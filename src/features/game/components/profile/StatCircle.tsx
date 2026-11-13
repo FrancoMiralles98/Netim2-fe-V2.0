@@ -1,9 +1,10 @@
 import { useId, useState } from "react";
-import { bonusFullNameByRef, type AttributesRefKeys, type BonusRefKeys } from "netim2-shared";
+import { bonusFullNameByRef, type AttributesRefKeys, type BonusRefKeys, type CharacterSession } from "netim2-shared";
 import { useCharacterSession } from "../../../characterSession/hooks/useCharacterSession";
 
 interface StatCircleProps {
     stat: AttributesRefKeys;
+    especialidad?: CharacterSession["especialidad"];
     byLevel: number;
     byBonifications: number;
     showAvailablePointIcon?: boolean;
@@ -24,7 +25,7 @@ const numberFormatter = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 
 const formatEffect = (stat: AttributesRefKeys, bonus: BonusRefKeys, value: number) =>
     `+${numberFormatter.format(value)}${stat === 'VIT' && bonus === 'hp' ? '%' : ''}`;
 
-export const StatCircle = ({ stat, byBonifications, byLevel, showAvailablePointIcon = false, onIncrease, isIncreasePending = false }: StatCircleProps) => {
+export const StatCircle = ({ stat, especialidad, byBonifications, byLevel, showAvailablePointIcon = false, onIncrease, isIncreasePending = false }: StatCircleProps) => {
     const { gameConfig } = useCharacterSession();
     const [isCircleHovered, setIsCircleHovered] = useState(false);
     const [isPointIconHovered, setIsPointIconHovered] = useState(false);
@@ -32,9 +33,11 @@ export const StatCircle = ({ stat, byBonifications, byLevel, showAvailablePointI
     const total = byLevel + byBonifications;
     const tooltipId = useId();
     const hideStatTooltip = showAvailablePointIcon && isPointIconHovered;
-    const attributeCaps = gameConfig?.character.attributeCaps;
-    const specialityCap = attributeCaps?.speciality?.[stat];
-    const cap = specialityCap ?? attributeCaps?.race[stat];
+    const specialityCaps = especialidad
+        ? gameConfig?.character.speciality.find((entry) => entry.specialidad === especialidad)?.caps
+        : undefined;
+    const specialityCap = specialityCaps?.[stat];
+    const cap = specialityCap ?? gameConfig?.character.race[stat];
     const capSource = specialityCap !== undefined ? "especialidad" : "raza";
     const hasReachedCap = cap !== undefined && byLevel >= cap;
     const effects = Object.entries(gameConfig?.attributes.effects[stat] ?? {}).filter(

@@ -1,10 +1,10 @@
 import type { ReinosNames } from "netim2-shared";
 
-export type CharacterSection = "perfil" | "habilidades";
+export type CharacterSection = "perfil" | "habilidades" | "misiones";
 
 interface CharacterSectionNavProps {
     reino: ReinosNames | null;
-    activeSection: CharacterSection;
+    activeSection: CharacterSection | null;
     onSelectSection: (section: CharacterSection) => void;
 }
 
@@ -14,7 +14,7 @@ export const CharacterSectionNav = ({ reino, activeSection, onSelectSection }: C
     return (
         <nav
             aria-label="Secciones del personaje"
-            className="relative aspect-[1300/128] mt-[2rem] ml-[3px] w-full"
+            className="relative aspect-[1300/128] mt-[2rem] ml-[3px] w-[calc(100%_-_3px)]"
         >
             <div
                 aria-hidden="true"
@@ -24,7 +24,7 @@ export const CharacterSectionNav = ({ reino, activeSection, onSelectSection }: C
             <div className="absolute inset-y-[18%] right-[7%] left-[7%] z-10 grid grid-cols-4 items-center text-center font-metin text-[15px] font-semibold text-[#f5e1b5] [text-shadow:0_2px_3px_#000]">
                 <button type="button" onClick={() => onSelectSection("perfil")} aria-pressed={activeSection === "perfil"} className="cursor-pointer hover:text-white">Perfil</button>
                 <button type="button" onClick={() => onSelectSection("habilidades")} aria-pressed={activeSection === "habilidades"} className="cursor-pointer hover:text-white">Habilidades</button>
-                <span>Misiones</span>
+                <button type="button" onClick={() => onSelectSection("misiones")} aria-pressed={activeSection === "misiones"} className="cursor-pointer hover:text-white">Misiones</button>
                 <span>Historial</span>
             </div>
         </nav>

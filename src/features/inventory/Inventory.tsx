@@ -12,6 +12,7 @@ import { useModal } from "../../shared/modal/hooks/useModal";
 import { useCharacterSession } from "../characterSession/hooks/useCharacterSession";
 import { canPotionRestore } from "./potion-restoration";
 import { getItemImagePath } from "./getItemImagePath";
+import { ItemSpecialImage } from "../../shared/animations";
 import { useChestActions } from "./hooks/useChestActions";
 import { ChestRewardModal } from "./components/ChestRewardModal";
 import { PickChestSelectionModal } from "./components/PickChestSelectionModal";
@@ -331,11 +332,13 @@ export const Inventory = ({ items, character }: InventoryProps) => {
             )}
             {movingItem && hoveredSlot && (
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 overflow-hidden">
-                    <img
+                    <ItemSpecialImage
+                        item={movingItem}
                         src={getItemImagePath(movingItem.idItem) ?? movingItem.img}
                         alt=""
-                        className="absolute object-contain opacity-50 blur-[1px]"
+                        className="object-contain opacity-50 blur-[1px]"
                         style={{
+                            position: "absolute",
                             top: hoveredSlot.row * INVENTORY_SLOT_SIZE,
                             left: hoveredSlot.col * INVENTORY_SLOT_SIZE,
                             width: movingItem.size.cols * INVENTORY_SLOT_SIZE,

@@ -1,4 +1,5 @@
 import type { CharacterRace, CharacterSpeciality, ReinosNames } from "netim2-shared";
+import { getStatusEffectIcons, SKILL_EFFECT_ICONS } from "../../../shared/icons/status-effect-icons";
 import type { AuraEffectConfig, AuraEffectType, MainDamageInfo, ReinosInfo, SkillEffectConfig, SkillEffectsType } from "../types/character-creation-card.types";
 export { getCharacterIconPath as getIconRace } from "../../../shared/utils/get-character-icon-path";
 
@@ -130,46 +131,46 @@ export const getInfoAuraEffect = (effect: AuraEffectType) => {
 
 export const SPECIALITY_EFFECTS: Partial<Record<CharacterSpeciality, SkillEffectConfig[]>> = {
     Corporal: [
-        { effect: 'sangrado', icon: '/icons/statusEffect/bleed-icon.png' },
-        { effect: 'desmayo', icon: '/icons/statusEffect/desmayo-icon.png' },
+        { effect: 'sangrado', icon: getStatusEffectIcons('sangrado').general },
+        { effect: 'desmayo', icon: getStatusEffectIcons('desmayo').general },
     ],
 
     Mental: [
-        { effect: 'desmayo', icon: '/icons/statusEffect/desmayo-icon.png' },
-        { effect: 'retardo', icon: '/icons/statusEffect/retardo-icon.png' },
-        { effect: 'penetracion', icon: '/icons/statusEffect/perforation-icon.png' },
+        { effect: 'desmayo', icon: getStatusEffectIcons('desmayo').general },
+        { effect: 'retardo', icon: getStatusEffectIcons('retardo').general },
+        { effect: 'penetracion', icon: SKILL_EFFECT_ICONS.penetracion },
     ],
 
     Daga: [
-        { effect: 'veneno', icon: '/icons/statusEffect/posion-icon.png' },
-        { effect: 'sangrado', icon: '/icons/statusEffect/bleed-icon.png' },
-        { effect: 'potenciador', icon: '/icons/statusEffect/potenciator-icon.png' },
+        { effect: 'veneno', icon: getStatusEffectIcons('veneno').general },
+        { effect: 'sangrado', icon: getStatusEffectIcons('sangrado').general },
+        { effect: 'potenciador', icon: SKILL_EFFECT_ICONS.potenciador },
     ],
 
     Flecha: [
-        { effect: 'veneno', icon: '/icons/statusEffect/posion-icon.png' },
-        { effect: 'incendio', icon: '/icons/statusEffect/fire-icon.png' },
-        { effect: 'potenciador', icon: '/icons/statusEffect/potenciator-icon.png' },
+        { effect: 'veneno', icon: getStatusEffectIcons('veneno').general },
+        { effect: 'incendio', icon: getStatusEffectIcons('incendio').general },
+        { effect: 'potenciador', icon: SKILL_EFFECT_ICONS.potenciador },
     ],
 
     Dragon: [
-        { effect: 'incendio', icon: '/icons/statusEffect/fire-icon.png' },
-        { effect: 'potenciador', icon: '/icons/statusEffect/potenciator-icon.png' },
+        { effect: 'incendio', icon: getStatusEffectIcons('incendio').general },
+        { effect: 'potenciador', icon: SKILL_EFFECT_ICONS.potenciador },
     ],
 
     Luz: [
-        { effect: 'desmayo', icon: '/icons/statusEffect/desmayo-icon.png' },
-        { effect: 'curacion', icon: '/icons/statusEffect/life-icon.png' },
+        { effect: 'desmayo', icon: getStatusEffectIcons('desmayo').general },
+        { effect: 'curacion', icon: SKILL_EFFECT_ICONS.curacion },
     ],
 
     Espejo: [
-        { effect: 'penetracion', icon: '/icons/statusEffect/perforation-icon.png' },
-        { effect: 'vampirismo', icon: '/icons/statusEffect/vampirismo-icon.png' },
+        { effect: 'penetracion', icon: SKILL_EFFECT_ICONS.penetracion },
+        { effect: 'vampirismo', icon: SKILL_EFFECT_ICONS.vampirismo },
     ],
 
     MagiaNegra: [
-        { effect: 'incendio', icon: '/icons/statusEffect/fire-icon.png' },
-        { effect: 'retardo', icon: '/icons/statusEffect/retardo-icon.png' },
+        { effect: 'incendio', icon: getStatusEffectIcons('incendio').general },
+        { effect: 'retardo', icon: getStatusEffectIcons('retardo').general },
     ],
 };
 
@@ -197,7 +198,7 @@ export const SPECIALITY_AURA_EFFECTS: Partial<Record<CharacterSpeciality, AuraEf
     ],
 
     Luz: [
-        { effect: 'cdr', icon: '/icons/statusEffect/cdr-icon.png' },
+        { effect: 'cdr', icon: SKILL_EFFECT_ICONS.cdr },
         { effect: 'vm', icon: '/characterSelection/mv-icon.png' },
         { effect: 'media', icon: '/characterSelection/media-icon.png' },
     ],

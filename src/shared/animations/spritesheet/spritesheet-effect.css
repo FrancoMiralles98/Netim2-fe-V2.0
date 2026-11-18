@@ -1,0 +1,14 @@
+.spritesheet-effect {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spritesheet-effect {
+        visibility: hidden;
+    }
+}

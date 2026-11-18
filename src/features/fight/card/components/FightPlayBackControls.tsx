@@ -10,7 +10,7 @@ interface FightPlaybackControlsProps {
 
     speed: FightPlaybackSpeed;
 
-    onLoadFight: () => void;
+    onLoadFight?: () => void;
     onPlay: () => void;
     onPause: () => void;
     onReset: () => void;
@@ -46,7 +46,7 @@ export const FightPlaybackControls = ({
             "
         >
             {/* Cargar pelea */}
-            <button
+            {onLoadFight && <button
                 type="button"
                 onClick={onLoadFight}
                 disabled={
@@ -72,7 +72,7 @@ export const FightPlaybackControls = ({
                     ? 'Cargando pelea...'
                     : 'Abrir'
                 }
-            </button>
+            </button>}
 
             {/* Play / continuar */}
             <button

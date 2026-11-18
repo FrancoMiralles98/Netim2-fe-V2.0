@@ -11,6 +11,7 @@ import { FeedBackModal } from "./components/FeedBackModal";
 import { ErrorModal } from "./components/ErrorModal";
 import { ApiError } from "../../api/errors/api-error";
 import { useNavigate } from "react-router";
+import { createPortal } from "react-dom";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [modalState, setModalState] = useState<ModalState>({ type: 'none', });
@@ -132,7 +133,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     return (
         <ModalContext value={modalContextValue}>
             {children}
-
+            {modalState.type !== 'none' && createPortal(<>
             {modalState.type === 'action' && (
                 <ActionModal
                     title={modalState.title!}
@@ -174,6 +175,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                     message={modalState.title!}
                 />
             )}
+            </>, document.querySelector("dialog[open]") ?? document.body)}
         </ModalContext>
     )
 }

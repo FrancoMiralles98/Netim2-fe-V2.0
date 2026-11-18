@@ -69,6 +69,7 @@ export const InventoryTooltipPortal = ({ anchorRef, id, children }: InventoryToo
             ))}
             {children}
         </div>,
-        document.body,
+        // A native modal is in the top layer, above any tooltip attached to the body.
+        anchorRef.current?.closest("dialog[open]") ?? document.body,
     );
 };

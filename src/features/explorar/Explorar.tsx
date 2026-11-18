@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { GameConfigResponse, GetMobsByUbicationResponse, ReinosNames } from "netim2-shared";
+import type { GameConfigResponse, GetMobsByUbicationResponse, MobSummary, ReinosNames } from "netim2-shared";
 import { PortalVortex } from "../../shared/animations";
 import { useModal } from "../../shared/modal/hooks/useModal";
 import { useCharacterSession } from "../characterSession/hooks/useCharacterSession";
@@ -21,7 +21,13 @@ const portalArrows = [
     { label: "Zona siguiente", image: "/characterSelection/flecha-d.png", left: "51%", direction: 1 },
 ] as const;
 
-export const Explorar = ({ reino }: { reino: ReinosNames | null }) => {
+interface ExplorarProps {
+    reino: ReinosNames | null;
+    onFight: (mob: MobSummary) => Promise<boolean>;
+    isStartingFight: boolean;
+}
+
+export const Explorar = ({ reino, onFight, isStartingFight }: ExplorarProps) => {
     const { gameConfig } = useCharacterSession();
     const { showLoadingModal, closeLoadingModal } = useModal();
     const [destinationIndex, setDestinationIndex] = useState(0);
@@ -72,7 +78,7 @@ export const Explorar = ({ reino }: { reino: ReinosNames | null }) => {
         >
             <h2 id="explorar-title" className="sr-only">Explorar</h2>
             {mobs !== null ? (
-                <ExploreZone name={destination.name} landscape={portalLandscape} mobs={mobs} onBack={() => setMobs(null)} />
+                <ExploreZone name={destination.name} landscape={portalLandscape} mobs={mobs} onBack={() => setMobs(null)} onFight={onFight} isStartingFight={isStartingFight} />
             ) : (
                 <>
                     <img

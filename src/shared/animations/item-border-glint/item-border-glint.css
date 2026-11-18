@@ -1,0 +1,154 @@
+.item-border-glint {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.item-border-glint__runner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    offset-path: inset(0 round var(--item-border-glint-radius));
+    offset-anchor: center;
+}
+
+.item-border-glint__trail,
+.item-border-glint__tip {
+    animation: item-border-glint-lap var(--item-border-glint-duration) linear infinite;
+    animation-delay: calc(-1 * var(--item-border-glint-duration) * var(--item-border-glint-phase));
+}
+
+.item-border-glint__trail {
+    width: 8px;
+    height: 3px;
+    border-radius: 100%;
+    background: linear-gradient(90deg, #ff941c, #ffe99a);
+    box-shadow: 0 0 4px #ffb32f, 0 0 9px #ff951caa;
+}
+
+.item-border-glint__tip {
+    width: 16px;
+    height: 16px;
+    filter: drop-shadow(0 0 3px #ffae1f) drop-shadow(0 0 5px #ffaf38);
+}
+
+.item-border-glint__tip::before,
+.item-border-glint__tip::after {
+    position: absolute;
+    content: "";
+}
+
+.item-border-glint__tip::before {
+    inset: 0;
+    background: #ffd365;
+    clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%,
+        50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+.item-border-glint__tip::after {
+    inset: 5px;
+    border-radius: 50%;
+    background: #fffaf0;
+}
+
+.item-border-glint[data-variant="blue"] .item-border-glint__trail {
+    background: linear-gradient(90deg, #237bff, #a3e4ff);
+    box-shadow: 0 0 4px #379bff, 0 0 9px #2385ffaa;
+}
+
+.item-border-glint[data-variant="blue"] .item-border-glint__tip {
+    filter: drop-shadow(0 0 3px #379bff) drop-shadow(0 0 5px #57bcff);
+}
+
+.item-border-glint[data-variant="blue"] .item-border-glint__tip::before {
+    background: #a3e4ff;
+}
+
+.item-border-glint[data-variant="blue"] .item-border-glint__tip::after {
+    background: #f0faff;
+}
+
+.item-border-glint[data-variant="red"] .item-border-glint__trail {
+    width: 10px;
+    height: 4px;
+    background: linear-gradient(90deg, #ff173e, #ff91a2);
+    box-shadow: 0 0 5px 1px #ff315d, 0 0 12px 2px #ff163d99;
+}
+
+.item-border-glint[data-variant="red"] .item-border-glint__tip {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(0 0 3px #ff4567) drop-shadow(0 0 8px #ff163d);
+}
+
+.item-border-glint[data-variant="red"] .item-border-glint__tip::before {
+    background: #ff8ba0;
+}
+
+.item-border-glint[data-variant="red"] .item-border-glint__tip::after {
+    inset: 7px;
+    background: #fff6f7;
+}
+
+.item-border-glint__emitter {
+    width: 0;
+    height: 0;
+    offset-distance: var(--item-border-glint-birth);
+    offset-rotate: auto;
+}
+
+.item-border-glint__spark {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: var(--item-border-glint-spark-size);
+    height: var(--item-border-glint-spark-size);
+    color: #ff204d;
+    filter: drop-shadow(0 0 3px currentColor);
+    opacity: 0;
+    animation: item-border-glint-spark var(--item-border-glint-duration) linear infinite;
+    animation-delay: calc(-1 * var(--item-border-glint-duration) * var(--item-border-glint-phase));
+}
+
+.item-border-glint__spark::before {
+    position: absolute;
+    inset: 0;
+    background: #ffc0cc;
+    clip-path: polygon(50% 0, 63% 37%, 100% 50%, 63% 63%,
+        50% 100%, 37% 63%, 0 50%, 37% 37%);
+    content: "";
+}
+
+.item-border-glint[data-paused="true"] :is(.item-border-glint__runner, .item-border-glint__spark) {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .item-border-glint__runner {
+        animation-play-state: paused;
+    }
+
+    .item-border-glint__spark {
+        animation: none;
+    }
+}
+
+@keyframes item-border-glint-lap {
+    from { offset-distance: 0%; }
+    to { offset-distance: 100%; }
+}
+
+@keyframes item-border-glint-spark {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.95;
+    }
+
+    30%, 100% {
+        transform: translate(
+            calc(-50% + var(--item-border-glint-spark-back)),
+            calc(-50% + var(--item-border-glint-spark-out))
+        ) scale(0.25);
+        opacity: 0;
+    }
+}

@@ -2,6 +2,206 @@
 
 Guardar cada efecto reutilizable en su propia carpeta y exportarlo desde `index.ts`.
 
+## SpritesheetEffect
+
+Reproductor de una secuencia de fotogramas con transparencia. Usa Web Animations
+para seleccionar cada celda mediante `background-position`, respetando pausa
+y cambios de velocidad. Recorre las filas de izquierda a derecha y termina
+ocultándose. Cambiá la `key` para reproducir otra ejecución de la misma skill.
+
+```tsx
+import { SpritesheetEffect } from "./shared/animations";
+
+// Mantener la configuración estable, fuera del componente.
+const dragon = {
+    src: "/spritesheets/dragon-fire-41.webp",
+    columns: 6,
+    rows: 4,
+    frameCount: 24,
+    fps: 24,
+};
+
+<div className="pointer-events-none h-64 w-64">
+    <SpritesheetEffect
+        key={castId}
+        sheet={dragon}
+        speed={speed}
+        paused={isPaused}
+    />
+</div>
+```
+
+El contenedor define el tamaño y la posición. Cada celda debe tener el mismo
+tamaño y la misma relación de aspecto que ese contenedor. Se requieren valores
+positivos para columnas, filas, fotogramas, FPS y velocidad, y una cuadrícula
+con capacidad para todos los fotogramas. También acepta `className` y `style`.
+Con movimiento reducido, el efecto se oculta.
+
+Para efectos persistentes, `<SpritesheetEffect sheet={sheet} loop />` repite
+la secuencia hasta que el componente se desmonta. Conserva pausa y velocidad.
+El modo predeterminado reproduce una sola vez y termina oculto.
+
+`direction="alternate"` recorre los cuadros hacia adelante y después hacia
+atrás, omitiendo la repetición de los extremos: 1→…→24→23→…→2→1.
+Combinado con `loop` repite ese recorrido mientras el componente esté montado.
+Los 24 cuadros a 24 FPS producen un ciclo completo de unos 1,92 segundos.
+
+### Auras persistentes
+
+**Convención obligatoria de diseño: todas las spritesheets de auras deben
+contener exactamente 24 fotogramas originales.** `AuraEffectConfig` exige
+`frameCount: 24` en TypeScript. La distribución en filas/columnas puede variar.
+Los extremos deben ser cuadros distintos: no copiar el fotograma 1 al 24.
+El reproductor cambia de sentido automáticamente y cada extremo ocupa
+un solo intervalo de fotograma:
+
+```text
+… 22 → 23 → 24 → 23 → 22 …
+…  3 →  2 →  1 →  2 →  3 …
+```
+
+La secuencia alternada tiene 46 pasos por ciclo (24 de ida y 22 de vuelta).
+A 24 FPS dura 46/24 segundos, aproximadamente 1,92 segundos.
+
+`getAuraEffect(skillId)`, en `src/features/fight/animations/aura-effects.ts`,
+registra las spritesheets que se repiten mientras están en `activeAuras`.
+La skill 43 usa `/spritesheets/blessing-light-aura-43.webp`, con
+24 fotogramas a 24 FPS y `direction: "normal"`. La spritesheet completa
+fue generada tomando como referencia Bendición del chamán Luz. Tiene
+destellos azules suaves con forma de pequeñas llamas o plumas alrededor
+del marco. Los cuadros conservan cambios pequeños y la unión 24→1 fue
+revisada sobre un fondo oscuro.
+El primer y último cuadro son distintos. El ciclo dura un segundo a
+velocidad normal. Se muestra sobre la card del lanzador.
+El recurso tiene trazos azules rectangulares y un centro transparente,
+adaptado al marco de la card contraída de 250×66 px. Las celdas de
+256×256 px conservan todo el margen del resplandor. `contentHeightRatio`
+indica la fracción vertical que ocupa el marco (76/256 para la skill 43).
+El reproductor centra la celda completa y ajusta su altura para que el marco
+visible abarque la altura de la card más 8 px. El margen transparente de
+la imagen queda fuera del contenedor y mantiene visible el brillo inferior.
+El contenedor deja 24 px adicionales por lado horizontal y 16 px por
+lado vertical para ubicar los destellos alrededor de la card de 250×66 px.
+
+`FightAuraEffects` renderiza las auras registradas cuyo `sourceFighterId`
+coincide con el luchador de la card. `aura_activated` la incorpora al estado.
+`aura_duration_updated` con duración cero o `aura_deactivated` la retiran.
+Reset vacía el estado y retira la animación. La duración es la del estado de
+la pelea; la duración del ciclo solo define cuánto dura cada vuelta visual.
+Agregar una entrada en `AURA_EFFECTS` habilita otro efecto persistente.
+
+`frameWeights` permite repartir el tiempo entre cuadros. Es un array de
+pesos positivos, uno por fotograma. Por defecto todos pesan 1. Un peso 2
+asigna el doble de tiempo a ese cuadro. La duración total sigue siendo
+`frameCount / fps`. Los pesos inválidos o ausentes se consideran 1.
+
+En las peleas, `getSkillEffect(skillId)`, definido en
+`src/features/fight/animations/skill-effects.ts`, obtiene la configuración.
+Agregá una entrada al registro para habilitar otra skill. La configuración
+incluye `mode: "target" | "projectile"`, tamaño visual (`width`, `height`)
+y anclaje normalizado (`anchorX`, `anchorY`, entre 0 y 1).
+
+- `target` coloca la secuencia sobre la card objetivo.
+- `projectile` comienza en la card del lanzador y viaja hasta la card objetivo.
+  Llega al 80 % del tiempo total y reproduce la parte final en el destino.
+
+La skill 39 usa el dragón horizontal en modo `projectile`, con 24 cuadros a
+16 FPS (1,5 segundos). Los primeros cuatro cuadros forman la cabeza en el
+lanzador y los últimos cuadros muestran el destello/explosión sobre el objetivo.
+`launchFraction` configura qué fracción inicial permanece en el lanzador
+(4/24 para la skill 39). La skill 41 usa la columna en modo `target`,
+con 1,5 segundos de duración y pesos dobles en los cuadros 9–16 para
+mantener visible el dragón a máxima altura durante 0,75 segundos.
+
+La skill 40, Talismán volador, usa `flying-talisman-40.webp` en modo
+`projectile`: aura verde inicial, esfera azul con corona dorada, pequeños
+talismanes verdes en la estela y explosión azul/verde/dorada al llegar.
+Tiene 24 cuadros a 16 FPS y dura 1,5 segundos. Los primeros cuatro cuadros
+se reproducen en el lanzador antes de iniciar el desplazamiento.
+El recurso usa WebP sin pérdida con transparencia.
+Podés cambiar el modo por skill en el registro o mediante la prop opcional
+de `FightPlayback`:
+
+```tsx
+<FightPlayback
+    response={response}
+    onFinishFight={onFinishFight}
+    skillEffectModes={{ 39: "target" }}
+/>
+```
+
+`getSkillEffect(39, "target")` también obtiene la configuración con el modo
+indicado. Cambiar el modo conserva el recurso gráfico de esa skill.
+
+La capa `SkillEffectLayer` vive sobre todo el campo de batalla. Mide las cards
+identificadas por `data-fight-fighter-id` y actualiza las coordenadas al cambiar
+el tamaño o el scroll. Acepta `mode`, `paused` y `speed`. La trayectoria y los
+fotogramas responden a los controles del playback.
+
+Durante `action_selected`, las acciones `use_damage_skill` seleccionan como
+destino la card atacada. Las demás acciones con `skillId` seleccionan al
+lanzador. El playback espera la duración completa de la secuencia
+antes del siguiente evento. Reset y desmontaje retiran el efecto.
+
+La spritesheet de la habilidad 41 tiene 24 cuadros de 256×256 px en una imagen
+de 1536×1024 px. `dragon-fire-41-clean.webp` usa WebP sin pérdida y conserva
+el canal alfa. Se limpiaron los halos amplios y los recuadros laterales.
+Es la resolución nativa del recurso generado. Ampliarlo no agregaría detalle.
+
+La spritesheet horizontal de la skill 39 usa WebP con transparencia, cuadrícula
+4×6 y celdas de 448×256 px en `dragon-projectile-39-v2.webp`. Incluye márgenes
+transparentes para el estallido final. Se generó con IA usando la imagen de referencia
+del dragón amarillo horizontal. El prompt está en
+`public/spritesheets/dragon-projectile-39-prompt.md`.
+
+## ItemBorderGlint
+
+Chispa blanca con halo y estela dorada que recorren el borde del ítem en
+sentido horario. La animación está hecha en CSS y el componente React se
+exporta desde `index.ts`.
+
+```tsx
+import { ItemBorderGlint } from "./shared/animations";
+
+<div className="relative isolate h-32 w-16 rounded-lg border border-amber-900">
+    <img src="/items/100.png" alt="Espada" className="h-full w-full object-contain" />
+    <ItemBorderGlint />
+</div>
+```
+
+El contenedor debe tener posición relativa y definir el borde. Usá `radius`
+para igualar sus esquinas en píxeles (8 por defecto, 0 para esquinas rectas).
+`duration` fija los segundos por vuelta (2,88 por defecto). También acepta
+`className`, `style` y `paused`. El halo se puede extender fuera del borde si
+el contenedor permite desbordamiento visible.
+
+El efecto no intercepta clics. Con `paused` se congela en la posición actual,
+y con la preferencia de movimiento reducido se muestra fijo.
+
+### Dorado y azul
+
+```tsx
+<ItemBorderGlint variant="gold" />
+<ItemBorderGlint variant="blue" />
+```
+
+Ambas opciones comparten la animación, velocidad, longitud de estela y tamaño
+del destello. `blue` usa una estela azul con halo celeste y centro blanco.
+El dorado es el valor predeterminado. Podés cambiar `variant` durante el
+renderizado para seleccionar el color.
+
+### Variante roja intensa
+
+```tsx
+<ItemBorderGlint variant="red" />
+```
+
+Usa el mismo recorrido con una estela roja más larga y un halo más intenso.
+Las chispas salen hacia afuera al paso del destello y se desvanecen. Para ver
+su recorrido completo, dejá el desbordamiento visible en el contenedor del ítem.
+Con movimiento reducido, las chispas se ocultan. El estilo dorado es el valor
+predeterminado (`variant="gold"`).
+
 ## ItemUpgradeSparkles
 
 Efecto aprobado en la vista previa: 18 brillos blancos concentrados en una franja

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FightAuraEffects } from "./components/FightAuraEffects";
 import { FightActiveEffects } from "./components/icons/FightActiveEffects";
 import type { FightFighterState } from "./fighter-state";
 import { ExpandedFighterCard } from "./ExpandedFighterCard";
@@ -22,6 +23,7 @@ export interface FightFighterCardProps {
     animation?: FightAnimationState;
     message?: string;
     speed: FightPlaybackSpeed
+    paused?: boolean;
 }
 
 export const FightFighterCard = ({
@@ -32,7 +34,8 @@ export const FightFighterCard = ({
     selectedAction,
     animation,
     message,
-    speed
+    speed,
+    paused = false,
 }: FightFighterCardProps) => {
 
     const [expanded, setExpanded] = useState(false);
@@ -98,6 +101,7 @@ export const FightFighterCard = ({
 
     return (
         <div
+            data-fight-fighter-id={fighter.fighterId}
             style={animationVariables}
             className={`
                 relative
@@ -111,6 +115,8 @@ export const FightFighterCard = ({
                 }
             `}
         >
+
+            <FightAuraEffects fighter={fighter} paused={paused} speed={speed} />
 
             {message && (
                 <div

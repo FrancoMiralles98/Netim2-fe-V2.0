@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import type { CharacterSession, IdMissionsList, MissionListEntry, ReinosNames } from "netim2-shared";
+import { formatExperienceReward } from "../../../../shared/formatters/experience-reward";
 import { MiniTooltip } from "../../../../shared/tooltip/components/MiniTooltip";
 import { InventoryItemTooltip } from "../../../inventory/components/InventoryItemTooltip";
 import { InventoryItemVisual } from "../../../inventory/components/InventoryItemVisual";
@@ -15,15 +16,6 @@ const filters = [
 ] as const;
 
 type MissionFilter = typeof filters[number]["value"];
-
-const formatExperienceReward = (amount: number, expNextLv: number): string => {
-    if (expNextLv <= 0) return "—";
-
-    const percentage = (amount / expNextLv) * 100;
-    if (percentage > 100) return ">100%";
-    if (percentage < 0.1) return "<0.1%";
-    return `${Number(percentage.toFixed(1))}%`;
-};
 
 const kingdomAccent: Record<ReinosNames, string> = {
     shinsoo: "[--mission-accent:#d75a53]",

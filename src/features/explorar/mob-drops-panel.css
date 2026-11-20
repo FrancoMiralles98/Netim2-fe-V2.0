@@ -1,0 +1,190 @@
+.mob-drops {
+    --drops-gold: #987447;
+    --drops-edge: #775432;
+    container-type: inline-size;
+    min-height: 184px;
+    max-height: 100%;
+    padding: 1rem 3.5% 1.2rem;
+    font-family: Georgia, serif;
+}
+
+.mob-drops__frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.mob-drops__frame::before,
+.mob-drops__frame::after {
+    position: absolute;
+    content: "";
+    border: 1px solid var(--drops-gold);
+    corner-shape: bevel;
+    border-radius: 9px;
+}
+
+.mob-drops__frame::before {
+    inset: 0;
+    background: linear-gradient(145deg, #b2833d15, #fff5c912 45%, #a5733024);
+    box-shadow: inset 0 0 12px #875a2626;
+}
+
+.mob-drops__frame::after {
+    inset: 3px;
+    border-color: #9d794a88;
+    border-radius: 7px;
+}
+
+.mob-drops__seal {
+    position: absolute;
+    z-index: 1;
+    bottom: -5px;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    transform: translateX(-50%);
+}
+
+.mob-drops__seal i,
+.mob-drops__divider span {
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--drops-edge);
+    background: #eccb94;
+    box-shadow: inset 0 0 0 1px #f7dda9;
+    transform: rotate(45deg);
+}
+
+.mob-drops__seal i:nth-child(2) {
+    width: 9px;
+    height: 9px;
+}
+
+.mob-drops__rewards,
+.mob-drops__divider,
+.mob-drops__items {
+    position: relative;
+}
+
+.mob-drops__rewards {
+    gap: clamp(4px, 3cqw, 14px);
+    margin-inline: 3%;
+}
+
+.mob-drops__rewards::before,
+.mob-drops__rewards::after {
+    flex: 1 1 12%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--drops-gold));
+    content: "";
+}
+
+.mob-drops__rewards::after {
+    transform: scaleX(-1);
+}
+
+.mob-drops__reward {
+    gap: clamp(3px, 1.6cqw, 8px);
+    min-width: min(26cqw, 110px);
+    padding: 4px clamp(4px, 1.5cqw, 9px);
+    border: 1px solid var(--drops-gold);
+    border-radius: 4px;
+    background: linear-gradient(#b98b4926, #f2d69c69 47%, #aa783b3d);
+    box-shadow: inset 0 0 0 1px #f8deae9c, inset 0 0 0 2px #9b773e66, 0 1px 1px #77543266;
+    font-size: clamp(0.65rem, 3.3cqw, 0.9rem);
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.mob-drops__reward img {
+    width: calc(clamp(12px, 5cqw, 24px) * var(--drops-icon-scale, 1));
+    aspect-ratio: 1;
+}
+
+.mob-drops__yang-icon {
+    --drops-icon-scale: 0.6;
+}
+
+.mob-drops__divider {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 4px;
+    margin: 25px 3% 10px;
+}
+
+.mob-drops__divider::before,
+.mob-drops__divider::after {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--drops-gold));
+    content: "";
+}
+
+.mob-drops__divider::after {
+    transform: scaleX(-1);
+}
+
+.mob-drops__items {
+    gap: 9px clamp(4px, 3cqw, 15px);
+    padding: 2px 1px 4px;
+}
+
+.mob-drops__item {
+    flex: none;
+    gap: 4px;
+}
+
+.mob-drops__slot {
+    padding: 3px;
+    border: 1px solid var(--drops-edge);
+    border-radius: 7px;
+    corner-shape: bevel;
+    background: linear-gradient(145deg, #f0d3a1, #ac8452 58%, #eccc94);
+    box-shadow: inset 0 0 0 1px #f4d9a7, 0 1px 2px #73522c66;
+}
+
+.mob-drops__visual {
+    width: 100%;
+    height: 100%;
+    padding: 3px;
+    border: 1px solid #3b2a18;
+    border-radius: 4px;
+    corner-shape: bevel;
+    background: radial-gradient(ellipse at 45% 40%, #30251a, #17120c 68%, #0e0b08);
+    box-shadow: inset 0 0 5px #0009;
+}
+
+.mob-drops__chance {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 54px;
+    height: 22px;
+    padding: 0 3px;
+    border: 1px solid #b48a55;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #f8dfb06b, #d6a96e47);
+    box-shadow: inset 0 0 0 1px #f8dfb77a, 0 1px 2px #875a2626;
+    color: #51351d;
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.mob-drops__reward-chance {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    z-index: 2;
+    transform: translateX(-50%);
+}
+
+.mob-drops__reward-chance .mob-drops__chance {
+    background: linear-gradient(180deg, #f4d9aa, #e4bd86);
+}

@@ -20,7 +20,7 @@ interface GeneralStatRowProps {
     iconTint?: keyof typeof ICON_TINT_CLASS;
     label: string;
     value: string | number;
-    description: string;
+    description?: string;
     details?: GeneralStatDetail[];
     progress?: number;
     progressColor?: 'hp' | 'mana';
@@ -80,6 +80,7 @@ export const GeneralStatRow = ({
     }, [isOpen, updatePosition]);
 
     const openTooltip = () => {
+        if (!description) return;
         setPosition(null);
         setIsOpen(true);
     };
@@ -88,13 +89,15 @@ export const GeneralStatRow = ({
         <>
             <div
                 ref={rowRef}
-                tabIndex={0}
+                tabIndex={description ? 0 : undefined}
                 aria-describedby={isOpen ? tooltipId : undefined}
                 onMouseEnter={openTooltip}
                 onMouseLeave={() => setIsOpen(false)}
                 onFocus={openTooltip}
                 onBlur={() => setIsOpen(false)}
-                className={`grid min-h-0 items-center gap-2 border-b border-white/15 text-[11px] text-[#d5d6d2] last:border-b-0 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#e9cf99] ${progress !== undefined ? 'grid-cols-[18px_36px_minmax(0,1fr)_96px]' : 'grid-cols-[18px_minmax(0,1fr)_auto]'}`}
+                className={`grid min-h-0 items-center gap-2 border-b border-white/15 text-[11px] text-[#d5d6d2] last:border-b-0 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#e9cf99] ${progress !== undefined
+                    ? 'grid-cols-[18px_36px_minmax(0,1fr)_96px]'
+                    : 'grid-cols-[18px_minmax(0,1fr)_auto]'}`}
             >
                 {icon ? (
                     iconTint ? (

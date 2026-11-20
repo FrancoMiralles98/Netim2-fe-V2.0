@@ -9,8 +9,8 @@ const getItemCornerLabel = (item: ItemDTO): string | number | null => {
     return item.acc ? item.cantidad : null;
 };
 
-export const InventoryItemVisual = ({ item }: { item: ItemDTO }) => {
-    const cornerLabel = getItemCornerLabel(item);
+export const InventoryItemVisual = ({ item, showIndicators = true }: { item: ItemDTO; showIndicators?: boolean }) => {
+    const cornerLabel = showIndicators ? getItemCornerLabel(item) : null;
 
     return (
         <div className="relative isolate h-full w-full">
@@ -19,7 +19,7 @@ export const InventoryItemVisual = ({ item }: { item: ItemDTO }) => {
             {item.type === "equip" && item.upgradeLv === 9 && <ItemUpgradeSparkles />}
             {item.type === "equip" && item.upgradeLv === 8 && <ItemStaticSparkles />}
             {item.type === "equip" && item.upgradeLv === 7 && <ItemStaticSparkles variant="bronze" />}
-            {item.type === "equip" && <EquipSlotIndicators slots={item.slot} filledSlots={item.piedras.length} />}
+            {showIndicators && item.type === "equip" && <EquipSlotIndicators slots={item.slot} filledSlots={item.piedras.length} />}
             {cornerLabel !== null && (
                 <span className="pointer-events-none absolute right-[2px] bottom-[1px] z-3 text-[11px] leading-none font-semibold text-white drop-shadow-[0_1px_2px_#000]">
                     {cornerLabel}

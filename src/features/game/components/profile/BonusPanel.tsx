@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { bonusFullNameByRef, type BonusRefKeys, type CharacterSession } from "netim2-shared";
+import type { BonusRefKeys, CharacterSession } from "netim2-shared";
 import { getBonusDescription } from "../../../../shared/tooltip/utils/bonus-info-tool-tip";
+import { bonusDisplayName, bonusValueColor, formatBonusValue, resolveStatBonusValue } from "../../../../shared/formatters/stat-bonus";
 
 type BonusCategory = keyof CharacterSession["stats"]["bonus"];
 
@@ -13,20 +14,6 @@ const BONUS_CATEGORIES: { key: BonusCategory; label: string }[] = [
 
 const bonusNameCollator = new Intl.Collator("es", { sensitivity: "base" });
 
-const bonusValueColor = (value: number) =>
-    value > 0 ? "text-emerald-300" : value < 0 ? "text-red-200" : "text-gray-300";
-
-const bonusDisplayName = (bonusRefKey: BonusRefKeys) => {
-    if (bonusRefKey === "desmayo") return "Prob de Desmayo";
-    if (bonusRefKey === "daño_critico") return "Daño crítico";
-    return bonusFullNameByRef(bonusRefKey);
-};
-
-const formatBonusValue = (bonusRefKey: BonusRefKeys, value: number, showPlus = false) =>
-    bonusRefKey === "daño_critico"
-        ? `x${value.toFixed(1)}`
-        : `${showPlus && value > 0 ? "+" : ""}${value}%`;
-
 interface BonusPanelProps {
     character: CharacterSession;
 }
@@ -38,7 +25,7 @@ export const BonusPanel = ({ character }: BonusPanelProps) => {
     const bonuses = (Object.entries(character.stats.bonus[activeCategory]) as [BonusRefKeys, number][])
         .map(([bonusRefKey, value]): [BonusRefKeys, number] => [
             bonusRefKey,
-            bonusRefKey === "doble_golpe" ? Math.max(0, character.stats.general.va) : value,
+            resolveStatBonusValue(bonusRefKey, value, character.stats.general.va),
         ])
         .sort(([firstKey], [secondKey]) =>
             bonusNameCollator.compare(bonusDisplayName(firstKey), bonusDisplayName(secondKey))

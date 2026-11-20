@@ -1,0 +1,39 @@
+.mob-fight-button::before,
+.mob-fight-button::after {
+    position: absolute;
+    pointer-events: none;
+    content: "";
+    opacity: 0;
+    transition: opacity 180ms ease-out;
+}
+
+.mob-fight-button::before {
+    inset: 40% 4% 7%;
+    border-radius: 0 0 18px 18px;
+    background: radial-gradient(ellipse at 50% 100%, #ffb52a99, #ff510d45 38%, transparent 72%);
+    mix-blend-mode: screen;
+}
+
+.mob-fight-button::after {
+    right: 7%;
+    bottom: 7%;
+    left: 7%;
+    height: 3px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, transparent, #ff9c20 12%, #fff6bb 35% 65%, #ff9c20 88%, transparent);
+    box-shadow: 0 0 4px #fff4bd, 0 0 9px #ffb521, 0 0 16px #ff560ecc;
+}
+
+.mob-fight-button:hover::before,
+.mob-fight-button:hover::after,
+.mob-fight-button:focus-visible::before,
+.mob-fight-button:focus-visible::after {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mob-fight-button::before,
+    .mob-fight-button::after {
+        transition: none;
+    }
+}

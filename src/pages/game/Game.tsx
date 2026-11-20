@@ -7,6 +7,8 @@ import { CharacterSkillsPanel } from "../../features/game/components/skills/Char
 import { MissionJournal } from "../../features/game/components/missions/MissionJournal";
 import { Explorar } from "../../features/explorar/Explorar";
 import { useGameGuard } from "../../features/game/hooks/useGame";
+import { useStartFight } from "../../features/fight/hooks/useStartFight";
+import { FightView } from "../../features/fight/FightView";
 
 export const Game = () => {
     const [activeSection, setActiveSection] = useState<CharacterSection | "explorar">("perfil");
@@ -15,6 +17,7 @@ export const Game = () => {
         worldSessionId,
         gameReady,
     } = useGameGuard();
+    const { response: fight, startFight, isPending: isStartingFight, clearFight } = useStartFight(character?.id);
     if (!gameReady || !character || !worldSessionId) {
         return null;
     }
@@ -23,6 +26,8 @@ export const Game = () => {
     const isExploring = activeSection === "explorar";
 
     return (
+        <>
+        <div hidden={Boolean(fight)}>
         <section
             id='bg'
             className={`min-h-[100dvh] bg-auto bg-top ${isExploring ? "overflow-x-clip" : "min-w-[1300px]"}`}
@@ -43,14 +48,37 @@ export const Game = () => {
                         onSelectSection={setActiveSection}
                     />
 
-                    {activeSection === "perfil" && <CharacterPanel character={character} />}
-                    {activeSection === "habilidades" && <CharacterSkillsPanel character={character} />}
-                    {activeSection === "misiones" && (
+                    {!fight && activeSection === "perfil" && <CharacterPanel character={character} />}
+                    {!fight && activeSection === "habilidades" && <CharacterSkillsPanel character={character} />}
+                    {!fight && activeSection === "misiones" && (
                         <MissionJournal key={character.id} character={character} />
                     )}
-                    {isExploring && <Explorar reino={reino} />}
+                    {(isExploring || fight) && (
+                        <div hidden={Boolean(fight)}>
+                            <Explorar
+                                key={character.id}
+                                reino={reino}
+                                isStartingFight={isStartingFight}
+                                onFight={(mob) => startFight({ idMob: mob.idMob, quantity: 1 })}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
+        </div>
+        {fight && (
+            <div className="min-h-dvh w-full bg-[#0c0d10] pb-10">
+                <FightView
+                    key={fight.fightPlaybackPayload.fightId}
+                    response={fight}
+                    onBack={() => {
+                        setActiveSection("explorar");
+                        clearFight();
+                    }}
+                />
+            </div>
+        )}
+        </>
     )
 }

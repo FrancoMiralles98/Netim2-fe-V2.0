@@ -3,6 +3,7 @@ import type { FightAuraState, FightBuffState, FightFighterState, FightStatusEffe
 import type { FightPlaybackState, PlaybackEventEntry } from "../animations.types";
 import type { ActionSelectedEvent, AuraActivatedEvent, AuraDeactivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDeactivatedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
 import type { FightPlaybackSpeed, UseFightPlayBackProps } from "../use-fight-play-back.type";
+import { getSkillEffect } from "../skill-effects";
 
 export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPlayBackProps) => {
     const [fightersState, setFightersState] = useState<FightFighterState[]>(() => structuredClone(initialFighters));
@@ -20,6 +21,11 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
     const speedRef = useRef<FightPlaybackSpeed>(1);
     const playbackSessionRef = useRef(0);
     const floatingAnimationSequenceRef = useRef(0);
+
+    useEffect(() => () => {
+        playbackSessionRef.current += 1;
+        isPlayingRef.current = false;
+    }, []);
 
     const getNextFloatingAnimationId = (): string => {
         floatingAnimationSequenceRef.current += 1;
@@ -86,8 +92,9 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
 
         let elapsed = 0;
         let previousTime = performance.now();
+        const session = playbackSessionRef.current;
 
-        while (elapsed < duration) {
+        while (elapsed < duration && session === playbackSessionRef.current) {
             await sleep(16);
 
             const currentTime = performance.now();
@@ -274,6 +281,7 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
             currentAction: undefined,
 
             animation: undefined,
+            skillEffect: undefined,
             hitSequence: undefined,
             message: undefined
         }));
@@ -1301,6 +1309,17 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
         fighterId: string,
         targetId: string
     ): Promise<void> => {
+        const sheet = "skillId" in event.action
+            ? getSkillEffect(event.action.skillId)
+            : undefined;
+        const skillEffect = sheet && "skillId" in event.action
+            ? {
+                id: getNextFloatingAnimationId(),
+                fighterId: event.action.type === "use_damage_skill" ? targetId : fighterId,
+                sourceFighterId: fighterId,
+                skillId: event.action.skillId,
+            }
+            : undefined;
 
         setPlayback(prev => ({
             ...prev,
@@ -1312,10 +1331,17 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 targetId,
 
             currentAction:
-                event.action
+                event.action,
+            skillEffect,
         }));
 
-        await wait(700);
+        await wait(sheet ? Math.max(700, sheet.frameCount / sheet.fps * 1000) : 700);
+
+        if (skillEffect) {
+            setPlayback(prev => prev.skillEffect?.id === skillEffect.id
+                ? { ...prev, skillEffect: undefined }
+                : prev);
+        }
     };
 
     const playBasicAttack = async (

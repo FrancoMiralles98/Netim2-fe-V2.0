@@ -5,3 +5,7 @@ export { SkillMasteryIcon } from "./skill-mastery-aura/SkillMasteryIcon";
 export { ItemLegendaryImage } from "./item-legendary-halo/ItemLegendaryImage";
 export { ItemSpecialImage } from "./item-special-sweep/ItemSpecialImage";
 export { PortalVortex } from "./portal-vortex/PortalVortex";
+export { ItemBorderGlint } from "./item-border-glint/ItemBorderGlint.jsx";
+export type { ItemBorderGlintProps } from "./item-border-glint/ItemBorderGlint.jsx";
+export { SpritesheetEffect } from "./spritesheet/SpritesheetEffect";
+export type { SpritesheetConfig, SpritesheetEffectProps } from "./spritesheet/SpritesheetEffect";

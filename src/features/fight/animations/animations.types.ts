@@ -21,6 +21,13 @@ export interface FightPlaybackState {
 
     animation?: FightAnimationState;
 
+    skillEffect?: {
+        id: string;
+        fighterId: string;
+        sourceFighterId: string;
+        skillId: number;
+    };
+
     hitSequence?: {
         current: number;
         total: number;

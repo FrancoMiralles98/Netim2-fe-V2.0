@@ -23,7 +23,7 @@ const portalArrows = [
 
 interface ExplorarProps {
     reino: ReinosNames | null;
-    onFight: (mob: MobSummary) => Promise<boolean>;
+    onFight: (mob: MobSummary, quantity: number) => Promise<boolean>;
     isStartingFight: boolean;
 }
 

@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import type { FightCharacterMobRequest, FightCharacterMobResponse } from "netim2-shared";
+import type { FightCharacterMobRequest, CharacterFightResultResponse } from "netim2-shared";
 import { useModal } from "../../../shared/modal/hooks/useModal";
 import { useCharacterSession } from "../../characterSession/hooks/useCharacterSession";
 import { fightMobRequest } from "../api/fight.services";
 
 export const useStartFight = (characterId: string | undefined) => {
-    const { runCharacterMutation } = useCharacterSession();
+    const { runCharacterMutation, applyFightResultResponse } = useCharacterSession();
     const { showLoadingModal, closeLoadingModal, showErrorModal } = useModal();
     const pending = useRef(false);
     const currentCharacter = useRef(characterId);
     const [isPending, setIsPending] = useState(false);
-    const [fight, setFight] = useState<{ characterId: string; response: FightCharacterMobResponse } | null>(null);
+    const [fight, setFight] = useState<{ characterId: string; response: CharacterFightResultResponse } | null>(null);
 
     useEffect(() => {
         currentCharacter.current = characterId;
@@ -23,7 +23,11 @@ export const useStartFight = (characterId: string | undefined) => {
         setIsPending(true);
         showLoadingModal("Preparando pelea…");
         try {
-            const response = await runCharacterMutation(characterId, () => fightMobRequest(characterId, body));
+            const response = await runCharacterMutation(characterId, async () => {
+                const result = await fightMobRequest(characterId, body);
+                applyFightResultResponse(characterId, result);
+                return result;
+            });
             if (currentCharacter.current !== characterId) return false;
             setFight({ characterId, response });
             return true;

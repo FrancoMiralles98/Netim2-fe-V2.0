@@ -38,7 +38,7 @@ interface ExploreZoneProps {
     landscape: string;
     mobs: GetMobsByUbicationResponse;
     onBack: () => void;
-    onFight: (mob: MobSummary) => Promise<boolean>;
+    onFight: (mob: MobSummary, quantity: number) => Promise<boolean>;
     isStartingFight: boolean;
 }
 
@@ -80,8 +80,8 @@ export const ExploreZone = ({ name, landscape, mobs, onBack, onFight, isStarting
                     mob={selectedMob}
                     onClose={() => setSelectedMob(null)}
                     isStartingFight={isStartingFight}
-                    onFight={() => {
-                        void onFight(selectedMob).then((started) => {
+                    onFight={(quantity) => {
+                        void onFight(selectedMob, quantity).then((started) => {
                             if (started) setSelectedMob(null);
                         });
                     }}

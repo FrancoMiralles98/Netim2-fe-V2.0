@@ -59,7 +59,7 @@ export const Game = () => {
                                 key={character.id}
                                 reino={reino}
                                 isStartingFight={isStartingFight}
-                                onFight={(mob) => startFight({ idMob: mob.idMob, quantity: 1 })}
+                                onFight={(mob, quantity) => startFight({ idMob: mob.idMob, quantity })}
                             />
                         </div>
                     )}

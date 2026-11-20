@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import type { CharacterFightResultResponse } from "netim2-shared";
 import { CharacterSessionContext } from "./context/character-session.context";
 import { useGameSocket } from "../../api/hooks/use-game-socket";
 import { useNavigate } from "react-router";
@@ -207,6 +208,12 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             : current);
     }, []);
 
+    const applyFightResultResponse = useCallback((characterId: string, response: CharacterFightResultResponse) => {
+        setCharacter(current => current?.id === characterId
+            ? { ...current, ...response.character }
+            : current);
+    }, []);
+
     const applyChestResponse = useCallback((characterId: string, response: OpenChestResponse) => {
         setCharacter(current => current?.id === characterId
             ? applyChestResponseToCharacter(current, response)
@@ -304,6 +311,7 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyBuffResponse,
             applyChestResponse,
             applyMissionClaimResponse,
+            applyFightResultResponse,
             runCharacterMutation,
             applySplitInventoryItemResponse,
             applyMergeInventoryItemsResponse,

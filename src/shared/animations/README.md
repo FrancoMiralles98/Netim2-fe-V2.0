@@ -48,12 +48,15 @@ Los 24 cuadros a 24 FPS producen un ciclo completo de unos 1,92 segundos.
 
 ### Auras persistentes
 
-**Convención obligatoria de diseño: todas las spritesheets de auras deben
-contener exactamente 24 fotogramas originales.** `AuraEffectConfig` exige
-`frameCount: 24` en TypeScript. La distribución en filas/columnas puede variar.
-Los extremos deben ser cuadros distintos: no copiar el fotograma 1 al 24.
-El reproductor cambia de sentido automáticamente y cada extremo ocupa
-un solo intervalo de fotograma:
+`AuraEffectConfig` admite 24 o 36 fotogramas. Las nuevas auras de 36 cuadros
+usan 24 FPS y `direction: "normal"` para completar un ciclo continuo de
+1,5 segundos. El primer y el último cuadro son distintos y la transición
+del último al primero forma parte del movimiento. La distribución en
+filas/columnas puede variar. Los efectos puntuales de skills conservan sus
+configuraciones de 24 cuadros.
+
+Con `direction: "alternate"`, el reproductor cambia de sentido y cada extremo
+ocupa un solo intervalo de fotograma:
 
 ```text
 … 22 → 23 → 24 → 23 → 22 …
@@ -65,23 +68,37 @@ A 24 FPS dura 46/24 segundos, aproximadamente 1,92 segundos.
 
 `getAuraEffect(skillId)`, en `src/features/fight/animations/aura-effects.ts`,
 registra las spritesheets que se repiten mientras están en `activeAuras`.
-La skill 43 usa `/spritesheets/blessing-light-aura-43.webp`, con
-24 fotogramas a 24 FPS y `direction: "normal"`. La spritesheet completa
-fue generada tomando como referencia Bendición del chamán Luz. Tiene
-destellos azules suaves con forma de pequeñas llamas o plumas alrededor
-del marco. Los cuadros conservan cambios pequeños y la unión 24→1 fue
-revisada sobre un fondo oscuro.
-El primer y último cuadro son distintos. El ciclo dura un segundo a
+La skill 42 usa `/spritesheets/dragon-strength-aura-42.webp`, con 36 cuadros
+a 24 FPS y un ciclo de 1,5 segundos en dirección normal. La esfera celeste
+mantiene su posición, tamaño y contorno; el interior cambia suavemente de luz
+mientras los aros dorados y violetas oscilan alrededor. El WebP sin pérdida
+mide 4800×2640 px, con 6×6 celdas de 800×440 px a resolución doble.
+La referencia visual es una superficie de 400×220 px con la card de 257×60 px
+en x=50, y=80, y la esfera centrada en x=303, y=80, junto a la esquina superior
+derecha. `cardBounds` mantiene esa ubicación con el tamaño real de la card.
+
+La skill 43 usa `/spritesheets/blessing-arc-aura-43.webp`, con
+36 fotogramas a 24 FPS y `direction: "normal"`. Las siluetas puntiagudas
+azules y las esferas celestes forman dos arcos laterales abiertos.
+El centro queda transparente. El diseño generado tiene una oscilación
+periódica mínima y brillo escalonado; la transición 36→1 continúa el ciclo.
+El primer y último cuadro son distintos. El ciclo dura 1,5 segundos a
 velocidad normal. Se muestra sobre la card del lanzador.
-El recurso tiene trazos azules rectangulares y un centro transparente,
-adaptado al marco de la card contraída de 250×66 px. Las celdas de
-256×256 px conservan todo el margen del resplandor. `contentHeightRatio`
-indica la fracción vertical que ocupa el marco (76/256 para la skill 43).
-El reproductor centra la celda completa y ajusta su altura para que el marco
-visible abarque la altura de la card más 8 px. El margen transparente de
-la imagen queda fuera del contenedor y mantiene visible el brillo inferior.
-El contenedor deja 24 px adicionales por lado horizontal y 16 px por
-lado vertical para ubicar los destellos alrededor de la card de 250×66 px.
+El recurso WebP sin pérdida mide 4800×2880 px, con una cuadrícula de 6×6.
+Cada celda de 800×480 px corresponde a una superficie de 400×240 px
+a resolución doble. La card de referencia mide 257×60 px y ocupa
+x=71,5, y=90 dentro de esa superficie. `cardBounds` conserva esta alineación
+con las dimensiones reales de la card. El margen transparente mantiene
+visibles el resplandor y los extremos de ambos arcos.
+
+La skill 44 usa `/spritesheets/golden-aura-44.webp`, con 36 cuadros a 24 FPS
+y `direction: "normal"`. El aura amarilla se dibuja por delante de la card.
+El WebP sin pérdida mide 4524×2040 px, distribuido en 6×6 celdas de 754×340 px.
+Cada celda se diseñó a resolución doble para una superficie de 377×170 px
+con una card de 257×60 px ubicada en x=61, y=53.
+`cardBounds` expresa ese rectángulo en coordenadas normalizadas. La capa
+calcula el tamaño y desplazamiento de la celda a partir de las dimensiones
+reales de la card, para mantener alineada el aura al contraer o expandir.
 
 `FightAuraEffects` renderiza las auras registradas cuyo `sourceFighterId`
 coincide con el luchador de la card. `aura_activated` la incorpora al estado.

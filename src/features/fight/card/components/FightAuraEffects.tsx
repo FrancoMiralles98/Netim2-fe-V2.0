@@ -32,7 +32,13 @@ export const FightAuraEffects = ({
                     speed={speed}
                     direction={sheet.direction}
                     loop
-                    style={{
+                    style={sheet.cardBounds ? {
+                        position: "absolute",
+                        left: `calc(24px - (100% - 48px) * ${sheet.cardBounds.left / sheet.cardBounds.width})`,
+                        top: `calc(16px - (100% - 32px) * ${sheet.cardBounds.top / sheet.cardBounds.height})`,
+                        width: `calc((100% - 48px) / ${sheet.cardBounds.width})`,
+                        height: `calc((100% - 32px) / ${sheet.cardBounds.height})`,
+                    } : {
                         position: "absolute",
                         left: 0,
                         top: "50%",

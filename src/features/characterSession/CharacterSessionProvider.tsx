@@ -8,6 +8,7 @@ import { useModal } from "../../shared/modal/hooks/useModal";
 import type { ApplyBuffResponse, BuyEquipmentSlotResponse, CharacterSession, CharacterSummary, DiscardInventoryItemResponse, EquipItemResponse, GameConfigResponse, IncreaseCharacterAttributeResponse, MergeInventoryItemsResponse, MoveInventoryItemResponse, OpenChestResponse, RefreshBuffsResponse, SelectEquipmentResponse, SplitInventoryItemResponse, UnequipItemResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
 import { applyEquipmentToCharacter, applyUnequipmentToCharacter } from "./utils/apply-equipment-response";
 import { applyPotionUseResponseToCharacter } from "./utils/apply-potion-use-response";
+import type { QuickHealResponse } from "netim2-shared";
 import { applySplitInventoryResponseToCharacter } from "./utils/apply-split-inventory-response";
 import { applyMergeInventoryResponseToCharacter } from "./utils/apply-merge-inventory-response";
 import { applyBuffResponseToCharacter } from "./utils/apply-buff-response";
@@ -196,7 +197,7 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             : current);
     }, []);
 
-    const applyPotionUseResponse = useCallback((characterId: string, response: UsePotionResponse | UseReservePotionResponse) => {
+    const applyPotionUseResponse = useCallback((characterId: string, response: UsePotionResponse | UseReservePotionResponse | QuickHealResponse) => {
         setCharacter((current) => current?.id === characterId
             ? applyPotionUseResponseToCharacter(current, response)
             : current);

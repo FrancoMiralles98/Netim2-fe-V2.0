@@ -5,6 +5,7 @@ import { RoutePanels } from "../../features/game/components/navigation/RoutePane
 import { CharacterSectionNav, type CharacterSection } from "../../features/game/components/navigation/CharacterSectionNav";
 import { CharacterSkillsPanel } from "../../features/game/components/skills/CharacterSkillsPanel";
 import { MissionJournal } from "../../features/game/components/missions/MissionJournal";
+import { Historial } from "../../features/game/components/historial/Historial";
 import { Explorar } from "../../features/explorar/Explorar";
 import { useGameGuard } from "../../features/game/hooks/useGame";
 import { useStartFight } from "../../features/fight/hooks/useStartFight";
@@ -53,6 +54,7 @@ export const Game = () => {
                     {!fight && activeSection === "misiones" && (
                         <MissionJournal key={character.id} character={character} />
                     )}
+                    {!fight && activeSection === "historial" && <Historial />}
                     {(isExploring || fight) && (
                         <div hidden={Boolean(fight)}>
                             <Explorar

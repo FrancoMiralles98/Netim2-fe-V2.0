@@ -10,7 +10,7 @@ import {
     DAMAGE_DELIVERY_STATISTIC_CONFIG,
     DAMAGE_SOURCE_STATISTIC_CONFIG,
     DAMAGE_TYPE_STATISTIC_CONFIG,
-    SKILL_STATISTIC_COLOR_CLASSES,
+    SKILL_STATISTIC_COLORS,
     STATUS_EFFECT_STATISTIC_CONFIG,
     UNCLASSIFIED_STATISTIC_CONFIG
 } from "../config/fight-statistics-visual-config";
@@ -102,10 +102,7 @@ export const getSkillDamageSegments = (
             key: rawSkillId,
             value: statistics.total,
             ...getSkillStatisticVisual(skillId, skills),
-            colorClass:
-                SKILL_STATISTIC_COLOR_CLASSES[
-                    index % SKILL_STATISTIC_COLOR_CLASSES.length
-                ]
+            ...SKILL_STATISTIC_COLORS[index % SKILL_STATISTIC_COLORS.length]
         };
     }
 );

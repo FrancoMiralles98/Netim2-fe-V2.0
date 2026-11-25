@@ -7,6 +7,7 @@ allowBuilds:
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/26fb6d29d6c80b70a032d20dc48f09abdd474602: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/2743ca08706ceb6591f02aab0633d7ba7886ed15: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/287c128467e22c298643150c2a3555c49e59c06e: false
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/2a924f0037db9f2378278069e77eda6226abd5b2: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/36bdfabfaabc2815d4f7609c66d9a931a7d3a89a: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/37fc594be3d41ec7c50c6d5b27c129fc4fb6ab87: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/3ac2cef7b7d81b1e79429738bdd5f961bf089d27: false
@@ -48,3 +49,4 @@ allowBuilds:
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/e0c38b54dedcee2f3d7dac2775a8e1d07aa271d9: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/ee58851ff71fd3c6fb09eebe6df46d28ff2b4b9e: false
   netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/f4001dc59e66dd5d643954103a3782679df7f7a7: false
+  netim2-shared@https://codeload.github.com/FrancoMiralles98/netim2-shared/tar.gz/ff99d7abdc6a8f77eea8504babe0dc42c7f9b686: false

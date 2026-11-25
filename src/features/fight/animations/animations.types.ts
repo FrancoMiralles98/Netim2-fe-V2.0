@@ -20,6 +20,7 @@ export interface FightPlaybackState {
     currentAction?: CombatAction;
 
     animation?: FightAnimationState;
+    hitVisuals?: HitVisual[];
 
     skillEffect?: {
         id: string;
@@ -35,6 +36,16 @@ export interface FightPlaybackState {
 
     message?: string;
 }
+
+export type HitVisual = {
+    id: string;
+    fighterId: string;
+    expiresAt: number;
+    lane: number;
+} & (
+    | { type: "value"; animation: Extract<FightAnimationState, { type: "damage" | "healing" | "status_effect_damage" | "resource_changed" }> }
+    | { type: "notice"; text: string; colorClass: string; parts?: { text: string; colorClass: string }[] }
+);
 
 export type FightAnimationState =
     | {
@@ -98,6 +109,8 @@ export type FightAnimationState =
         damageType: DamageType;
         critical: boolean;
         penetrating: boolean;
+        reflected?: boolean;
+        statusNotice?: { text: string; colorClass: string };
     }
     | {
         type: 'stunned';

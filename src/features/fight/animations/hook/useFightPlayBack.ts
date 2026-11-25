@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FightAuraState, FightBuffState, FightFighterState, FightStatusEffectState } from "../../card/fighter-state";
-import type { FightPlaybackState, PlaybackEventEntry } from "../animations.types";
+import type { FightPlaybackState, HitVisual, PlaybackEventEntry } from "../animations.types";
 import type { ActionSelectedEvent, AuraActivatedEvent, AuraDeactivatedEvent, AuraDurationUpdatedEvent, BasicAttackUsedEvent, BuffAppliedEvent, BuffDeactivatedEvent, BuffDurationUpdatedEvent, ControlEffectProcessedEvent, CooldownUpdatedEvent, DamageResolvedEvent, DoubleHitTriggeredEvent, FightResult, HealingResolvedEvent, HitResolvedEvent, ResourceChangedEvent, StatusEffectAppliedEvent, StatusEffectDurationUpdatedEvent, StatusEffectStackProcEvent, StatusEffectTickedEvent, StatusEffectUpdatedEvent, TurnEndedEvent, TurnStartedEvent } from "netim2-shared";
 import type { FightPlaybackSpeed, UseFightPlayBackProps } from "../use-fight-play-back.type";
 import { getSkillEffect } from "../skill-effects";
+import { buildPlaybackSteps, type PlaybackStep } from "../build-playback-steps";
+import { applyCombatHit, applyHitStatus, getHitVisuals, getHitStatusNotice, getModifierNotice } from "../hit-presentation";
+
+const HIT_INTERVAL_MS = 450;
+const HIT_VISUAL_DURATION_MS = 1000;
+const PLAYBACK_CANCELLED = Symbol("playback-cancelled");
 
 export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPlayBackProps) => {
     const [fightersState, setFightersState] = useState<FightFighterState[]>(() => structuredClone(initialFighters));
@@ -21,6 +27,8 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
     const speedRef = useRef<FightPlaybackSpeed>(1);
     const playbackSessionRef = useRef(0);
     const floatingAnimationSequenceRef = useRef(0);
+    const visualClockRef = useRef(0);
+    const hitVisualsRef = useRef<HitVisual[]>([]);
 
     useEffect(() => () => {
         playbackSessionRef.current += 1;
@@ -42,37 +50,16 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
         setFightResult(null);
     };
 
-    const playbackEvents = useMemo<PlaybackEventEntry[]>(
+    const playbackEvents = useMemo<PlaybackStep[]>(
         () => {
             if (!events) {
                 return [];
             }
 
-            return events.turns.flatMap(turn =>
-                turn.fighterTurns.flatMap(fighterTurn =>
-                    fighterTurn.events.map(event => ({
-                        fightId: events.fightId,
-
-                        turnNumber: turn.turnNumber,
-
-                        fighterId: fighterTurn.fighterId,
-                        targetId: fighterTurn.targetId,
-
-                        event
-                    }))
-                )
-            );
+            return buildPlaybackSteps(events);
         },
         [events]
     );
-
-    useEffect(() => {
-        setFightersState(
-            structuredClone(
-                initialFighters
-            )
-        );
-    }, [initialFighters]);
 
     /*
      * Índice del siguiente evento a reproducir.
@@ -96,6 +83,7 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
 
         while (elapsed < duration && session === playbackSessionRef.current) {
             await sleep(16);
+            if (session !== playbackSessionRef.current) throw PLAYBACK_CANCELLED;
 
             const currentTime = performance.now();
 
@@ -116,7 +104,14 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
              * más rápido, x0.5 dos veces más lento.
              */
             elapsed += delta * speedRef.current;
+            visualClockRef.current += delta * speedRef.current;
+            if (hitVisualsRef.current.some(visual => visual.expiresAt <= visualClockRef.current)) {
+                const remaining = hitVisualsRef.current.filter(visual => visual.expiresAt > visualClockRef.current);
+                hitVisualsRef.current = remaining;
+                setPlayback(current => ({ ...current, hitVisuals: remaining }));
+            }
         }
+        if (session !== playbackSessionRef.current) throw PLAYBACK_CANCELLED;
     };
 
     const pause = (): void => {
@@ -185,9 +180,11 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                     eventIndexRef.current
                     ];
 
-                await playEvent(
-                    playbackEntry
-                );
+                if (playbackEntry.type === "event") {
+                    await playEvent(playbackEntry.entry, playbackEntry.fast);
+                } else {
+                    await playAttackStep(playbackEntry);
+                }
 
                 if (
                     sessionId !==
@@ -212,11 +209,14 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 sessionId ===
                 playbackSessionRef.current
             ) {
+                await wait(HIT_VISUAL_DURATION_MS);
                 showFightResult(
                     result
                 );
             }
 
+        } catch (error) {
+            if (error !== PLAYBACK_CANCELLED) throw error;
         } finally {
 
             if (
@@ -239,6 +239,8 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
          */
         playbackSessionRef.current += 1;
         floatingAnimationSequenceRef.current = 0;
+        visualClockRef.current = 0;
+        hitVisualsRef.current = [];
 
         eventIndexRef.current = 0;
 
@@ -323,8 +325,70 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
     };
 
 
+    const addHitVisuals = (contents: ReturnType<typeof getHitVisuals>) => {
+        const visuals = [...hitVisualsRef.current];
+        for (const content of contents) {
+            const occupied = new Set(visuals.filter(visual => visual.fighterId === content.fighterId).map(visual => visual.lane));
+            let lane = 0;
+            while (occupied.has(lane)) lane += 1;
+            visuals.push({
+                ...content,
+                id: getNextFloatingAnimationId(),
+                expiresAt: visualClockRef.current + HIT_VISUAL_DURATION_MS,
+                lane,
+            });
+        }
+        hitVisualsRef.current = visuals;
+        setPlayback(current => ({ ...current, hitVisuals: visuals }));
+    };
+
+    const playAttackStep = async (step: Exclude<PlaybackStep, { type: "event" }>) => {
+        if (step.type === "modifiers") {
+            const text = getModifierNotice(step.attack.modifiers);
+            if (text) {
+                addHitVisuals([{ type: "notice", fighterId: step.fighterId, text, colorClass: "text-yellow-300" }]);
+            }
+            setPlayback(current => ({ ...current, hitSequence: { current: 0, total: step.attack.modifiers.executedHitCount } }));
+            await wait(HIT_INTERVAL_MS);
+            return;
+        }
+        if (step.type === "hit-status") {
+            const notices = step.hit.statusEffects.map(effect => getHitStatusNotice(step.hit, effect));
+            addHitVisuals([{
+                type: "notice",
+                fighterId: step.hit.targetId,
+                text: notices.map(notice => notice.text).join(" · "),
+                colorClass: "text-slate-200",
+                parts: notices.map(({ text, colorClass }) => ({ text, colorClass })),
+            }]);
+            await wait(HIT_INTERVAL_MS);
+            return;
+        }
+        const { hit } = step;
+        setFightersState(current => {
+            let fighters = applyCombatHit(current, hit);
+            for (const effect of hit.statusEffects) {
+                fighters = applyHitStatus(fighters, hit, effect);
+            }
+            return fighters;
+        });
+        setPlayback(current => ({
+            ...current,
+            currentActorId: hit.attackerId,
+            currentTargetId: hit.targetId,
+            hitSequence: { current: hit.hitIndex + 1, total: step.totalHits },
+            animation: hit.outcome === "hit" ? {
+                type: "hit", attackerId: hit.attackerId, targetId: hit.targetId,
+                hitIndex: hit.hitIndex, critical: hit.critical, penetrating: hit.penetrating,
+            } : undefined,
+        }));
+        addHitVisuals(getHitVisuals(hit, getNextFloatingAnimationId));
+        await wait(HIT_INTERVAL_MS);
+    };
+
     const playEvent = async (
-        entry: PlaybackEventEntry
+        entry: PlaybackEventEntry,
+        fast = false,
     ): Promise<void> => {
 
         const {
@@ -348,7 +412,8 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 await playActionSelected(
                     event,
                     fighterId,
-                    targetId
+                    targetId,
+                    fast,
                 );
                 break;
 
@@ -360,7 +425,8 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 await playBasicAttack(
                     event,
                     fighterId,
-                    targetId
+                    targetId,
+                    fast,
                 );
                 break;
 
@@ -426,6 +492,15 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
 
             case 'status_effect_updated':
                 playStatusEffectUpdated(event, fighterId, targetId);
+                break;
+
+            case 'status_effect_deactivated':
+                setFightersState(current => current.map(fighter => {
+                    if (fighter.fighterId !== event.targetFighterId) return fighter;
+                    const activeEffects = new Map(fighter.activeEffects);
+                    activeEffects.delete(event.effectId);
+                    return { ...fighter, activeEffects };
+                }));
                 break;
 
             case 'turn_ended':
@@ -771,14 +846,15 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
         fighterId: string
     ): Promise<void> => {
 
-        setPlayback({
+        setPlayback(current => ({
             currentTurn: turnNumber,
 
             currentActorId:
                 fighterId,
 
-            message: undefined
-        });
+            message: undefined,
+            hitVisuals: current.hitVisuals,
+        }));
 
         await wait(400);
     };
@@ -1281,9 +1357,9 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
         const increased =
             event.currentValue > event.previousValue;
 
-        setPlayback(prev => ({
-            ...prev,
-
+        addHitVisuals([{
+            type: "value",
+            fighterId,
             animation: {
                 type: 'resource_changed',
                 id: animationId,
@@ -1294,20 +1370,15 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
                 amount: event.amount,
                 increased
             }
-        }));
-
-        await wait(950);
-
-        setPlayback(prev => ({
-            ...prev,
-            animation: undefined
-        }));
+        }]);
+        await wait(HIT_INTERVAL_MS);
     };
 
     const playActionSelected = async (
         event: ActionSelectedEvent,
         fighterId: string,
-        targetId: string
+        targetId: string,
+        fast = false,
     ): Promise<void> => {
         const sheet = "skillId" in event.action
             ? getSkillEffect(event.action.skillId)
@@ -1335,6 +1406,10 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
             skillEffect,
         }));
 
+        if (fast) {
+            await wait(HIT_INTERVAL_MS);
+            return;
+        }
         await wait(sheet ? Math.max(700, sheet.frameCount / sheet.fps * 1000) : 700);
 
         if (skillEffect) {
@@ -1347,7 +1422,8 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
     const playBasicAttack = async (
         _event: BasicAttackUsedEvent,
         fighterId: string,
-        targetId: string
+        targetId: string,
+        fast = false,
     ): Promise<void> => {
 
         setPlayback(prev => ({
@@ -1369,7 +1445,7 @@ export const useFightPlayBack = ({ initialFighters, events, result }: UseFightPl
             }
         }));
 
-        await wait(400);
+        await wait(fast ? HIT_INTERVAL_MS : 400);
 
         setPlayback(prev => ({
             ...prev,

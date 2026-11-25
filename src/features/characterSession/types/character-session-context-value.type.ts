@@ -3,9 +3,12 @@ import type { SessionEndReason } from "./session-end-reason.type";
 import type { QuickHealResponse } from "netim2-shared";
 import type { ClaimMissionResponse, SelectCharacterSpecialityResponse } from "netim2-shared";
 import type { CharacterFightResultResponse } from "netim2-shared";
+import type { ClaimCharacterHistoryRewardsResponse, ClaimHistoryRewardsResponse } from "netim2-shared";
 
 
 export interface CharacterSessionContextValue {
+    historyRewardClaims: Record<string, ClaimHistoryRewardsResponse>;
+    applyHistoryRewardsClaimResponse: (characterId: string, response: ClaimCharacterHistoryRewardsResponse) => void;
     applyFightResultResponse: (characterId: string, response: CharacterFightResultResponse) => void;
     applySkillUpgradeResponse: (characterId: string, response: import("netim2-shared").UpgradeCharacterSkillResponse) => void;
     character: CharacterSession | null

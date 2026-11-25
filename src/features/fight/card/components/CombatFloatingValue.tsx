@@ -15,10 +15,12 @@ export type CombatFloatingAnimation = Extract<
 >;
 interface CombatFloatingValueProps {
     animation: CombatFloatingAnimation;
+    paused?: boolean;
 }
 
 export const CombatFloatingValue = ({
     animation,
+    paused = false,
 }: CombatFloatingValueProps) => {
 
     const getVisualConfig = () => {
@@ -133,6 +135,7 @@ export const CombatFloatingValue = ({
 
     return (
         <div
+            style={{ animationPlayState: paused ? "paused" : "running" }}
             className={`
                 pointer-events-none
                 absolute
@@ -168,6 +171,7 @@ export const CombatFloatingValue = ({
                 {config.sign}
                 {config.amount}
             </span>
+            {animation.type === "damage" && animation.reflected && <span className="text-xs">Reflejado</span>}
 
             {/* Indicador crítico adicional */}
             {config.critical && (
@@ -199,6 +203,11 @@ export const CombatFloatingValue = ({
                         object-contain
                     "
                 />
+            )}
+            {animation.type === "damage" && animation.statusNotice && (
+                <span className={`ml-2 text-sm font-bold ${animation.statusNotice.colorClass}`}>
+                    {animation.statusNotice.text}
+                </span>
             )}
         </div>
     );

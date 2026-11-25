@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { CharacterFightResultResponse } from "netim2-shared";
+import type { ClaimCharacterHistoryRewardsResponse, ClaimHistoryRewardsResponse } from "netim2-shared";
 import { CharacterSessionContext } from "./context/character-session.context";
 import { useGameSocket } from "../../api/hooks/use-game-socket";
 import { useNavigate } from "react-router";
@@ -22,6 +23,22 @@ import { applySpecialitySelectionToCharacter } from "./utils/apply-speciality-se
 export const CharacterSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const [character, setCharacter] = useState<CharacterSession | null>(null)
+    const [historyRewardClaims, setHistoryRewardClaims] = useState<Record<string, ClaimHistoryRewardsResponse>>({});
+
+    const applyHistoryRewardsClaimResponse = useCallback((characterId: string, response: ClaimCharacterHistoryRewardsResponse) => {
+        setCharacter(current => current?.id === characterId
+            ? applySplitInventoryResponseToCharacter(current, response)
+            : current);
+        setHistoryRewardClaims(current => ({
+            ...current,
+            [response.historialId]: {
+                historialId: response.historialId,
+                claimedRewardIds: response.claimedRewardIds,
+                pendingItems: response.pendingItems,
+                remainingReward: response.remainingReward,
+            },
+        }));
+    }, []);
     const applyMissionClaimResponse = useCallback((characterId: string, response: ClaimMissionResponse) => {
         const missionsInProgress = response.missionsInProgress.map(({ startedAt, expiresAt, completedAt, ...progress }) => ({
             ...progress,
@@ -313,6 +330,8 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyChestResponse,
             applyMissionClaimResponse,
             applyFightResultResponse,
+            applyHistoryRewardsClaimResponse,
+            historyRewardClaims,
             runCharacterMutation,
             applySplitInventoryItemResponse,
             applyMergeInventoryItemsResponse,

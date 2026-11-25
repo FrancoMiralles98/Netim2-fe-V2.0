@@ -125,12 +125,12 @@ export const STATUS_EFFECT_STATISTIC_CONFIG = {
     }
 } satisfies Record<ActiveStatusEffectId, FightStatisticVisualConfig>;
 
-export const SKILL_STATISTIC_COLOR_CLASSES = [
-    'bg-blue-500',
-    'bg-cyan-500',
-    'bg-indigo-500',
-    'bg-purple-500',
-    'bg-fuchsia-500'
+export const SKILL_STATISTIC_COLORS = [
+    { colorClass: 'bg-blue-500', textColorClass: 'text-blue-300' },
+    { colorClass: 'bg-cyan-500', textColorClass: 'text-cyan-300' },
+    { colorClass: 'bg-indigo-500', textColorClass: 'text-indigo-300' },
+    { colorClass: 'bg-purple-500', textColorClass: 'text-purple-300' },
+    { colorClass: 'bg-fuchsia-500', textColorClass: 'text-fuchsia-300' }
 ] as const;
 
 export const UNCLASSIFIED_STATISTIC_CONFIG = {

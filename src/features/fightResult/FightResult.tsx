@@ -1,11 +1,10 @@
 import { FightResultSummary } from "./FightResultSummary";
 import type { FighterFightSummary } from "./types/fighter-fight-summary.types";
-import type { CharacterFightResultResponse } from "netim2-shared";
-import { FightRewardsSummary } from "./components/FightRewardsSummary";
+import { FightRewardsSummary, type FightRewardsData } from "./components/FightRewardsSummary";
 
 export interface FightResultProps {
     summaries: FighterFightSummary[];
-    response?: CharacterFightResultResponse;
+    response?: FightRewardsData;
 }
 
 export const FightResult = ({

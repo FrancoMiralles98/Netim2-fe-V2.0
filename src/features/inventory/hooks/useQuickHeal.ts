@@ -61,7 +61,7 @@ export const useQuickHeal = () => {
         if (!character || pending.current) return;
         modal.showActionModal({
             title: "Curación rápida de vida y maná",
-            subTitle: "Esta acción usará las pociones de menor a mayor recuperación para restablecer toda tu vida y maná, según las pociones disponibles. Solo se consumirán para los recursos que necesites recuperar.",
+            subTitle: "Esta acción usará las pociones de menor a mayor recuperación para restablecer toda tu vida y maná. Solo se consumirán para los recursos que necesites recuperar.",
             acceptText: "Recuperar",
             onAccept: () => { void heal(character.id); },
         });

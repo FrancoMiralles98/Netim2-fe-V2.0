@@ -1,4 +1,5 @@
-import type { CharacterFightResultResponse } from "netim2-shared";
+import type { CharacterFightResultResponse, InitialFighterStats, PendingHistoryReward } from "netim2-shared";
+import { HistoryRewardItems } from "./HistoryRewardItems";
 import { useCharacterSession } from "../../characterSession/hooks/useCharacterSession";
 import { InventoryItemTooltip } from "../../inventory/components/InventoryItemTooltip";
 import { InventoryItemVisual } from "../../inventory/components/InventoryItemVisual";
@@ -6,7 +7,13 @@ import { INVENTORY_SLOT_SIZE } from "../../inventory/inventory.constants";
 
 const numberFormatter = new Intl.NumberFormat("es-AR");
 
-export const FightRewardsSummary = ({ response }: { response: CharacterFightResultResponse }) => {
+export type FightRewardsData = Pick<CharacterFightResultResponse, "result" | "yang" | "exp" | "items"> & {
+    initialFighters: Pick<InitialFighterStats, "fighterId" | "name" | "side">[];
+    historialId?: string;
+    pendingItems?: PendingHistoryReward[];
+};
+
+export const FightRewardsSummary = ({ response }: { response: FightRewardsData }) => {
     const { character } = useCharacterSession();
     const { result, initialFighters, yang, exp, items } = response;
     const winnerIds = result.winnerFighterIds?.length
@@ -46,7 +53,9 @@ export const FightRewardsSummary = ({ response }: { response: CharacterFightResu
                     ))}
                 </dl>
             </div>
-            {items.length > 0 && (
+            {items.length > 0 && response.historialId ? (
+                <HistoryRewardItems key={response.historialId} historialId={response.historialId} initialRewards={response.pendingItems} />
+            ) : items.length > 0 && (
                 <div className="mt-5 border-t border-amber-700/30 pt-4">
                     <h3 className="font-semibold text-amber-100">Ítems obtenidos</h3>
                     <p className="mt-1 text-xs text-slate-400">Pendientes de reclamar en el historial.</p>

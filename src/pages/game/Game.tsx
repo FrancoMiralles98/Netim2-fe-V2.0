@@ -5,10 +5,13 @@ import { RoutePanels } from "../../features/game/components/navigation/RoutePane
 import { CharacterSectionNav, type CharacterSection } from "../../features/game/components/navigation/CharacterSectionNav";
 import { CharacterSkillsPanel } from "../../features/game/components/skills/CharacterSkillsPanel";
 import { MissionJournal } from "../../features/game/components/missions/MissionJournal";
+import { Historial } from "../../features/game/components/historial/Historial";
 import { Explorar } from "../../features/explorar/Explorar";
 import { useGameGuard } from "../../features/game/hooks/useGame";
 import { useStartFight } from "../../features/fight/hooks/useStartFight";
 import { FightView } from "../../features/fight/FightView";
+import { useHistoryDetail } from "../../features/game/hooks/useHistoryDetail";
+import { HistoryFightResult } from "../../features/game/components/historial/HistoryFightResult";
 
 export const Game = () => {
     const [activeSection, setActiveSection] = useState<CharacterSection | "explorar">("perfil");
@@ -18,6 +21,7 @@ export const Game = () => {
         gameReady,
     } = useGameGuard();
     const { response: fight, startFight, isPending: isStartingFight, clearFight } = useStartFight(character?.id);
+    const { response: historyDetail, openDetail, closeDetail } = useHistoryDetail(character?.id);
     if (!gameReady || !character || !worldSessionId) {
         return null;
     }
@@ -27,7 +31,7 @@ export const Game = () => {
 
     return (
         <>
-        <div hidden={Boolean(fight)}>
+        <div hidden={Boolean(fight || historyDetail)}>
         <section
             id='bg'
             className={`min-h-[100dvh] bg-auto bg-top ${isExploring ? "overflow-x-clip" : "min-w-[1300px]"}`}
@@ -53,13 +57,16 @@ export const Game = () => {
                     {!fight && activeSection === "misiones" && (
                         <MissionJournal key={character.id} character={character} />
                     )}
+                    {!fight && activeSection === "historial" && (
+                        <Historial key={character.id} character={character} onDetail={historialId => void openDetail(historialId)} />
+                    )}
                     {(isExploring || fight) && (
                         <div hidden={Boolean(fight)}>
                             <Explorar
                                 key={character.id}
                                 reino={reino}
                                 isStartingFight={isStartingFight}
-                                onFight={(mob) => startFight({ idMob: mob.idMob, quantity: 1 })}
+                                onFight={(mob, quantity) => startFight({ idMob: mob.idMob, quantity })}
                             />
                         </div>
                     )}
@@ -75,6 +82,17 @@ export const Game = () => {
                     onBack={() => {
                         setActiveSection("explorar");
                         clearFight();
+                    }}
+                />
+            </div>
+        )}
+        {!fight && historyDetail && (
+            <div className="min-h-dvh w-full bg-[#0c0d10] pb-10">
+                <HistoryFightResult
+                    response={historyDetail}
+                    onBack={() => {
+                        setActiveSection("historial");
+                        closeDetail();
                     }}
                 />
             </div>

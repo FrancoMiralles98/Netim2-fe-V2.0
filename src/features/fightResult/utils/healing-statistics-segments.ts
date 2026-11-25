@@ -2,7 +2,7 @@ import type { HealingStatistics } from "netim2-shared";
 import {
     HEALING_PREVENTED_STATISTIC_CONFIG,
     HEALING_SOURCE_STATISTIC_CONFIG,
-    SKILL_STATISTIC_COLOR_CLASSES
+    SKILL_STATISTIC_COLORS
 } from "../config/fight-statistics-visual-config";
 import type { StatisticsBarSegment } from "../types/statistics-bar.types";
 import type { FighterFightSummarySkill } from "../types/fighter-fight-summary.types";
@@ -43,10 +43,7 @@ export const getSkillHealingSegments = (
         key: String(skill.idSkill),
         value: skill.amount,
         ...getSkillStatisticVisual(skill.idSkill, skills),
-        colorClass:
-            SKILL_STATISTIC_COLOR_CLASSES[
-                index % SKILL_STATISTIC_COLOR_CLASSES.length
-            ]
+        ...SKILL_STATISTIC_COLORS[index % SKILL_STATISTIC_COLORS.length]
     })
 );
 

@@ -1,11 +1,14 @@
-import type { CharacterSession, InventoryItem, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
+import type { CharacterSession, InventoryItem, QuickHealResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
 
 export const applyPotionUseResponseToCharacter = (
     character: CharacterSession,
-    response: UsePotionResponse | UseReservePotionResponse,
+    response: UsePotionResponse | UseReservePotionResponse | QuickHealResponse,
 ): CharacterSession => {
     const changes = new Map(response.updatedItems.map((change) => [change.id, change]));
     const updatedPotion = "updatedPotion" in response ? response.updatedPotion : null;
+    const updatedPotions = new Map(("updatedPotions" in response
+        ? response.updatedPotions
+        : updatedPotion ? [updatedPotion] : []).map(potion => [potion.id, potion]));
 
     const inventario = character.inventario.flatMap((item): InventoryItem[] => {
         const change = changes.get(item.id);
@@ -15,8 +18,9 @@ export const applyPotionUseResponseToCharacter = (
         if (change && item.type === "utility") {
             updatedItem = { ...item, cantidad: change.cantidad! };
         }
-        if (updatedPotion?.id === item.id && updatedItem.type === "utility" && updatedItem.type_utility === "poción" && updatedItem.potionType === "reserve") {
-            updatedItem = { ...updatedItem, resource: updatedPotion.resource, reserve: updatedPotion.reserve };
+        const reservePotion = updatedPotions.get(item.id);
+        if (reservePotion && updatedItem.type === "utility" && updatedItem.type_utility === "poción" && updatedItem.potionType === "reserve") {
+            updatedItem = { ...updatedItem, resource: reservePotion.resource, reserve: reservePotion.reserve };
         }
         return [updatedItem];
     });

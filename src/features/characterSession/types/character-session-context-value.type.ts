@@ -1,9 +1,15 @@
 import type { ApplyBuffResponse, BuyEquipmentSlotResponse, CharacterSession, CharacterSummary, DiscardInventoryItemResponse, EquipItemResponse, GameConfigResponse, IncreaseCharacterAttributeResponse, MergeInventoryItemsResponse, MoveInventoryItemResponse, OpenChestResponse, SelectEquipmentResponse, SplitInventoryItemResponse, UnequipItemResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
 import type { SessionEndReason } from "./session-end-reason.type";
+import type { QuickHealResponse } from "netim2-shared";
 import type { ClaimMissionResponse, SelectCharacterSpecialityResponse } from "netim2-shared";
+import type { CharacterFightResultResponse } from "netim2-shared";
+import type { ClaimCharacterHistoryRewardsResponse, ClaimHistoryRewardsResponse } from "netim2-shared";
 
 
 export interface CharacterSessionContextValue {
+    historyRewardClaims: Record<string, ClaimHistoryRewardsResponse>;
+    applyHistoryRewardsClaimResponse: (characterId: string, response: ClaimCharacterHistoryRewardsResponse) => void;
+    applyFightResultResponse: (characterId: string, response: CharacterFightResultResponse) => void;
     applySkillUpgradeResponse: (characterId: string, response: import("netim2-shared").UpgradeCharacterSkillResponse) => void;
     character: CharacterSession | null
     gameConfig: GameConfigResponse | null
@@ -19,7 +25,7 @@ export interface CharacterSessionContextValue {
     applyEquipmentSelectionResponse: (characterId: string, response: SelectEquipmentResponse) => void
     applyAttributeIncreaseResponse: (characterId: string, response: IncreaseCharacterAttributeResponse) => void
     applySpecialitySelectionResponse: (characterId: string, response: SelectCharacterSpecialityResponse) => void;
-    applyPotionUseResponse: (characterId: string, response: UsePotionResponse | UseReservePotionResponse) => void
+    applyPotionUseResponse: (characterId: string, response: UsePotionResponse | UseReservePotionResponse | QuickHealResponse) => void
     applyBuffResponse: (characterId: string, response: ApplyBuffResponse) => void
     applyChestResponse: (characterId: string, response: OpenChestResponse) => void
     applyMissionClaimResponse: (characterId: string, response: ClaimMissionResponse) => void

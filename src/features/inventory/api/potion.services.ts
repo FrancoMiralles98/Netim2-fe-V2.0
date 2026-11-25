@@ -1,7 +1,17 @@
-import type { UsePotionRequest, UsePotionResponse, UseReservePotionRequest, UseReservePotionResponse } from "netim2-shared";
+import type { QuickHealRequest, QuickHealResponse, UsePotionRequest, UsePotionResponse, UseReservePotionRequest, UseReservePotionResponse } from "netim2-shared";
 import { http } from "../../../api/http";
 import type { ApiResponse } from "../../../api/types/api-response.type";
 import { POTION_ROUTES } from "./potion.routes";
+
+export const quickHealRequest = async (
+    characterId: string,
+    body: QuickHealRequest,
+): Promise<QuickHealResponse> => {
+    const response = await http.post<ApiResponse<QuickHealResponse>>(
+        POTION_ROUTES.quickHeal(characterId), body,
+    );
+    return response.data.data;
+};
 
 export const activatePotionRequest = async (
     characterId: string,

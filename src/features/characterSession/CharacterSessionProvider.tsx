@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import type { CharacterFightResultResponse } from "netim2-shared";
+import type { ClaimCharacterHistoryRewardsResponse, ClaimHistoryRewardsResponse } from "netim2-shared";
 import { CharacterSessionContext } from "./context/character-session.context";
 import { useGameSocket } from "../../api/hooks/use-game-socket";
 import { useNavigate } from "react-router";
@@ -7,6 +9,7 @@ import { useModal } from "../../shared/modal/hooks/useModal";
 import type { ApplyBuffResponse, BuyEquipmentSlotResponse, CharacterSession, CharacterSummary, DiscardInventoryItemResponse, EquipItemResponse, GameConfigResponse, IncreaseCharacterAttributeResponse, MergeInventoryItemsResponse, MoveInventoryItemResponse, OpenChestResponse, RefreshBuffsResponse, SelectEquipmentResponse, SplitInventoryItemResponse, UnequipItemResponse, UsePotionResponse, UseReservePotionResponse } from "netim2-shared";
 import { applyEquipmentToCharacter, applyUnequipmentToCharacter } from "./utils/apply-equipment-response";
 import { applyPotionUseResponseToCharacter } from "./utils/apply-potion-use-response";
+import type { QuickHealResponse } from "netim2-shared";
 import { applySplitInventoryResponseToCharacter } from "./utils/apply-split-inventory-response";
 import { applyMergeInventoryResponseToCharacter } from "./utils/apply-merge-inventory-response";
 import { applyBuffResponseToCharacter } from "./utils/apply-buff-response";
@@ -20,6 +23,22 @@ import { applySpecialitySelectionToCharacter } from "./utils/apply-speciality-se
 export const CharacterSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const [character, setCharacter] = useState<CharacterSession | null>(null)
+    const [historyRewardClaims, setHistoryRewardClaims] = useState<Record<string, ClaimHistoryRewardsResponse>>({});
+
+    const applyHistoryRewardsClaimResponse = useCallback((characterId: string, response: ClaimCharacterHistoryRewardsResponse) => {
+        setCharacter(current => current?.id === characterId
+            ? applySplitInventoryResponseToCharacter(current, response)
+            : current);
+        setHistoryRewardClaims(current => ({
+            ...current,
+            [response.historialId]: {
+                historialId: response.historialId,
+                claimedRewardIds: response.claimedRewardIds,
+                pendingItems: response.pendingItems,
+                remainingReward: response.remainingReward,
+            },
+        }));
+    }, []);
     const applyMissionClaimResponse = useCallback((characterId: string, response: ClaimMissionResponse) => {
         const missionsInProgress = response.missionsInProgress.map(({ startedAt, expiresAt, completedAt, ...progress }) => ({
             ...progress,
@@ -195,7 +214,7 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             : current);
     }, []);
 
-    const applyPotionUseResponse = useCallback((characterId: string, response: UsePotionResponse | UseReservePotionResponse) => {
+    const applyPotionUseResponse = useCallback((characterId: string, response: UsePotionResponse | UseReservePotionResponse | QuickHealResponse) => {
         setCharacter((current) => current?.id === characterId
             ? applyPotionUseResponseToCharacter(current, response)
             : current);
@@ -204,6 +223,12 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
     const applyBuffResponse = useCallback((characterId: string, response: ApplyBuffResponse) => {
         setCharacter((current) => current?.id === characterId
             ? applyBuffResponseToCharacter(current, response)
+            : current);
+    }, []);
+
+    const applyFightResultResponse = useCallback((characterId: string, response: CharacterFightResultResponse) => {
+        setCharacter(current => current?.id === characterId
+            ? { ...current, ...response.character }
             : current);
     }, []);
 
@@ -304,6 +329,9 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyBuffResponse,
             applyChestResponse,
             applyMissionClaimResponse,
+            applyFightResultResponse,
+            applyHistoryRewardsClaimResponse,
+            historyRewardClaims,
             runCharacterMutation,
             applySplitInventoryItemResponse,
             applyMergeInventoryItemsResponse,

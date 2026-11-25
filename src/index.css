@@ -173,44 +173,32 @@
 @keyframes fight-damage-number {
   0% {
     opacity: 1;
-    transform: translate(-50%, -25%) scale(1);
+    transform: translate(-50%, -25%);
   }
 
-  50% {
+  80% {
     opacity: 1;
-    transform: translate(-50%, -60px) scale(1.05);
-  }
-
-  90% {
-    opacity: 1;
-    transform: translate(-50%, -80px) scale(1);
   }
 
   100% {
     opacity: 0;
-    transform: translate(-50%, -90px) scale(0.95);
+    transform: translate(-50%, calc(-25% - 90px));
   }
 }
 
 @keyframes fight-resource-number {
   0% {
     opacity: 1;
-    transform: translate(-50%, -25%) scale(1);
+    transform: translate(-50%, -25%);
   }
 
-  50% {
+  80% {
     opacity: 1;
-    transform: translate(-50%, -60px) scale(1.05);
-  }
-
-  90% {
-    opacity: 1;
-    transform: translate(-50%, -80px) scale(1);
   }
 
   100% {
     opacity: 0;
-    transform: translate(-50%, -90px) scale(0.95);
+    transform: translate(-50%, calc(-25% - 90px));
   }
 }
 

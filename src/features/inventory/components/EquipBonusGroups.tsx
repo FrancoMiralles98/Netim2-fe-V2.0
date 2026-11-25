@@ -53,7 +53,7 @@ export const ImplicitBonuses = ({ bonuses }: BonusGroupProps) => (
 );
 
 export const RandomImplicitBonuses = ({ bonuses }: BonusGroupProps) => (
-    <BonusGroup bonuses={bonuses} color={implicitColor} />
+    <BonusGroup bonuses={bonuses} color="text-cyan-200/75" />
 );
 
 export const CorruptImplicitBonuses = ({ bonuses }: BonusGroupProps) => (

@@ -1,12 +1,15 @@
 import { FightResultSummary } from "./FightResultSummary";
 import type { FighterFightSummary } from "./types/fighter-fight-summary.types";
+import { FightRewardsSummary, type FightRewardsData } from "./components/FightRewardsSummary";
 
 export interface FightResultProps {
     summaries: FighterFightSummary[];
+    response?: FightRewardsData;
 }
 
 export const FightResult = ({
-    summaries
+    summaries,
+    response,
 }: FightResultProps) => (
     <main
         className="
@@ -26,6 +29,7 @@ export const FightResult = ({
             </p>
         </header>
 
+        {response && <FightRewardsSummary response={response} />}
         <FightResultSummary fighters={summaries} />
     </main>
 );

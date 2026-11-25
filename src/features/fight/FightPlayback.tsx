@@ -120,6 +120,11 @@ export const FightPlayback = ({ response, onFinishFight, skillEffectModes }: Fig
                 "
             >
                 Turno {playback.currentTurn}
+                {playback.hitSequence && playback.hitSequence.current > 0 && (
+                    <span className="ml-3 text-sm text-amber-200">
+                        Golpe {playback.hitSequence.current}/{playback.hitSequence.total}
+                    </span>
+                )}
             </div>
 
             {/* CAMPO DE BATALLA */}
@@ -197,6 +202,7 @@ export const FightPlayback = ({ response, onFinishFight, skillEffectModes }: Fig
                                             ? playback.currentAction
                                             : undefined
                                     }
+                                    hitVisuals={playback.hitVisuals}
                                     animation={
                                         playback.animation
                                     }
@@ -266,6 +272,7 @@ export const FightPlayback = ({ response, onFinishFight, skillEffectModes }: Fig
                                             ? playback.currentAction
                                             : undefined
                                     }
+                                    hitVisuals={playback.hitVisuals}
                                     animation={
                                         playback.animation
                                     }

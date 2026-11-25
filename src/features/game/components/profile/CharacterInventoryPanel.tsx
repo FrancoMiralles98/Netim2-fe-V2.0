@@ -2,9 +2,11 @@ import type { CharacterSession } from "netim2-shared";
 import { Inventory } from "../../../inventory/Inventory";
 import { useCharacterSession } from "../../../characterSession/hooks/useCharacterSession";
 import { AppliedBuffTooltip } from "./AppliedBuffTooltip";
+import { useQuickHeal } from "../../../inventory/hooks/useQuickHeal";
 
 export const CharacterInventoryPanel = ({ character }: { character: CharacterSession }) => {
     const { gameConfig } = useCharacterSession();
+    const { confirmQuickHeal, isPending } = useQuickHeal();
 
     return (
     <div className="h-full w-full bg-[url('/game/marco-inventario-horizontal.png')] bg-[length:100%_100%] bg-no-repeat font-sans">
@@ -12,6 +14,16 @@ export const CharacterInventoryPanel = ({ character }: { character: CharacterSes
             <h2 className="text-[17px] mt-3 font-semibold text-[#e9cf99] [text-shadow:0_1px_2px_#000]">
                 Inventario
             </h2>
+            <button
+                type="button"
+                onClick={confirmQuickHeal}
+                disabled={isPending}
+                aria-label="Curación rápida de vida y maná"
+                title="Curación rápida de vida y maná"
+                className="mt-3 ml-2 size-7 shrink-0 cursor-pointer rounded hover:brightness-125 focus-visible:outline-2 focus-visible:outline-amber-200 disabled:cursor-wait disabled:opacity-50"
+            >
+                <img src="/utils/auto-potion.png" alt="" className="size-full object-contain" />
+            </button>
         </div>
         <div className="ml-[3%] mt-2 flex h-[192px] w-[94%] min-w-0">
             <Inventory items={character.inventario} character={character} />

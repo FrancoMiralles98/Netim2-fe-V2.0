@@ -6,7 +6,8 @@ import { ExpandedFighterCard } from "./ExpandedFighterCard";
 import { CompactFighterCard } from "./CompactFighterCard";
 import type { CombatAction } from "netim2-shared";
 import { FightActionIndicator } from "../animations/components/FightActionIndicator";
-import type { FightAnimationState } from "../animations/animations.types";
+import type { FightAnimationState, HitVisual } from "../animations/animations.types";
+import { HitVisualLayer } from "./components/HitVisualLayer";
 import { getFighterAnimationVisualState, getFighterCardAnimationClass } from "../utils/get-visual-animation.helper";
 import { CombatFloatingValue } from "./components/CombatFloatingValue";
 import type { FightPlaybackSpeed } from "../animations/use-fight-play-back.type";
@@ -21,6 +22,7 @@ export interface FightFighterCardProps {
     selectedAction?: CombatAction;
 
     animation?: FightAnimationState;
+    hitVisuals?: HitVisual[];
     message?: string;
     speed: FightPlaybackSpeed
     paused?: boolean;
@@ -33,6 +35,7 @@ export const FightFighterCard = ({
     isCurrentTarget = false,
     selectedAction,
     animation,
+    hitVisuals = [],
     message,
     speed,
     paused = false,
@@ -42,10 +45,10 @@ export const FightFighterCard = ({
 
     const animationVariables = {
         '--fight-damage-duration':
-            `${1300 / speed}ms`,
+            `${1000 / speed}ms`,
 
         '--fight-resource-duration':
-            `${1300 / speed}ms`,
+            `${1000 / speed}ms`,
 
         '--fight-hit-duration':
             `${400 / speed}ms`,
@@ -117,6 +120,7 @@ export const FightFighterCard = ({
         >
 
             <FightAuraEffects fighter={fighter} paused={paused} speed={speed} />
+            <HitVisualLayer visuals={hitVisuals} fighterId={fighter.fighterId} paused={paused} speed={speed} />
 
             {message && (
                 <div
@@ -143,6 +147,7 @@ export const FightFighterCard = ({
                 <CombatFloatingValue
                     key={floatingAnimation.id}
                     animation={floatingAnimation}
+                    paused={paused}
                 />
             )}
 

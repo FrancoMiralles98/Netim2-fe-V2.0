@@ -5,12 +5,13 @@ import { getMobInfoRequest } from "./api/explore.services";
 import { MobGeneralStatsPanel } from "./MobGeneralStatsPanel";
 import { MobBonusPanel } from "./MobBonusPanel";
 import { MobDropsPanel } from "./MobDropsPanel";
+import { FightQuantityModal } from "./FightQuantityModal";
 import "./mob-info-modal.css";
 
 interface MobInfoModalProps {
     mob: MobSummary;
     onClose: () => void;
-    onFight: () => void;
+    onFight: (quantity: number) => void;
     isStartingFight: boolean;
 }
 
@@ -35,6 +36,7 @@ export const MobInfoModal = ({ mob, onClose, onFight, isStartingFight }: MobInfo
     const [state, setState] = useState<MobInfoState>({ status: "loading" });
     const [attempt, setAttempt] = useState(0);
     const [imageMissing, setImageMissing] = useState(false);
+    const [isChoosingQuantity, setIsChoosingQuantity] = useState(false);
     const [activeView, setActiveView] = useState<typeof detailViews[number]>("Stats");
 
     useEffect(() => {
@@ -170,14 +172,26 @@ export const MobInfoModal = ({ mob, onClose, onFight, isStartingFight }: MobInfo
                 </div>
                 <button
                     type="button"
-                    onClick={onFight}
-                    disabled={isStartingFight || state.status !== "ready"}
+                    onClick={() => setIsChoosingQuantity(true)}
+                    disabled={isStartingFight || state.status !== "ready" || !info || info.maxQuantitySpawn < 1}
                     aria-busy={isStartingFight}
                     className="mob-fight-button absolute bottom-[3.5%] left-1/2 z-10 aspect-[250/76] w-[25%] max-w-[250px] -translate-x-1/2 cursor-pointer bg-[url('/utils/explorar/boton-pelea.png')] bg-contain bg-center bg-no-repeat font-metin text-sm font-semibold text-amber-100 [text-shadow:0_1px_3px_#000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-200 disabled:cursor-wait disabled:opacity-60 sm:text-xl"
                 >
                     Pelear
                 </button>
             </div>
+            {isChoosingQuantity && info && (
+                <FightQuantityModal
+                    mobName={info.nombre}
+                    maxQuantity={info.maxQuantitySpawn}
+                    onClose={() => setIsChoosingQuantity(false)}
+                    onConfirm={(quantity) => {
+                        if (isStartingFight || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > info.maxQuantitySpawn) return;
+                        setIsChoosingQuantity(false);
+                        onFight(quantity);
+                    }}
+                />
+            )}
         </dialog>
     );
 };

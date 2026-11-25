@@ -1,6 +1,6 @@
 import type { ReinosNames } from "netim2-shared";
 
-export type CharacterSection = "perfil" | "habilidades" | "misiones";
+export type CharacterSection = "perfil" | "habilidades" | "misiones" | "historial";
 
 interface CharacterSectionNavProps {
     reino: ReinosNames | null;
@@ -25,7 +25,7 @@ export const CharacterSectionNav = ({ reino, activeSection, onSelectSection }: C
                 <button type="button" onClick={() => onSelectSection("perfil")} aria-pressed={activeSection === "perfil"} className="cursor-pointer hover:text-white">Perfil</button>
                 <button type="button" onClick={() => onSelectSection("habilidades")} aria-pressed={activeSection === "habilidades"} className="cursor-pointer hover:text-white">Habilidades</button>
                 <button type="button" onClick={() => onSelectSection("misiones")} aria-pressed={activeSection === "misiones"} className="cursor-pointer hover:text-white">Misiones</button>
-                <span>Historial</span>
+                <button type="button" onClick={() => onSelectSection("historial")} aria-pressed={activeSection === "historial"} className="cursor-pointer hover:text-white">Historial</button>
             </div>
         </nav>
     );

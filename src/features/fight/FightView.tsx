@@ -4,7 +4,7 @@ import {
     type FighterFightSummary
 } from "../fightResult/FightResult";
 import { FightTest } from "./FightTest";
-import type { FightResponse } from "netim2-shared";
+import type { CharacterFightResultResponse } from "netim2-shared";
 import { FightPlayback } from "./FightPlayback";
 
 export type FightViewPhase = 'fight' | 'result';
@@ -18,7 +18,7 @@ type FightViewState =
         fightSummary: FighterFightSummary[];
     };
 
-export const FightView = ({ response, onBack }: { response?: FightResponse; onBack?: () => void }) => {
+export const FightView = ({ response, onBack }: { response?: CharacterFightResultResponse; onBack?: () => void }) => {
     const [view, setView] =
         useState<FightViewState>({
             phase: 'fight'
@@ -41,7 +41,7 @@ export const FightView = ({ response, onBack }: { response?: FightResponse; onBa
                         Volver a la zona
                     </button>
                 )}
-                <FightResult summaries={view.fightSummary} />
+                <FightResult summaries={view.fightSummary} response={response} />
             </>
         );
     }

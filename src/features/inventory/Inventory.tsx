@@ -23,6 +23,11 @@ const INVENTORY_SLOTS = Array.from(
 );
 
 interface InventoryProps {
+    onForge?: (item: Extract<InventoryItem, { type: "equip" }>) => Promise<void>;
+    hiddenItemIds?: readonly string[];
+    onSell?: (item: InventoryItem, quantity: number) => Promise<void>;
+    quickSale?: boolean;
+    isShopPending?: boolean;
     items: InventoryItem[];
     character: Pick<CharacterSession, "id" | "lv" | "raza" | "buffos" | "stats" | "inventario">;
 }
@@ -60,7 +65,7 @@ const getItemAtSlot = (items: InventoryItem[], slot: HoveredSlot) => items.find(
     && slot.col < item.position.col + item.size.cols,
 );
 
-export const Inventory = ({ items, character }: InventoryProps) => {
+export const Inventory = ({ items, character, onSell, onForge, hiddenItemIds = [], quickSale = false, isShopPending = false }: InventoryProps) => {
     const { moveItem, splitItem, mergeItems, discardItem, isPending: isInventoryPending } = useInventoryActions(character);
     const modal = useModal();
     const { equipItem, isPending: isEquipPending } = useEquipmentActions(character);
@@ -68,9 +73,9 @@ export const Inventory = ({ items, character }: InventoryProps) => {
     const { applyBuff, isPending: isBuffPending } = useBuffActions(character);
     const { openRandomChest, openAllChest, openManyChests, loadPickChest, claimPickedItems, pickSelection, dismissPickSelection, reveal, onRevealStopped, dismissReveal, isPending: isChestPending } = useChestActions(character);
     const { gameConfig } = useCharacterSession();
-    const isPending = isInventoryPending || isEquipPending || isPotionPending || isBuffPending || isChestPending;
+    const isPending = isInventoryPending || isEquipPending || isPotionPending || isBuffPending || isChestPending || isShopPending;
     const [activeMenuItemId, setActiveMenuItemId] = useState<string | null>(null);
-    const [quantitySelection, setQuantitySelection] = useState<{ itemId: string; action: "use" | "split" | "openBulk" } | null>(null);
+    const [quantitySelection, setQuantitySelection] = useState<{ itemId: string; action: "use" | "split" | "openBulk" | "sell" } | null>(null);
     const [movingItemId, setMovingItemId] = useState<string | null>(null);
     const [mergingItemId, setMergingItemId] = useState<string | null>(null);
     const [hoveredSlot, setHoveredSlot] = useState<HoveredSlot | null>(null);
@@ -142,7 +147,7 @@ export const Inventory = ({ items, character }: InventoryProps) => {
                     />
                 ))}
             </div>
-            {items.filter(isItemWithinInventory).map((item) => (
+            {items.filter(item => isItemWithinInventory(item) && !hiddenItemIds.includes(item.id)).map((item) => (
                 <InventoryItemSlot
                     key={item.id}
                     item={item}
@@ -230,6 +235,27 @@ export const Inventory = ({ items, character }: InventoryProps) => {
                         setHoveredSlot(null);
                         setMergingItemId(item.id);
                     } : undefined}
+                    onForge={onForge && item.type === "equip" && item.upgradeLv < 9 && item.upgradeLv < item.upgradeMax ? () => {
+                        if (isPending) return;
+                        setActiveMenuItemId(null);
+                        void onForge(item);
+                    } : undefined}
+                    onSell={onSell ? () => {
+                        if (isPending) return;
+                        setActiveMenuItemId(null);
+                        if (quickSale) {
+                            void onSell(item, item.type === "utility" ? item.cantidad : 1);
+                        } else if (item.type === "utility" && item.maxCantidad > 1) {
+                            setQuantitySelection({ itemId: item.id, action: "sell" });
+                        } else {
+                            modal.showActionModal({
+                                title: "¿Seguro que querés vender este ítem?",
+                                subTitle: `${item.name}${item.type === "equip" ? ` +${item.upgradeLv}` : ""} por ${new Intl.NumberFormat("es-AR").format(item.price)} yang.`,
+                                acceptText: "Vender",
+                                onAccept: () => onSell(item, 1),
+                            });
+                        }
+                    } : undefined}
                     onDiscard={() => {
                         if (isPending) return;
                         setActiveMenuItemId(null);
@@ -247,6 +273,12 @@ export const Inventory = ({ items, character }: InventoryProps) => {
                     onCloseQuantity={() => setQuantitySelection(null)}
                     onConfirmQuantity={(quantity) => {
                         if (isPending || item.type !== "utility" || !Number.isSafeInteger(quantity)) return;
+                        if (quantitySelection?.action === "sell") {
+                            if (!onSell || quantity < 1 || quantity > item.cantidad) return;
+                            setQuantitySelection(null);
+                            void onSell(item, quantity);
+                            return;
+                        }
                         if (quantitySelection?.action === "split") {
                             if (!item.acc || item.maxCantidad <= 1 || quantity < 1 || quantity >= item.cantidad) return;
                             setQuantitySelection(null);

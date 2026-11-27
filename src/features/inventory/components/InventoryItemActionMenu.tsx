@@ -13,6 +13,8 @@ interface InventoryItemActionMenuProps {
     onSplit?: () => void;
     onMerge?: () => void;
     onDiscard?: () => void;
+    onSell?: () => void;
+    onForge?: () => void;
     splitDisabled?: boolean;
     openBulkDisabled?: boolean;
 }
@@ -22,7 +24,7 @@ interface MenuPosition {
     left: number;
 }
 
-export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip, onUnequip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, splitDisabled = false, openBulkDisabled = false }: InventoryItemActionMenuProps) => {
+export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip, onUnequip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, onSell, onForge, splitDisabled = false, openBulkDisabled = false }: InventoryItemActionMenuProps) => {
     const menuRef = useRef<HTMLDivElement>(null);
     const hasFocusedRef = useRef(false);
     const [position, setPosition] = useState<MenuPosition | null>(null);
@@ -173,6 +175,16 @@ export const InventoryItemActionMenu = ({ anchorRef, onClose, onMove, onEquip, o
                     onClick={onMerge}
                 >
                     Agrupar
+                </button>
+            )}
+            {onForge && (
+                <button type="button" role="menuitem" className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left text-amber-200 hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none" onClick={onForge}>
+                    Colocar en forja
+                </button>
+            )}
+            {onSell && (
+                <button type="button" role="menuitem" className="block w-full cursor-pointer rounded-sm px-3 py-1.5 text-left text-amber-200 hover:bg-[#8e683b]/30 focus-visible:bg-[#8e683b]/30 focus-visible:outline-none" onClick={onSell}>
+                    Vender
                 </button>
             )}
             {onDiscard && (

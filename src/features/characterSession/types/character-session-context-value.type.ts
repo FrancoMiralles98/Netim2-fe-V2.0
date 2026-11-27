@@ -4,9 +4,12 @@ import type { QuickHealResponse } from "netim2-shared";
 import type { ClaimMissionResponse, SelectCharacterSpecialityResponse } from "netim2-shared";
 import type { CharacterFightResultResponse } from "netim2-shared";
 import type { ClaimCharacterHistoryRewardsResponse, ClaimHistoryRewardsResponse } from "netim2-shared";
+import type { BuyShopItemResponse, SellShopItemResponse } from "netim2-shared";
 
 
 export interface CharacterSessionContextValue {
+    applyShopSaleResponse: (characterId: string, response: SellShopItemResponse) => void;
+    applyShopPurchaseResponse: (characterId: string, response: BuyShopItemResponse) => void;
     historyRewardClaims: Record<string, ClaimHistoryRewardsResponse>;
     applyHistoryRewardsClaimResponse: (characterId: string, response: ClaimCharacterHistoryRewardsResponse) => void;
     applyFightResultResponse: (characterId: string, response: CharacterFightResultResponse) => void;

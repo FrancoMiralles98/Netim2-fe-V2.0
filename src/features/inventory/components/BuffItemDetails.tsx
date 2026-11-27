@@ -2,7 +2,7 @@ import type { BuffType } from "netim2-shared";
 import { CorruptImplicitBonuses, ImplicitBonuses } from "./EquipBonusGroups";
 import { ItemStockAndPrice } from "./ItemStockAndPrice";
 
-export const BuffItemDetails = ({ item }: { item: BuffType }) => (
+export const BuffItemDetails = ({ item, showPrice = true, showStock = true }: { item: BuffType; showPrice?: boolean; showStock?: boolean }) => (
     <section className="w-[200px] max-w-[calc(100vw-48px)] p-1 text-center">
         <h3 className="text-[14px] font-medium text-white">{item.name}</h3>
         <p className="mt-1 text-[11px] text-gray-200">Tipo de Buff: <span className="text-emerald-200">{item.idBuff}</span></p>
@@ -19,6 +19,6 @@ export const BuffItemDetails = ({ item }: { item: BuffType }) => (
             <p>{item.duration} {item.duration === 1 ? "minuto" : "minutos"}.</p>
         </div>
 
-        <ItemStockAndPrice item={item} />
+        <ItemStockAndPrice item={item} showPrice={showPrice} showStock={showStock} />
     </section>
 );

@@ -1,0 +1,161 @@
+.forge-success-chance {
+    --ink-primary: #267a4c;
+    --ink-secondary: #16464b;
+    --ink-highlight: #7c9651;
+    --chance-color: #e2ffcb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin: 0;
+    min-height: 0;
+    height: 100%;
+    transform: translateY(-15px);
+}
+.forge-success-chance[data-tone="medium"] {
+    --ink-primary: #b56522;
+    --ink-secondary: #7c342b;
+    --ink-highlight: #c9a34d;
+    --chance-color: #fff0c5;
+}
+.forge-success-chance[data-tone="low"] {
+    --ink-primary: #9a283f;
+    --ink-secondary: #542c77;
+    --ink-highlight: #bd4a4e;
+    --chance-color: #ffe0ea;
+}
+.forge-success-chance__label {
+    color: #ead8b5;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+}
+.forge-success-chance__value {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 76%;
+    height: 100%;
+    max-height: 80px;
+}
+.forge-success-chance__brush {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: .9;
+    transform: scale(.85);
+}
+.forge-success-chance__value strong {
+    color: var(--chance-color);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: -2px;
+    white-space: nowrap;
+    text-shadow: 0 2px 3px #000, 0 0 8px #0008;
+}
+.forge-success-chance__value strong span { font-size: .58em; margin-left: 3px; }
+
+.forge-current-item,
+.forge-next-item {
+    position: absolute;
+    left: 48%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-family: var(--font-sans);
+    filter: drop-shadow(0 0 7px #ff9b3355);
+}
+.forge-current-item { bottom: 54%; }
+.forge-next-item { bottom: 80%; filter: drop-shadow(0 0 9px #ffd47a66); }
+.forge-upgrade-arrow {
+    position: absolute;
+    top: 23%;
+    left: 48%;
+    width: 23px;
+    height: 10%;
+    transform: translateX(-50%);
+    background: linear-gradient(to top, #9c481c66, #ffbb51 65%, #ffe7a5);
+    clip-path: polygon(50% 0, 100% 35%, 65% 35%, 65% 100%, 35% 100%, 35% 35%, 0 35%);
+}
+.forge-preview-details {
+    position: absolute;
+    top: 12%;
+    right: 4.5%;
+    width: 28%;
+    height: 46%;
+    display: grid;
+    grid-template-rows: 20px 60px minmax(0, 1fr) 52px 31px;
+    gap: 6px;
+    padding: 5px 6px;
+    color: #eadfca;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    text-shadow: 0 1px 2px #000;
+}
+
+.forge-preview-materials {
+    display: flex;
+    min-height: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.herrero-anvil-glow {
+    position: absolute;
+    top: 46%;
+    left: 36%;
+    width: 24%;
+    height: 15%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    background: radial-gradient(ellipse at 50% 66%, #ff8a254a 0%, #f6501430 22%, #e2471014 45%, transparent 72%);
+    transform-origin: 50% 70%;
+    animation: herrero-firelight 3.4s ease-in-out infinite;
+}
+
+.herrero-anvil-glow::before,
+.herrero-anvil-glow::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+}
+
+.herrero-anvil-glow::before {
+    inset: 39% 19% 5%;
+    background: radial-gradient(ellipse at 50% 46%, #fff0a6b3 0%, #ffb63894 13%, #ff671c61 30%, #ff390c1c 52%, transparent 73%);
+    filter: blur(3px);
+    animation: herrero-embers 2.3s ease-in-out infinite;
+}
+
+.herrero-anvil-glow::after {
+    left: -5%;
+    right: -5%;
+    top: 67%;
+    height: 30%;
+    background: radial-gradient(ellipse, #ff9b354d 0%, #ff4e132b 35%, transparent 72%);
+    filter: blur(5px);
+}
+
+@keyframes herrero-firelight {
+    0%, 100% { opacity: .55; transform: scale(.96); }
+    38% { opacity: .92; transform: scale(1.025); }
+    56% { opacity: .76; transform: scale(1); }
+    73% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes herrero-embers {
+    0%, 100% { opacity: .65; }
+    28% { opacity: 1; }
+    47% { opacity: .72; }
+    68% { opacity: .94; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .herrero-anvil-glow,
+    .herrero-anvil-glow::before { animation: none; }
+}

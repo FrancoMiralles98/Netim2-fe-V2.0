@@ -18,15 +18,17 @@ interface InventoryItemSlotProps {
     onSplit?: () => void;
     onMerge?: () => void;
     onDiscard?: () => void;
+    onSell?: () => void;
+    onForge?: () => void;
     splitDisabled?: boolean;
     openBulkDisabled?: boolean;
     quantityOpen?: boolean;
-    quantityAction?: "use" | "split" | "openBulk";
+    quantityAction?: "use" | "split" | "openBulk" | "sell";
     onConfirmQuantity?: (quantity: number) => void;
     onCloseQuantity?: () => void;
 }
 
-export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove, onEquip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, splitDisabled, openBulkDisabled, quantityOpen, quantityAction, onConfirmQuantity, onCloseQuantity }: InventoryItemSlotProps) => {
+export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, onToggleMenu, onCloseMenu, onMove, onEquip, onUse, onOpen, onOpenBulk, onSplit, onMerge, onDiscard, onSell, onForge, splitDisabled, openBulkDisabled, quantityOpen, quantityAction, onConfirmQuantity, onCloseQuantity }: InventoryItemSlotProps) => {
 
     return (
         <div
@@ -53,6 +55,8 @@ export const InventoryItemSlot = ({ item, character, menuOpen, suppressTooltip, 
                 onSplit={onSplit}
                 onMerge={onMerge}
                 onDiscard={onDiscard}
+                onSell={onSell}
+                onForge={onForge}
                 splitDisabled={splitDisabled}
                 openBulkDisabled={openBulkDisabled}
                 quantityOpen={quantityOpen}

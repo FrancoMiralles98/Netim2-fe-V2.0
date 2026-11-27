@@ -18,9 +18,9 @@ export const ItemPrice = ({ item }: { item: Pick<UtilityType, "cantidad" | "pric
     </p>
 );
 
-export const ItemStockAndPrice = ({ item }: { item: Pick<UtilityType, "cantidad" | "maxCantidad" | "price"> }) => (
+export const ItemStockAndPrice = ({ item, showPrice = true, showStock = true }: { item: Pick<UtilityType, "cantidad" | "maxCantidad" | "price">; showPrice?: boolean; showStock?: boolean }) => (
     <>
-        <ItemStock item={item} />
-        <ItemPrice item={item} />
+        {showStock && <ItemStock item={item} />}
+        {showPrice && <ItemPrice item={item} />}
     </>
 );

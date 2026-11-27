@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { CharacterFightResultResponse } from "netim2-shared";
+import type { BuyShopItemResponse, SellShopItemResponse } from "netim2-shared";
 import type { ClaimCharacterHistoryRewardsResponse, ClaimHistoryRewardsResponse } from "netim2-shared";
 import { CharacterSessionContext } from "./context/character-session.context";
 import { useGameSocket } from "../../api/hooks/use-game-socket";
@@ -23,6 +24,18 @@ import { applySpecialitySelectionToCharacter } from "./utils/apply-speciality-se
 export const CharacterSessionProvider = ({ children }: { children: ReactNode }) => {
 
     const [character, setCharacter] = useState<CharacterSession | null>(null)
+    const applyShopSaleResponse = useCallback((characterId: string, response: SellShopItemResponse) => {
+        setCharacter(current => current?.id === characterId ? {
+            ...applyMergeInventoryResponseToCharacter(current, response),
+            yang: response.yang,
+        } : current);
+    }, []);
+    const applyShopPurchaseResponse = useCallback((characterId: string, response: BuyShopItemResponse) => {
+        setCharacter(current => current?.id === characterId ? {
+            ...applySplitInventoryResponseToCharacter(current, response),
+            yang: response.yang,
+        } : current);
+    }, []);
     const [historyRewardClaims, setHistoryRewardClaims] = useState<Record<string, ClaimHistoryRewardsResponse>>({});
 
     const applyHistoryRewardsClaimResponse = useCallback((characterId: string, response: ClaimCharacterHistoryRewardsResponse) => {
@@ -331,6 +344,8 @@ export const CharacterSessionProvider = ({ children }: { children: ReactNode }) 
             applyMissionClaimResponse,
             applyFightResultResponse,
             applyHistoryRewardsClaimResponse,
+            applyShopPurchaseResponse,
+            applyShopSaleResponse,
             historyRewardClaims,
             runCharacterMutation,
             applySplitInventoryItemResponse,

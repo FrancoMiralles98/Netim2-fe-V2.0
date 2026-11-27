@@ -1,0 +1,68 @@
+.forge-durability { display: flex; flex-direction: column; justify-content: center; margin: 0; padding: 0; transform: translateY(-25px); }
+.forge-durability__upgrade {
+    position: relative;
+    top: -3px;
+    isolation: isolate;
+    display: block;
+    width: 72%;
+    height: 31px;
+    margin: 0 auto;
+    padding: 0 12px;
+    border: 0;
+    clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+    background: linear-gradient(125deg, #eed2a0, #7c5939 25%, #bc9159 55%, #efd7b1 80%, #725035);
+    color: #f6e4bf;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    text-shadow: 0 2px 2px #000;
+    cursor: pointer;
+}
+.forge-durability__upgrade::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: -1;
+    clip-path: inherit;
+    background: radial-gradient(ellipse at 50% 100%, #a65a2538, transparent 75%), linear-gradient(#3c2b1c, #17120d 60%, #302016);
+    box-shadow: inset 0 1px 1px #f2d9a34d, inset 0 -1px 2px #000;
+}
+.forge-durability__upgrade:hover { filter: brightness(1.2); }
+.forge-durability__upgrade:active { filter: brightness(.95); }
+.forge-durability__upgrade:focus-visible { outline: none; background: #ffe0a0; }
+.forge-durability__heading { display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 8px; }
+.forge-durability__heading h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 15px; color: #e6cf9b; }
+.forge-durability__help { display: grid; place-items: center; width: 17px; height: 17px; border: 1px solid #806a48; border-radius: 50%; background: #17130e; color: #ab9672; font-family: Georgia, serif; font-size: 12px; line-height: 1; cursor: help; transition: color 160ms, border-color 160ms, box-shadow 160ms; }
+.forge-durability__help:hover,
+.forge-durability__help:focus-visible { color: #ffe6a0; border-color: #e8bb65; box-shadow: 0 0 7px #efb84488, inset 0 0 4px #f8cd642b; outline: none; }
+.forge-durability__bar { position: relative; isolation: isolate; height: 24px; overflow: hidden; border: 1px solid #ae824b; border-radius: 3px; background: #1d150d; box-shadow: 0 0 0 2px #100d09, inset 0 0 4px #000, 0 1px 4px #000; }
+.forge-durability__metal { position: absolute; inset: 2px; border-radius: 1px; background: repeating-linear-gradient(110deg, #fff3bc0a 0 1px, transparent 1px 6px), linear-gradient(#d7b56d, #a47636 24%, #be914c 45%, #8a5b28 72%, #c79a50); box-shadow: inset 0 1px 1px #ffe9a7aa, inset 0 -1px 2px #422407; }
+.forge-durability[data-durability="3"] .forge-durability__metal { animation: forge-metal-pulse 3.8s ease-in-out infinite; }
+.forge-durability[data-durability="2"] .forge-durability__metal { filter: saturate(.7) brightness(.8); animation: forge-metal-pulse 4.5s ease-in-out infinite; }
+.forge-durability[data-durability="1"] .forge-durability__metal { filter: saturate(.45) brightness(.58); }
+.forge-durability[data-durability="0"] .forge-durability__metal { filter: saturate(.12) brightness(.31); }
+.forge-durability[data-durability="0"] .forge-durability__bar { border-color: #514737; box-shadow: 0 0 0 2px #100d09, inset 0 0 5px #000; }
+.forge-durability__number { position: absolute; inset: 0; display: grid; place-items: center; z-index: 3; font-size: 11px; font-weight: 600; color: #fff0cc; text-shadow: 0 1px 2px #000, 0 0 3px #000; pointer-events: none; }
+.forge-durability[data-durability="0"] .forge-durability__number { color: #a49b8a; }
+.forge-durability__sweep { position: absolute; top: 0; bottom: 0; left: -15%; width: 12%; z-index: 1; background: linear-gradient(90deg, transparent, #fff7d29c 42%, #fff 52%, #fff6cd77 64%, transparent); transform: skewX(-22deg); animation: forge-durability-sweep 3.8s linear infinite; }
+.forge-durability__flare { position: absolute; top: -70%; bottom: -70%; right: -8%; width: 22%; z-index: 2; background: radial-gradient(ellipse, #fffce9dd 0%, #ffe8a36e 24%, transparent 65%); opacity: 0; animation: forge-durability-flare 3.8s ease-out infinite; }
+.forge-durability__cracks { position: absolute; inset: 2px; width: calc(100% - 4px); height: calc(100% - 4px); pointer-events: none; }
+.forge-durability__cracks path { fill: none; stroke-linejoin: bevel; stroke-linecap: square; vector-effect: non-scaling-stroke; }
+.forge-durability__fractures { stroke: #28190e; stroke-width: 1.2px; filter: drop-shadow(1px 0 0 #e9ba6438); }
+.forge-durability[data-durability="1"] .forge-durability__fractures { stroke: #1c140f; stroke-width: 1.7px; }
+.forge-durability[data-durability="0"] .forge-durability__fractures { stroke: #100d0a; stroke-width: 3px; }
+.forge-durability__embers { stroke: #ed722a; stroke-width: 1.2px; opacity: .85; filter: drop-shadow(0 0 2px #f47020); }
+.forge-durability__embers path { animation: forge-crack-embers 4.3s ease-in-out infinite; }
+.forge-durability__embers path:nth-child(2n) { animation-delay: -1.7s; }
+.forge-durability__embers path:nth-child(3n) { animation-delay: -2.8s; }
+@keyframes forge-metal-pulse { 0%, 100% { opacity: .84; } 50% { opacity: 1; } }
+@keyframes forge-durability-sweep { 0%, 12% { left: -15%; opacity: 0; } 15% { opacity: .9; } 65% { left: 103%; opacity: .9; } 67%, 100% { left: 110%; opacity: 0; } }
+@keyframes forge-durability-flare { 0%, 59% { opacity: 0; transform: scale(.8); } 66% { opacity: 1; transform: scale(1.15); } 83%, 100% { opacity: 0; transform: scale(.9); } }
+@keyframes forge-crack-embers { 0%, 100% { stroke-opacity: .1; } 44% { stroke-opacity: 1; } 62% { stroke-opacity: .35; } }
+@media (prefers-reduced-motion: reduce) {
+    .forge-durability .forge-durability__metal,
+    .forge-durability__sweep,
+    .forge-durability__flare,
+    .forge-durability__embers path { animation: none; }
+    .forge-durability__sweep,
+    .forge-durability__flare { display: none; }
+}

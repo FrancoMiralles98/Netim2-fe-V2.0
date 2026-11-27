@@ -21,7 +21,7 @@ export const InventoryItemVisual = ({ item, showIndicators = true }: { item: Ite
             {item.type === "equip" && item.upgradeLv === 7 && <ItemStaticSparkles variant="bronze" />}
             {showIndicators && item.type === "equip" && <EquipSlotIndicators slots={item.slot} filledSlots={item.piedras.length} />}
             {cornerLabel !== null && (
-                <span className="pointer-events-none absolute right-[2px] bottom-[1px] z-3 text-[11px] leading-none font-semibold text-white drop-shadow-[0_1px_2px_#000]">
+                <span className="pointer-events-none absolute right-[2px] bottom-[1px] z-3 font-sans text-[11px] leading-none font-semibold text-white drop-shadow-[0_1px_2px_#000]">
                     {cornerLabel}
                 </span>
             )}

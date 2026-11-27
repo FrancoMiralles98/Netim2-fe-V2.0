@@ -2,7 +2,7 @@ import type { PiedraType } from "netim2-shared";
 import { CorruptExplicitBonuses, ImplicitBonuses } from "./EquipBonusGroups";
 import { ItemStockAndPrice } from "./ItemStockAndPrice";
 
-export const StoneItemDetails = ({ item }: { item: PiedraType }) => (
+export const StoneItemDetails = ({ item, showPrice = true, showStock = true }: { item: PiedraType; showPrice?: boolean; showStock?: boolean }) => (
     <section className="w-[200px] max-w-[calc(100vw-48px)] p-1 text-center">
         <h3 className="text-[14px] font-medium text-white">{item.name} +{item.upgradeLv}</h3>
 
@@ -17,6 +17,6 @@ export const StoneItemDetails = ({ item }: { item: PiedraType }) => (
             Puede incrustarse en las ranuras del equipo para otorgar sus bonus.
         </p>
 
-        <ItemStockAndPrice item={item} />
+        <ItemStockAndPrice item={item} showPrice={showPrice} showStock={showStock} />
     </section>
 );

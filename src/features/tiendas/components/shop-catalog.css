@@ -1,0 +1,127 @@
+.shop-catalog {
+    position: absolute;
+    top: 11%;
+    right: 3%;
+    left: 33%;
+    height: 32%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #f2e4c7;
+    font-family: Georgia, "Times New Roman", serif;
+    text-shadow: 0 1px 2px #000;
+}
+
+.shop-catalog__filters {
+    display: flex;
+    flex-shrink: 0;
+    max-width: 100%;
+    width: 100%;
+    justify-content: safe center;
+    align-items: center;
+    gap: 3px;
+    min-height: 31px;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.shop-catalog__filter,
+.shop-purchase__buy {
+    --filter-shape: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+    position: relative;
+    isolation: isolate;
+    flex-shrink: 0;
+    min-width: 104px;
+    height: 29px;
+    padding: 0 15px;
+    border: 0;
+    background: linear-gradient(125deg, #d0a66b, #634424 25%, #967044 53%, #d1ac76 78%, #6f4928);
+    color: #eee2c8;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    clip-path: var(--filter-shape);
+}
+
+.shop-catalog__filter {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 5px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.shop-catalog__filter::before,
+.shop-catalog__filter::after,
+.shop-purchase__buy::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    clip-path: var(--filter-shape);
+}
+
+.shop-catalog__filter::before,
+.shop-purchase__buy::before {
+    inset: 1px;
+    background: #100b07;
+}
+
+.shop-catalog__filter::after,
+.shop-purchase__buy::after {
+    inset: 3px;
+    background: radial-gradient(ellipse at 50% 0, #54402b33, transparent 75%), linear-gradient(#17130e, #080706 65%, #1c140c);
+    box-shadow: inset 0 1px 1px #b28c5744, inset 0 -1px 1px #80552c66, inset 0 0 5px #000;
+}
+
+.shop-catalog__filter[aria-pressed="true"],
+.shop-purchase__buy {
+    background: linear-gradient(125deg, #f0ce89, #9a6836 26%, #d8ac65 55%, #f5d59a 80%, #a4743c);
+    color: #fff2d5;
+}
+
+.shop-catalog__filter[aria-pressed="true"]::after,
+.shop-purchase__buy::after {
+    background: radial-gradient(ellipse at 50% 20%, #b93d233d, transparent 70%), repeating-linear-gradient(135deg, #b43b1610 0 1px, transparent 1px 4px), linear-gradient(#641c10, #380a06 65%, #661b0b);
+    box-shadow: inset 0 1px 1px #f3c47177, inset 0 -1px 1px #bc7c3166, inset 0 0 5px #1e0402;
+}
+
+.shop-catalog__filter:hover,
+.shop-purchase__buy:hover { filter: brightness(1.25); }
+.shop-catalog__filter:focus-visible,
+.shop-purchase__buy:focus-visible { outline: 2px solid #f6d391; outline-offset: -5px; }
+.shop-catalog__grid { position: relative; flex-shrink: 0; }
+.shop-catalog__cells { display: grid; }
+.shop-catalog__cell {
+    width: 32px;
+    height: 32px;
+    background: url("/game/inventory/bg_item.png") no-repeat;
+}
+.shop-catalog__items { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.shop-catalog__item { position: absolute; z-index: 1; pointer-events: auto; }
+.shop-catalog__item:hover, .shop-catalog__item:focus-within {
+    z-index: 2;
+    background: #d0942820;
+    box-shadow: inset 0 0 0 1px #e8b354, 0 0 9px #e9ac3b99;
+}
+.shop-catalog__message {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    background: #100b07cc;
+    text-align: center;
+    font-size: 13px;
+}
+.shop-catalog__message p { margin: 0; }
+.shop-catalog__retry { border: 1px solid #a08354; padding: 3px 10px; background: #30190f; cursor: pointer; }
+.shop-catalog__pages { display: flex; align-items: center; gap: 12px; height: 18px; flex-shrink: 0; font-size: 11px; }
+.shop-catalog__pages button { padding: 0 7px; border: 1px solid #886139; color: #e7c78b; line-height: 15px; cursor: pointer; }
+.shop-catalog__pages button:disabled { opacity: .35; cursor: default; }

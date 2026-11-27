@@ -17,7 +17,7 @@ const getRestoredResources = (resources: ReservePotion["resource"]) => {
     return "recursos";
 };
 
-export const PotionItemDetails = ({ item }: { item: PocionType }) => (
+export const PotionItemDetails = ({ item, showPrice = true, showStock = true }: { item: PocionType; showPrice?: boolean; showStock?: boolean }) => (
     <section className="w-[200px] max-w-[calc(100vw-48px)] whitespace-normal break-words p-1 text-center">
         <h3 className="text-[14px] font-medium text-white">{item.name}</h3>
 
@@ -44,6 +44,6 @@ export const PotionItemDetails = ({ item }: { item: PocionType }) => (
             </div>
         )}
 
-        <ItemStockAndPrice item={item} />
+        <ItemStockAndPrice item={item} showPrice={showPrice} showStock={showStock} />
     </section>
 );

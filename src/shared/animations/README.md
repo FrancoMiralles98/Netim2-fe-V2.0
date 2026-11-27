@@ -2,6 +2,81 @@
 
 Guardar cada efecto reutilizable en su propia carpeta y exportarlo desde `index.ts`.
 
+## ItemUpgradeProtectedFailureEffect
+
+Final de fallo **sin rotura**: naranja con destello central blanco creciente,
+64 chispas naranjas que saltan en arcos y se apagan al caer, y recuperación
+gradual del color mientras el ítem baja. Termina visible e intacto.
+
+`ItemUpgradeProtectedFailureEffect` reproduce solo el final, desde el ítem
+blanco y elevado. Para continuar desde cualquier preparación existente, usá
+`result="protected-failure"` en el componente de nivel bajo, moderado o alto.
+`failure` conserva su significado anterior de fallo con rotura.
+
+Ver [uso, tiempos y propiedades](./item-upgrade-protected-failure/README.md).
+
+## ItemHighUpgradeEffect
+
+Variante para mejoras altas: elevación con vibración creciente, silueta
+blanca/dorada, remolino que envuelve el ítem y destellos entrantes que aceleran.
+El éxito emite una explosión de 58 destellos con tres ondas expansivas antes
+del descenso. El fallo reutiliza la rotura compartida. Permite esperar el
+resultado con `pending`, pausar y respetar movimiento reducido.
+
+Ver [uso, tiempos y propiedades](./item-high-upgrade/README.md).
+
+## ItemModerateUpgradeEffect
+
+Variante para mejoras moderadas: carga blanca/dorada, chispa central con un
+aro que vibra y crece, y selección de final mediante `result`. El éxito usa
+un destello dorado mayor y mini luces que salen del centro, permanecen
+brillando y se apagan mientras el ítem baja. El fallo reutiliza la rotura
+del nivel bajo sin cambios. Admite `pending`, pausa y movimiento reducido.
+
+Ver [uso, tiempos y propiedades](./item-moderate-upgrade/README.md).
+
+## ItemLowLevelUpgradeEffect / ItemLowLevelUpgradeFailureEffect
+
+La preparación de mejora de nivel bajo es compartida: el ítem se eleva, se
+vuelve blanco y recibe destellos. `ItemLowLevelUpgradeEffect` permite empezar
+con `result="pending"` y cambiarlo a `"success"` o `"failure"` sin reiniciar.
+Mientras espera, conserva el ítem blanco y elevado.
+
+- Éxito: destello blanco y descenso original, separados en `success-ending.ts`.
+- Fallo con rotura: rojo/anaranjado, cortes oscuros y fragmentación hasta
+  desaparecer, separados en `failure-ending.ts`.
+
+`ItemLowLevelUpgradeSuccessEffect` y `ItemLowLevelUpgradeFailureEffect` permiten
+reproducir un resultado ya conocido. La rotura no se usa para fallos protegidos
+que conservan el objeto. Ver [API compartida y ejemplos](./item-low-level-upgrade/README.md).
+
+## ItemLowLevelUpgradeSuccessEffect
+
+Animación del herrero para una **mejora exitosa de nivel bajo**: eleva el ítem, blanquea su silueta, atrae
+destellos, emite un flash blanco localizado y lo devuelve a su posición.
+Incluye la imagen y tiene fondo transparente. Dura 3550 ms por defecto y
+se reproduce una sola vez; una nueva `key` permite repetirla.
+
+```tsx
+import { ItemLowLevelUpgradeSuccessEffect } from "./shared/animations";
+
+<ItemLowLevelUpgradeSuccessEffect
+    key={successfulLowLevelUpgradeId}
+    src="/items/200.png"
+    alt="Arma mejorada con éxito en nivel bajo"
+    onComplete={handleVisualComplete}
+/>
+```
+
+Acepta tamaño, duración, elevación, activación, pausa y callback de finalización.
+Espera la carga de la imagen, suspende el reloj en pestañas ocultas y respeta
+movimiento reducido. Reproducir solo tras confirmar el éxito con el backend y
+clasificar la mejora como de nivel bajo; el rango lo define el consumidor.
+No modifica el resultado de la mejora ni reemplaza los brillos persistentes
+de `ItemUpgradeSparkles`.
+
+Ver [propiedades, tiempos e integración](./item-low-level-upgrade-success/README.md).
+
 ## SpritesheetEffect
 
 Reproductor de una secuencia de fotogramas con transparencia. Usa Web Animations

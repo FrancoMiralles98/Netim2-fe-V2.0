@@ -19,7 +19,7 @@ const RACE_NAMES = {
     chaman: "Chamán",
 } as const;
 
-export const EquipItemDetails = ({ item, character }: { item: EquipType; character?: CharacterRequirements }) => {
+export const EquipItemDetails = ({ item, character, showPrice = true }: { item: EquipType; character?: CharacterRequirements; showPrice?: boolean }) => {
     const isCompatible = !character || (character.lv >= item.lvReq
         && (item.restricted.length === 0 || item.restricted.includes(character.raza)));
     const hasBonuses = item.implicitBonus.length > 0
@@ -59,10 +59,10 @@ export const EquipItemDetails = ({ item, character }: { item: EquipType; charact
             {item.corrupt && (
                 <p className="mt-4 text-center text-[10px] font-bold tracking-wide text-red-600">CORRUPTO</p>
             )}
-            <p className={`${item.corrupt ? "mt-2" : "mt-4"} flex items-center justify-center gap-1 text-[12px] !text-gray-200/80`}>
+            {showPrice && <p className={`${item.corrupt ? "mt-2" : "mt-4"} flex items-center justify-center gap-1 text-[12px] !text-gray-200/80`}>
                 Precio: <span className="!text-yellow-300">{priceFormatter.format(item.price)}</span>
                 <img src="/utils/yang-icon.png" alt="Yang" className="h-[12px] w-[12px] object-contain" />
-            </p>
+            </p>}
         </section>
     );
 };

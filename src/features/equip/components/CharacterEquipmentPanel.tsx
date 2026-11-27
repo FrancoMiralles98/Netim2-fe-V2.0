@@ -15,10 +15,10 @@ interface CharacterEquipmentPanelProps {
     character: CharacterSession;
 }
 
-// Las ranuras ubican el centro de cada ítem sobre el fondo de 200 × 300.
+// Las armas se alinean arriba; las demás ranuras ubican el centro del ítem.
 // El tamaño del ítem se mantiene en píxeles, independiente del tamaño del fondo.
 const EQUIPMENT_POSITIONS = {
-    arma: { left: 7, top: 0, width: 36, height: 190 },
+    arma: { left: 7, top: 8, width: 36, height: 190 },
     casco: { left: 54, top: 8, width: 37, height: 47 },
     collar: { left: 154, top: 114, width: 38, height: 47 },
     armadura: { left: 58, top: 61, width: 37, height: 98 },
@@ -77,13 +77,14 @@ export const CharacterEquipmentPanel = ({ equipo, character }: CharacterEquipmen
                     <img src="/game/equipo.png" className="block h-full w-full" alt="" />
                     {equipo.map((item) => {
                         const position = EQUIPMENT_POSITIONS[item.sub_type_equip];
+                        const isWeapon = item.sub_type_equip === "arma";
                         return (
                             <div
                                 key={item.sub_type_equip}
-                                className="absolute -translate-x-1/2 -translate-y-1/2"
+                                className={`absolute -translate-x-1/2 ${isWeapon ? "" : "-translate-y-1/2"}`}
                                 style={{
                                     left: `${(position.left + position.width / 2) / 200 * 100}%`,
-                                    top: `${(position.top + position.height / 2) / 300 * 100}%`,
+                                    top: `${(position.top + (isWeapon ? 0 : position.height / 2)) / 300 * 100}%`,
                                     width: item.size.cols * INVENTORY_SLOT_SIZE,
                                     height: item.size.rows * INVENTORY_SLOT_SIZE,
                                 }}
@@ -105,7 +106,7 @@ export const CharacterEquipmentPanel = ({ equipo, character }: CharacterEquipmen
                                 >
                                     <div className="relative isolate h-full w-full">
                                         {item.corrupt === true && <ItemCorruptionSmoke />}
-                                        <ItemSpecialImage item={item} src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className="relative z-1 h-full w-full object-contain" />
+                                        <ItemSpecialImage item={item} src={getItemImagePath(item.idItem) ?? item.img} alt={item.name} className={`relative z-1 h-full w-full object-contain ${isWeapon ? "object-top" : ""}`} />
                                         {item.type === "equip" && item.upgradeLv === 9 && <ItemUpgradeSparkles />}
                                         {item.type === "equip" && item.upgradeLv === 8 && <ItemStaticSparkles />}
                                         {item.type === "equip" && item.upgradeLv === 7 && <ItemStaticSparkles variant="bronze" />}

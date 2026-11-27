@@ -1,0 +1,80 @@
+.venta-rapida-control {
+    --frame-shape: polygon(9px 0, calc(100% - 9px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 9px) 100%, 9px 100%, 0 calc(100% - 8px), 0 8px);
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    width: 225px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    clip-path: var(--frame-shape);
+    background: linear-gradient(110deg, #5a3c23, #d0a46b 15%, #6a482b 34%, #b58b55 66%, #e2bd80 85%, #684329);
+    color: #f3e9d5;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13px;
+    line-height: 1;
+    text-shadow: 0 2px 2px #000;
+    cursor: pointer;
+}
+
+.venta-rapida-control::before,
+.venta-rapida-control::after {
+    content: "";
+    position: absolute;
+    clip-path: var(--frame-shape);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.venta-rapida-control::before {
+    inset: 1px;
+    background: #160f09;
+}
+
+.venta-rapida-control::after {
+    inset: 3px;
+    background: radial-gradient(ellipse at 50% 0, #382c1a66, transparent 70%), linear-gradient(#14110d, #080706 55%, #18130c);
+    box-shadow: inset 0 1px 1px #b58b5544, inset 0 -1px 1px #a57a4544, inset 0 0 6px #000;
+}
+
+.venta-rapida-control:hover { filter: brightness(1.15); }
+.venta-rapida-control:focus-visible { outline: none; background: #f4d69a; }
+.venta-rapida-label { white-space: nowrap; }
+.venta-rapida-status { width: 68px; text-align: center; font-size: 12px; }
+
+.venta-rapida-switch {
+    position: relative;
+    width: 39px;
+    height: 20px;
+    flex-shrink: 0;
+    border: 1px solid #bd935e;
+    border-radius: 99px;
+    background: linear-gradient(#090806, #21190f);
+    box-shadow: 0 0 0 2px #100c08, inset 0 2px 5px #000, 0 1px 1px #c29b6266;
+}
+
+.venta-rapida-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #ead5b0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d8c7a9, #ac987a 65%, #867154);
+    box-shadow: 0 0 0 1px #59452e, 1px 2px 3px #000, inset 0 1px 2px #fff6;
+    transition: transform 160ms ease;
+}
+
+.venta-rapida-control[aria-checked="true"] .venta-rapida-switch {
+    background: linear-gradient(#332814, #66502a);
+}
+.venta-rapida-control[aria-checked="true"] .venta-rapida-thumb { transform: translateX(19px); }
+
+@media (prefers-reduced-motion: reduce) {
+    .venta-rapida-thumb { transition: none; }
+}

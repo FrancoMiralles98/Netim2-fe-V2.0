@@ -1,13 +1,18 @@
-import type { ReinosNames } from "netim2-shared";
+import type { NpcShopId, ReinosNames } from "netim2-shared";
 import { ButtonReino } from "../../../../shared/button/ButtonReino";
+import { tiendas } from "../../../tiendas/tiendas.config";
 
 interface RoutePanelsProps {
     reino: ReinosNames | null;
     isExploreActive: boolean;
     onExplore: () => void;
+    activeStore: NpcShopId | null;
+    onStore: (tipo: NpcShopId) => void;
+    isBlacksmithActive: boolean;
+    onBlacksmith: () => void;
 }
 
-export const RoutePanels = ({ reino, isExploreActive, onExplore }: RoutePanelsProps) => (
+export const RoutePanels = ({ reino, isExploreActive, onExplore, activeStore, onStore, isBlacksmithActive, onBlacksmith }: RoutePanelsProps) => (
     <section id='paneles de rutas'>
         {reino && (
             <>
@@ -32,17 +37,17 @@ export const RoutePanels = ({ reino, isExploreActive, onExplore }: RoutePanelsPr
                     />
                     <div className="absolute mt-[5rem] mb-[1rem] inset-0 z-10 flex flex-col items-start justify-start gap-[5px] px-4">
                         <ButtonReino reino={reino} texto="Explorar" onClick={onExplore} pressed={isExploreActive} />
-                        <ButtonReino reino={reino} texto="Tienda General" />
-                        <ButtonReino reino={reino} texto="Tienda De Armas" />
-                        <ButtonReino reino={reino} texto="Tienda De Armaduras" />
+                        {(["general", "weapons", "armors"] as const).map(tipo => (
+                            <ButtonReino key={tipo} reino={reino} texto={tiendas[tipo].nombre} onClick={() => onStore(tipo)} pressed={activeStore === tipo} />
+                        ))}
                         <ButtonReino reino={reino} texto="Arena" />
-                        <ButtonReino reino={reino} texto="Herrero" />
+                        <ButtonReino reino={reino} texto="Herrero" onClick={onBlacksmith} pressed={isBlacksmithActive} />
                         <ButtonReino reino={reino} texto="Capitán" />
-                        <ButtonReino reino={reino} texto="Establo" />
+                        <ButtonReino reino={reino} texto="Establo" onClick={() => onStore("stable")} pressed={activeStore === "stable"} />
                         <ButtonReino reino={reino} texto="Encantador" />
                         <ButtonReino reino={reino} texto="Orfebre" />
                         <ButtonReino reino={reino} texto="Mercado" />
-                        <ButtonReino reino={reino} texto="La Costa" />
+                        <ButtonReino reino={reino} texto="La Costa" onClick={() => onStore("fishing")} pressed={activeStore === "fishing"} />
                     </div>
                 </div>
             </>

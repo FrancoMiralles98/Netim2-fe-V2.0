@@ -4,12 +4,13 @@ import { createPortal } from "react-dom";
 interface ItemQuantityPopoverProps {
     anchorRef: RefObject<HTMLDivElement | null>;
     maxQuantity: number;
-    action: "use" | "split" | "openBulk";
+    action: "use" | "split" | "openBulk" | "sell";
+    saleUnitPrice?: number;
     onConfirm: (quantity: number) => void;
     onClose: () => void;
 }
 
-export const ItemQuantityPopover = ({ anchorRef, maxQuantity, action, onConfirm, onClose }: ItemQuantityPopoverProps) => {
+export const ItemQuantityPopover = ({ anchorRef, maxQuantity, action, saleUnitPrice, onConfirm, onClose }: ItemQuantityPopoverProps) => {
     const popoverRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const [quantity, setQuantity] = useState(action === "openBulk" ? "2" : "1");
@@ -18,7 +19,7 @@ export const ItemQuantityPopover = ({ anchorRef, maxQuantity, action, onConfirm,
     const minQuantity = action === "openBulk" ? 2 : 1;
     const isValidQuantity = Number.isSafeInteger(parsedQuantity)
         && parsedQuantity >= minQuantity && parsedQuantity <= maxQuantity;
-    const actionLabel = action === "split" ? "Dividir" : action === "openBulk" ? "Abrir" : "Usar";
+    const actionLabel = action === "sell" ? "Vender" : action === "split" ? "Dividir" : action === "openBulk" ? "Abrir" : "Usar";
 
     const updatePosition = useCallback(() => {
         const anchor = anchorRef.current;
@@ -77,7 +78,7 @@ export const ItemQuantityPopover = ({ anchorRef, maxQuantity, action, onConfirm,
         <div
             ref={popoverRef}
             role="dialog"
-            aria-label={action === "split" ? "Cantidad de ítems a dividir" : action === "openBulk" ? "Cantidad de cofres a abrir" : "Cantidad de pociones a usar"}
+            aria-label={action === "sell" ? "Cantidad de ítems a vender" : action === "split" ? "Cantidad de ítems a dividir" : action === "openBulk" ? "Cantidad de cofres a abrir" : "Cantidad de pociones a usar"}
             className="fixed z-[100000] w-[180px] rounded-sm border border-[#8e683b] bg-[#0b0b0b]/95 p-2 font-sans text-[12px] text-[#e9cf99] shadow-[0_8px_24px_rgba(0,0,0,0.85)]"
             style={{
                 top: position?.top ?? 0,
@@ -86,7 +87,7 @@ export const ItemQuantityPopover = ({ anchorRef, maxQuantity, action, onConfirm,
             }}
         >
             <form onSubmit={handleSubmit}>
-                <label htmlFor="item-action-quantity" className="block">Cantidad a {action === "split" ? "dividir" : action === "openBulk" ? "abrir" : "usar"} (máx. {maxQuantity})</label>
+                <label htmlFor="item-action-quantity" className="block">Cantidad a {actionLabel.toLowerCase()} (máx. {maxQuantity})</label>
                 <input
                     ref={inputRef}
                     id="item-action-quantity"
@@ -98,6 +99,12 @@ export const ItemQuantityPopover = ({ anchorRef, maxQuantity, action, onConfirm,
                     onChange={(event) => setQuantity(event.target.value)}
                     className="mt-1 w-full rounded-sm border border-[#8e683b] bg-black px-2 py-1 text-white outline-none focus:border-[#e9cf99]"
                 />
+                {action === "sell" && saleUnitPrice !== undefined && (
+                    <p aria-live="polite" className="mt-2 flex items-center justify-center gap-1">
+                        Total: <span className="text-yellow-300">{new Intl.NumberFormat("es-AR").format(isValidQuantity ? parsedQuantity * saleUnitPrice : 0)}</span>
+                        <img src="/utils/yang-icon.png" alt="Yang" className="size-3 object-contain" />
+                    </p>
+                )}
                 <div className="mt-2 flex justify-end gap-2">
                     <button type="button" onClick={onClose} className="cursor-pointer px-1 text-gray-300 hover:text-white">Cancelar</button>
                     <button type="submit" disabled={!isValidQuantity} className="cursor-pointer px-1 text-[#e9cf99] hover:text-white disabled:cursor-not-allowed disabled:opacity-40">{actionLabel}</button>

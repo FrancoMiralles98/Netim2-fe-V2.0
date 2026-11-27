@@ -1,0 +1,91 @@
+.item-low-level-upgrade {
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+    overflow: visible;
+    vertical-align: middle;
+    pointer-events: none;
+    user-select: none;
+}
+
+.item-low-level-upgrade__moving,
+.item-low-level-upgrade__intact {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.item-low-level-upgrade__intact > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.item-low-level-upgrade__silhouette,
+.item-low-level-upgrade__cuts,
+.item-low-level-upgrade__fragment > span {
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.item-low-level-upgrade__silhouette,
+.item-low-level-upgrade__cuts,
+.item-low-level-upgrade__fragments,
+.item-low-level-upgrade__fragment,
+.item-low-level-upgrade__fragment > span {
+    position: absolute;
+    display: block;
+    inset: 0;
+}
+
+.item-low-level-upgrade__silhouette {
+    opacity: 0;
+    background: white;
+    filter: drop-shadow(0 0 8px #fff8e4);
+}
+
+.item-low-level-upgrade__cuts {
+    opacity: 0;
+}
+
+.item-low-level-upgrade__cuts > span {
+    position: absolute;
+    left: -40%;
+    width: 180%;
+    height: 3%;
+    background: linear-gradient(90deg, #080506, #2c1012 50%, #080506);
+}
+
+.item-low-level-upgrade__fragments {
+    opacity: 0;
+}
+
+.item-low-level-upgrade__fragment > span {
+    background: #e85b21;
+}
+
+.item-low-level-upgrade__particles {
+    position: absolute;
+    z-index: 1;
+    max-width: none;
+    max-height: none;
+    pointer-events: none;
+}
+
+.item-low-level-upgrade__particles--back {
+    z-index: -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .item-low-level-upgrade__moving { transform: none !important; }
+    .item-low-level-upgrade__silhouette,
+    .item-low-level-upgrade__cuts,
+    .item-low-level-upgrade__fragments,
+    .item-low-level-upgrade__particles { visibility: hidden; }
+}

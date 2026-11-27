@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { NpcShopId } from "netim2-shared";
 import { CharacterPanel } from "../../features/game/components/profile/CharacterPanel";
 import { Navbar } from "../../features/game/components/hud/Navbar";
 import { RoutePanels } from "../../features/game/components/navigation/RoutePanels";
@@ -7,6 +8,9 @@ import { CharacterSkillsPanel } from "../../features/game/components/skills/Char
 import { MissionJournal } from "../../features/game/components/missions/MissionJournal";
 import { Historial } from "../../features/game/components/historial/Historial";
 import { Explorar } from "../../features/explorar/Explorar";
+import { Tienda } from "../../features/tiendas/Tienda";
+import { Herrero } from "../../features/herrero/Herrero";
+import { esNpcShopId } from "../../features/tiendas/tiendas.config";
 import { useGameGuard } from "../../features/game/hooks/useGame";
 import { useStartFight } from "../../features/fight/hooks/useStartFight";
 import { FightView } from "../../features/fight/FightView";
@@ -14,7 +18,7 @@ import { useHistoryDetail } from "../../features/game/hooks/useHistoryDetail";
 import { HistoryFightResult } from "../../features/game/components/historial/HistoryFightResult";
 
 export const Game = () => {
-    const [activeSection, setActiveSection] = useState<CharacterSection | "explorar">("perfil");
+    const [activeSection, setActiveSection] = useState<CharacterSection | "explorar" | "herrero" | NpcShopId>("perfil");
     const {
         character,
         worldSessionId,
@@ -28,6 +32,7 @@ export const Game = () => {
 
     const reino = character.reino;
     const isExploring = activeSection === "explorar";
+    const activeStore = esNpcShopId(activeSection) ? activeSection : null;
 
     return (
         <>
@@ -44,15 +49,25 @@ export const Game = () => {
                 ? "w-full max-w-[1300px] grid-cols-[minmax(0,17%)_minmax(0,1fr)]"
                 : "w-[1300px] grid-cols-[17%_auto]"}`}>
                 <Navbar character={character} />
-                <RoutePanels reino={reino} isExploreActive={isExploring} onExplore={() => setActiveSection("explorar")} />
+                <RoutePanels
+                    reino={reino}
+                    isExploreActive={isExploring}
+                    onExplore={() => setActiveSection("explorar")}
+                    activeStore={activeStore}
+                    onStore={setActiveSection}
+                    isBlacksmithActive={activeSection === "herrero"}
+                    onBlacksmith={() => setActiveSection("herrero")}
+                />
                 <div className={isExploring ? "min-w-0" : undefined}>
                     <CharacterSectionNav
                         reino={reino}
-                        activeSection={isExploring ? null : activeSection}
+                        activeSection={activeSection === "perfil" || activeSection === "habilidades" || activeSection === "misiones" || activeSection === "historial" ? activeSection : null}
                         onSelectSection={setActiveSection}
                     />
 
                     {!fight && activeSection === "perfil" && <CharacterPanel character={character} />}
+                    {!fight && activeSection === "herrero" && <Herrero key={character.id} character={character} />}
+                    {!fight && activeStore && <Tienda key={`${character.id}-${activeStore}`} character={character} tipo={activeStore} />}
                     {!fight && activeSection === "habilidades" && <CharacterSkillsPanel character={character} />}
                     {!fight && activeSection === "misiones" && (
                         <MissionJournal key={character.id} character={character} />

@@ -1,7 +1,7 @@
 import type { CañaType } from "netim2-shared";
 import { ItemPrice } from "./ItemStockAndPrice";
 
-export const FishingRodItemDetails = ({ item }: { item: CañaType }) => (
+export const FishingRodItemDetails = ({ item, showPrice = true }: { item: CañaType; showPrice?: boolean }) => (
     <section className="w-[200px] max-w-[calc(100vw-48px)] p-1 text-center">
         <h3 className="text-[14px] font-medium text-white">{item.name}</h3>
         {item.description?.trim() && (
@@ -15,6 +15,6 @@ export const FishingRodItemDetails = ({ item }: { item: CañaType }) => (
         <p className="mt-3 text-[12px] text-gray-200">
             Habilidad de Pesca: <span className="text-emerald-300">+{item.pescaSkill}</span>
         </p>
-        <ItemPrice item={item} />
+        {showPrice && <ItemPrice item={item} />}
     </section>
 );
